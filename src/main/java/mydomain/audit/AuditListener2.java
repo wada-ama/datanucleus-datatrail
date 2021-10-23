@@ -3,11 +3,9 @@ package mydomain.audit;
 import mydomain.datanucleus.datatrail2.Node;
 import mydomain.datanucleus.datatrail2.NodeFactory;
 import org.datanucleus.TransactionEventListener;
-import org.datanucleus.api.jdo.NucleusJDOHelper;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.state.ObjectProvider;
 import org.datanucleus.util.NucleusLogger;
-import org.datanucleus.util.StringUtils;
 import org.slf4j.Logger;
 
 import javax.jdo.JDOHelper;

@@ -4,11 +4,7 @@ import mydomain.datanucleus.datatrail2.ContainerNode;
 import mydomain.datanucleus.datatrail2.Node;
 import mydomain.datanucleus.datatrail2.NodeFactory;
 import mydomain.datanucleus.datatrail2.NodeType;
-import mydomain.datatrail.field.Field;
 import org.datanucleus.metadata.AbstractMemberMetaData;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class Collection extends ContainerNode {
     @Override

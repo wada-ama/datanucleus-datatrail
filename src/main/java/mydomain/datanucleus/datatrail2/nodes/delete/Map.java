@@ -1,6 +1,5 @@
 package mydomain.datanucleus.datatrail2.nodes.delete;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import mydomain.datanucleus.datatrail2.ContainerNode;
 import mydomain.datanucleus.datatrail2.Node;
 import mydomain.datanucleus.datatrail2.NodeFactory;

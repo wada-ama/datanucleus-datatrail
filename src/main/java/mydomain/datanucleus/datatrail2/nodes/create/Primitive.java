@@ -1,6 +1,5 @@
 package mydomain.datanucleus.datatrail2.nodes.create;
 
-import mydomain.datanucleus.datatrail2.ClassUtils;
 import mydomain.datanucleus.datatrail2.Node;
 import mydomain.datanucleus.datatrail2.NodeType;
 import org.datanucleus.metadata.AbstractMemberMetaData;

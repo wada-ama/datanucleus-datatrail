@@ -9,7 +9,6 @@ import mydomain.datanucleus.datatrail2.ReferenceNode;
 import org.datanucleus.api.jdo.NucleusJDOHelper;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.AbstractMemberMetaData;
-import org.datanucleus.metadata.ClassMetaData;
 import org.datanucleus.metadata.MetaData;
 import org.datanucleus.state.ObjectProvider;
 

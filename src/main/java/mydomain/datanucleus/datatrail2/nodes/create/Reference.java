@@ -32,5 +32,4 @@ public class Reference extends ReferenceNode {
             this.name = mmd.getName();
     }
 
-
 }
