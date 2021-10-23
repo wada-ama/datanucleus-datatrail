@@ -9,12 +9,10 @@ import mydomain.model.Student;
 import mydomain.model.Telephone;
 import mydomain.model.TelephoneType;
 import org.datanucleus.enhancement.Persistable;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
-import javax.jdo.JDOHelper;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;

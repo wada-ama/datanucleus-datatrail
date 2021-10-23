@@ -3,29 +3,19 @@ package org.datanucleus.test2;
 import com.spotify.hamcrest.pojo.IsPojo;
 import mydomain.datanucleus.datatrail2.Node;
 import mydomain.datanucleus.datatrail2.NodeType;
-import mydomain.datatrail.Entity;
-import mydomain.datatrail.field.Field;
 import mydomain.model.CountryCode;
 import mydomain.model.Telephone;
 import org.datanucleus.identity.DatastoreIdImplKodo;
-import org.datanucleus.util.NucleusLogger;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.Collection;
 
-import static com.spotify.hamcrest.pojo.IsPojo.pojo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.any;
-import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.hasToString;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 
 
 public class ReferenceTest extends AbstractTest {

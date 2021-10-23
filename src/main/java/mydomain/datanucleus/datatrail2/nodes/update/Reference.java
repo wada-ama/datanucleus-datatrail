@@ -32,5 +32,13 @@ public class Reference extends ReferenceNode {
             this.name = mmd.getName();
     }
 
+    @Override
+    public void setPrev(Object value) {
+        // previous must be of same type
+        if( value != null && value.getClass() != this.getClass()){
+            throw new IllegalArgumentException( "Previous value is not of the same type: " + value.getClass().getName() + " !=" + this.getClass().getName());
+        }
 
+        this.prev = ((Reference)value).getValue();
+    }
 }

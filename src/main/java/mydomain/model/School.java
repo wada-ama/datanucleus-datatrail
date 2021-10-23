@@ -1,8 +1,6 @@
 package mydomain.model;
 
 import javax.jdo.annotations.Element;
-import javax.jdo.annotations.ForeignKey;
-import javax.jdo.annotations.ForeignKeyAction;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.Order;
 import javax.jdo.annotations.PersistenceCapable;

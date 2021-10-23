@@ -9,7 +9,6 @@ import h2.H2Server;
 import mydomain.audit.AuditListener2;
 import mydomain.datanucleus.datatrail2.Node;
 import mydomain.datanucleus.datatrail2.NodeType;
-import mydomain.datanucleus.datatrail2.nodes.create.Entity;
 import mydomain.model.ITrailDesc;
 import org.datanucleus.api.jdo.JDOTransaction;
 import org.datanucleus.enhancement.Persistable;

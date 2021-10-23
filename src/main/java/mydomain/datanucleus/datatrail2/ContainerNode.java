@@ -1,8 +1,6 @@
 package mydomain.datanucleus.datatrail2;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import mydomain.datanucleus.datatrail2.Node;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 import java.util.ArrayList;
@@ -35,5 +33,12 @@ abstract public class ContainerNode extends Node {
     @Override
     public String getClassName() {
         return super.getClassName();
+    }
+
+    @Override
+    public void updateFields() {
+        super.updateFields();
+        added.stream().forEach( node -> node.updateFields());
+        removed.stream().forEach( node -> node.updateFields());
     }
 }

@@ -6,7 +6,6 @@ import mydomain.datanucleus.datatrail2.NodeFactory;
 import mydomain.datanucleus.datatrail2.NodeType;
 import mydomain.datanucleus.types.wrappers.tracker.ChangeTrackable;
 import mydomain.datanucleus.types.wrappers.tracker.ChangeTracker;
-import mydomain.datatrail.field.Field;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 import java.util.stream.Collectors;

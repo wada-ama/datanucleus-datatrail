@@ -22,6 +22,23 @@ import java.util.Set;
  */
 public class Entity extends ReferenceNode {
 
+    protected Instant dateModified;
+    protected String username;
+    private Set<Node> fields = new HashSet<Node>();
+    /**
+     * Default constructor.  Should only be called via the NodeFactory
+     *
+     * @param value
+     * @param md
+     * @param parent
+     */
+    public Entity(Persistable value, MetaData md, Node parent) {
+        // an entity is the root node in the tree
+        super(value, md, null);
+        setFields(value);
+        dateModified = Instant.now();
+    }
+
     @Override
     public NodeType getType() {
         return NodeType.ENTITY;
@@ -32,48 +49,31 @@ public class Entity extends ReferenceNode {
         return Action.UPDATE;
     }
 
-
-    private Set<Node> fields = new HashSet<Node>();
-    protected Instant dateModified;
-    protected String username;
-
-    /**
-     * Default constructor.  Should only be called via the NodeFactory
-     * @param value
-     * @param md
-     * @param parent
-     */
-    public Entity(Persistable value, MetaData md, Node parent){
-        // an entity is the root node in the tree
-        super(value, md,null);
-        setFields(value);
-        dateModified = Instant.now();
-    }
-
-
-    private void setFields(Persistable pc){
-        if( pc == null )
-            return;
-
-        PersistenceManager pm = (PersistenceManager)pc.dnGetExecutionContext().getOwner();
-        ExtendedReferentialStateManagerImpl op = (ExtendedReferentialStateManagerImpl)pc.dnGetStateManager();
-
-        // need to include all loaded fields
-        String[] fieldNames = NucleusJDOHelper.getLoadedFields( pc, pm);
-        for(String fieldName : fieldNames) {
-            int position = op.getClassMetaData().getAbsolutePositionOfMember(fieldName);
-            Object field = op.provideSavedField(position);
-            AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
-            if( mmd.isFieldToBePersisted()){
-                fields.add(NodeFactory.getInstance().createNode( field, getAction(), mmd, this));
-            }
-        }
-    }
-
-
     @JsonProperty
     public Set<Node> getFields() {
         return fields;
+    }
+
+    private void setFields(Persistable pc) {
+        if (pc == null)
+            return;
+
+        PersistenceManager pm = (PersistenceManager) pc.dnGetExecutionContext().getOwner();
+        ExtendedReferentialStateManagerImpl op = (ExtendedReferentialStateManagerImpl) pc.dnGetStateManager();
+
+        // need to include all dirty fields
+        int[] absoluteFieldPositions = op.getDirtyFieldNumbers() != null ? op.getDirtyFieldNumbers() : new int[]{};
+        for (int position : absoluteFieldPositions) {
+            Object field = op.provideField(position);
+            Object prevField = op.provideSavedField(position);
+            AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
+
+            if (mmd.isFieldToBePersisted()) {
+                Node current = NodeFactory.getInstance().createNode(field, getAction(), mmd, this);
+                current.setPrev(NodeFactory.getInstance().createNode(prevField, getAction(), mmd, this));
+                fields.add(current);
+            }
+        }
     }
 
     @JsonProperty
@@ -89,6 +89,6 @@ public class Entity extends ReferenceNode {
     @Override
     public void updateFields() {
         super.updateFields();
-        fields.stream().forEach( node -> node.updateFields());
+        fields.stream().forEach(node -> node.updateFields());
     }
 }

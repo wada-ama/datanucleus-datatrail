@@ -120,6 +120,13 @@ abstract public class Node {
         return parent;
     }
 
+    /**
+     * Sets the previous value of this node
+     */
+    public void setPrev(Object value){
+        // by default, do nothing
+    }
+
 
     public void updateFields(){
 
