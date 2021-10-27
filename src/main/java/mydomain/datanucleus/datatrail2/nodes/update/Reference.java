@@ -39,6 +39,6 @@ public class Reference extends ReferenceNode {
             throw new IllegalArgumentException( "Previous value is not of the same type: " + value.getClass().getName() + " !=" + this.getClass().getName());
         }
 
-        this.prev = ((Reference)value).getValue();
+        this.prev = this.getClass().cast(value).getValue();
     }
 }
