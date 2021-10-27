@@ -34,16 +34,16 @@ public class Collection extends ContainerNode {
 
     /**
      * Adds all the elements in the collection
-     * @param elements
+     * @param collection
      */
-    private void addElements( java.util.Collection elements ){
-        if( elements instanceof ChangeTrackable){
-            ChangeTracker changeTracker = ((ChangeTrackable)elements).getChangeTracker();
+    private void addElements( java.util.Collection collection ){
+        if( collection instanceof ChangeTrackable && ((ChangeTrackable)collection).getChangeTracker().isTracking()){
+            ChangeTracker changeTracker = ((ChangeTrackable)collection).getChangeTracker();
             added = (java.util.Collection<Node>) changeTracker.getAdded().stream().map(o -> NodeFactory.getInstance().createNode(o, getAction(), null, this)).collect(Collectors.toList());
             removed = (java.util.Collection<Node>) changeTracker.getRemoved().stream().map(o -> NodeFactory.getInstance().createNode(o, getAction(), null, this)).collect(Collectors.toList());
         } else {
-            for (Object element : elements) {
-                added.add(NodeFactory.getInstance().createNode(element, getAction(), null, this));
+            for (Object element : collection) {
+                contents.add(NodeFactory.getInstance().createNode(element, getAction(), null, this));
             }
         }
     }

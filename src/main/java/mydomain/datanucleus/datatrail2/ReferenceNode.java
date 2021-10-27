@@ -76,9 +76,6 @@ abstract public class ReferenceNode extends Node {
         return super.getValue();
     }
 
-    // makes no sense for a Reference object to have a previous value.  If the value of the reference object has changed
-    // it will be shown via a change to the ref object itself.
-    @JsonIgnore
     @Override
     public Object getPrev() {
         return super.getPrev();
