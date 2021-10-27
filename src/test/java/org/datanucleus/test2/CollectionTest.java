@@ -3,9 +3,11 @@ package org.datanucleus.test2;
 import com.spotify.hamcrest.pojo.IsPojo;
 import mydomain.datanucleus.datatrail2.Node;
 import mydomain.datanucleus.datatrail2.NodeType;
+import mydomain.datanucleus.datatrail2.nodes.create.Entity;
 import mydomain.model.Address;
 import mydomain.model.CountryCode;
 import mydomain.model.QCountryCode;
+import mydomain.model.QSchool;
 import mydomain.model.QTelephone;
 import mydomain.model.QTelephoneBook;
 import mydomain.model.School;
@@ -21,6 +23,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static mydomain.datanucleus.datatrail2.Node.Action.CREATE;
@@ -35,34 +38,36 @@ import static org.hamcrest.Matchers.is;
 @Execution(ExecutionMode.SAME_THREAD)
 public class CollectionTest extends AbstractTest {
 
-//
-//    @Test
-//    public void createCollectionArray() throws IOException {
-//        executeTx(pm -> {
-//            Address address = new Address(new Street[]{new Street("Regina")});
-//            pm.makePersistent(address);
-//        });
-//
-//        final IsPojo<Entity> street = getEntity(CREATE, Street.class, "1")
-//                .withProperty("fields", hasItem(
-//                        getField(Field.Type.PRIMITIVE, String.class, "name", "Regina", null)
-//                ));
-//
-//
-//        final IsPojo<Entity> address = getEntity(CREATE, Address.class, "1")
-//                .withProperty("fields", hasItem(
-//                        getContainerField(Field.Type.COLLECTION, "street")
-//                                .withProperty("added", hasItem(
-//                                        getListElement(Field.Type.REF, Street.class, "1")
-//                                ))
-//                ));
-//
-//
-//        Collection<Entity> entities = audit.getModifications();
-//        assertThat(entities, containsInAnyOrder(street, address));
-//    }
-//
-//
+
+    @Test
+    public void createCollectionArray() {
+        executeTx(pm -> {
+            Address address = new Address(new Street[]{new Street("Regina")});
+            pm.makePersistent(address);
+        });
+
+        final IsPojo<Node> street = getEntity(CREATE, Street.class, "1")
+                .withProperty("fields", hasItem(
+                        getField(NodeType.PRIMITIVE, String.class, "name", "Regina", null)
+                ));
+
+
+        final IsPojo<Node> address = getEntity(CREATE, Address.class, "1")
+                .withProperty("fields", hasItem(
+                        getContainerField(NodeType.ARRAY, "street")
+                                .withProperty("contents", hasItem(
+                                        getListElement(NodeType.REF, Street.class, "1")
+                                ))
+                ));
+
+
+        Collection<Node> entities = audit.getModifications();
+        assertThat(entities, hasItem(street));
+        assertThat(entities, hasItem(address));
+        assertThat(entities, containsInAnyOrder(street, address));
+    }
+
+
     @Test
     public void createCollectionList() {
         executeTx(pm -> {
@@ -99,7 +104,7 @@ public class CollectionTest extends AbstractTest {
         final IsPojo<Node> address = getEntity(CREATE, Address.class, "1")
                 .withProperty("fields", hasItem(
                         getContainerField(NodeType.ARRAY, "street")
-                                .withProperty("added", hasItems(
+                                .withProperty("contents", hasItems(
                                         getListElement(NodeType.REF, Street.class, "1"),
                                         getListElement(NodeType.REF, Street.class, "2")
                                 ))
@@ -173,7 +178,7 @@ public class CollectionTest extends AbstractTest {
         final IsPojo<Node> address = getEntity(DELETE, Address.class, "1")
                 .withProperty("fields", hasItem(
                         getContainerField(NodeType.ARRAY, "street")
-                                .withProperty("removed", hasItems(
+                                .withProperty("contents", hasItems(
                                         getListElement(NodeType.REF, Street.class, "1"),
                                         getListElement(NodeType.REF, Street.class, "2")
                                 ))
@@ -207,85 +212,122 @@ public class CollectionTest extends AbstractTest {
                 school
         ));
     }
-//
-//
-//    @Test
-//    public void updateCollectionArray() throws IOException {
-//        executeTx(pm -> {
-//            Address address = new Address(new Street[]{new Street("Regina")});
-//            pm.makePersistent(address);
-//        }, false);
-//
-//        executeTx(pm -> {
-//            Street street = new Street("Calgary");
-//            Object id = new DatastoreIdImplKodo(Address.class.getName(), 1);
-//            Address p = pm.getObjectById(Address.class, id);
-//            p.replaceStreet(0, street);
-//        });
-//
-//
-//
-//        final IsPojo<Entity> street = getEntity(CREATE, Street.class, "1")
-//                .withProperty("fields", hasItem(
-//                        getField(Field.Type.PRIMITIVE, String.class, "name", "Regina", null)
-//                ));
-//
-//
-//        final IsPojo<Entity> address = getEntity(CREATE, Address.class, "1")
-//                .withProperty("fields", hasItem(
-//                        getContainerField(Field.Type.COLLECTION, "street")
-//                                .withProperty("added", hasItem(
-//                                        getListElement(Field.Type.REF, Street.class, "1")
-//                                ))
-//                ));
-//
-//
-//        Collection<Entity> entities = audit.getModifications();
-//        assertThat(entities, containsInAnyOrder(street, address));
-//    }
-//
-//
-//
-////
-////    @Test
-////    public void updateCollectionList() {
-////        executeTx(pm -> {
-////                    Address address = new Address(new Street[]{
-////                            new Street("Regina"),
-////                            new Street("Road")
-////                    });
-////
-////                    School school = new School("WADA");
-////                    school.setAddresses(Arrays.asList(address));
-////
-////                    Student charline = new Student("Charline");
-////                    Set<Student> students = new HashSet<>();
-////                    students.add(charline);
-////                    school.setStudents(students);
-////
-////                    pm.makePersistent(charline);
-////                    pm.makePersistent(school);
-////                }, false);
-////
-////
-////        executeTx(pm -> {;
-////
-////            School school = pm.getObjectById(School.class, new DatastoreIdImplKodo(School.class.getName(), 1));
-////            List<Address> addresses = school.getAddresses();
-////
-////            Address calgary = new Address(new Street[]{
-////                    new Street("Calgary")
-////            });
-////
-////            // delete all addresss
-////            addresses.clear();
-////
-////            // add the new address
-////            addresses.add(calgary);
-////
-////        }, true);
-////    }
-//
+
+
+    /**
+     * With an array object, need to dump the entire array contents as there is no way to track
+     * changes to the individual elements
+     */
+    @Test
+    public void updateCollectionArray(){
+        executeTx(pm -> {
+            Address address = new Address(new Street[]{new Street("Regina"), new Street("Montreal")});
+            pm.makePersistent(address);
+        }, false);
+
+        executeTx(pm -> {
+            Street street = new Street("Calgary");
+            Object id = new DatastoreIdImplKodo(Address.class.getName(), 1);
+            Address p = pm.getObjectById(Address.class, id);
+            p.replaceStreet(0, street);
+        });
+
+
+
+        final IsPojo<Node> calgary = getEntity(CREATE, Street.class, "3")
+                .withProperty("fields", hasItem(
+                        getField(NodeType.PRIMITIVE, String.class, "name", "Calgary", null)
+                ));
+
+        final IsPojo<Node> address = getEntity(UPDATE, Address.class, "1")
+                .withProperty("fields", hasItem(
+                        getContainerField(NodeType.ARRAY, "street")
+                                .withProperty("contents", hasItems(
+                                        getListElement(NodeType.REF, Street.class, "2"),
+                                        getListElement(NodeType.REF, Street.class, "3")
+                                ))
+                ));
+
+
+        Collection<Node> entities = audit.getModifications();
+        assertThat(filterEntity(entities, Street.class, CREATE).get(), is(calgary));
+        assertThat(filterEntity(entities, Address.class, UPDATE).get(), is(address));
+        assertThat(entities, containsInAnyOrder(calgary, address));
+    }
+
+
+    @Test
+    public void updateCollectionList() {
+        executeTx(pm -> {
+                    Address address = new Address(new Street[]{
+                            new Street("Regina"),
+                            new Street("Road")
+                    });
+
+                    School school = new School("WADA");
+                    school.setAddresses(Arrays.asList(address));
+
+                    Student charline = new Student("Charline");
+                    Set<Student> students = new HashSet<>();
+                    students.add(charline);
+                    school.setStudents(students);
+
+                    pm.makePersistent(charline);
+                    pm.makePersistent(school);
+                }, false);
+
+
+        executeTx(pm -> {;
+            School school = pm.newJDOQLTypedQuery(School.class).filter(QSchool.candidate().name.eq("WADA")).executeUnique();
+            List<Address> addresses = school.getAddresses();
+
+            Address calgary = new Address(new Street[]{
+                    new Street("Calgary")
+            });
+
+            // delete all addresss
+            addresses.clear();
+
+            // add the new address
+            addresses.add(calgary);
+
+        });
+
+        IsPojo<Node> calgarySt = getEntity(CREATE, Street.class, "3")
+                .withProperty("fields", hasItem(
+                        getField(NodeType.PRIMITIVE, String.class, "name", "Calgary", null)
+                ));
+
+
+        IsPojo<Node> calgaryAddr = getEntity(CREATE, Address.class, "2")
+                .withProperty("fields", hasItem(
+                        getContainerField(NodeType.ARRAY, "street")
+                                .withProperty("contents", hasItem(
+                                                getListElement(NodeType.REF, Street.class, "3")
+                                ))
+                ));
+
+        IsPojo<Node> school = getEntity(UPDATE, School.class, "1")
+                .withProperty("fields", hasItems(
+                        getContainerField(NodeType.COLLECTION, "addresses")
+                                .withProperty("added", hasItem(
+                                        getListElement(NodeType.REF, Address.class, "2")
+                                ))
+                                .withProperty("removed", hasItem(
+                                        getListElement(NodeType.REF, Address.class, "1" )
+                                ))
+                ));
+
+        assertThat(filterEntity(audit.getModifications(), Street.class, CREATE).get(), is(calgarySt));
+        assertThat(filterEntity(audit.getModifications(), Address.class, CREATE).get(), is(calgaryAddr));
+        assertThat(filterEntity(audit.getModifications(), School.class, UPDATE).get(), is(school));
+
+
+        assertThat(audit.getModifications(), hasItem(school));
+
+
+    }
+
     @Test
     public void updateListTest(){
         executeTx(pm -> {
@@ -301,7 +343,6 @@ public class CollectionTest extends AbstractTest {
 
 
         executeTx(pm -> {
-
             TelephoneBook telephoneBook = pm.newJDOQLTypedQuery(TelephoneBook.class).filter(QTelephoneBook.candidate().name.eq("Montreal")).executeUnique();
             CountryCode canada = pm.newJDOQLTypedQuery(CountryCode.class).filter( QCountryCode.candidate().code.eq(1)).executeUnique();
 
@@ -314,20 +355,13 @@ public class CollectionTest extends AbstractTest {
         });
 
 
-//        executeTx(pm -> {
-//            JDOQLTypedQuery<TelephoneBook> tqTb = pm.newJDOQLTypedQuery(TelephoneBook.class);
-//            QTelephoneBook cand = QTelephoneBook.candidate();
-//            TelephoneBook telephoneBook = tqTb.filter(cand.name.eq("Montreal")).executeUnique();
-//            telephoneBook.getTelephoneNumbers();
-//        });
-
-
         final IsPojo<Node> five555 = getEntity(CREATE, Telephone.class, ANY)
                 .withProperty( "fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "number", "514-555-5555", null),
                         getField(NodeType.REF, CountryCode.class, "countryCode", "1", null)
                         )
                 );
+
 
         final IsPojo<Node> one113 = getEntity(DELETE, Telephone.class, ANY)
                 .withProperty( "fields", hasItems(
@@ -346,29 +380,9 @@ public class CollectionTest extends AbstractTest {
                 ));
 
         Collection<Node> entities = audit.getModifications();
-//        assertThat(entities, hasItem( five555));
-//        assertThat(entities, hasItem( one113));
-        assertThat(entities.stream().filter(node -> node.getClassName().equals(TelephoneBook.class.getName())).findFirst().get(), is(telephoneBook));
-
-//        assertThat(entities, hasItem( telephoneBook));
-
-//
-//
-//
-//        final IsPojo<Entity> street = getEntity(CREATE, Street.class, "1")
-//                .withProperty("fields", hasItem(
-//                        getField(Field.Type.PRIMITIVE, String.class, "name", "Regina", null)
-//                ));
-//
-//
-//        final IsPojo<Entity> address = getEntity(CREATE, Address.class, "1")
-//                .withProperty("fields", hasItem(
-//                        getContainerField(Field.Type.COLLECTION, "street")
-//                                .withProperty("added", hasItem(
-//                                        getListElement(Field.Type.REF, Street.class, "1")
-//                                ))
-//                ));
-//
-//
+        assertThat(filterEntity(entities, Telephone.class, CREATE).get(), is( five555));
+        assertThat(filterEntity(entities, Telephone.class, DELETE).get(), is( one113));
+        assertThat(filterEntity(entities, TelephoneBook.class, UPDATE).get(), is(telephoneBook));
+        assertThat(entities, containsInAnyOrder(five555, one113, telephoneBook));
     }
 }

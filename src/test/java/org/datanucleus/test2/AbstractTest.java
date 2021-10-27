@@ -9,6 +9,7 @@ import h2.H2Server;
 import mydomain.audit.AuditListener2;
 import mydomain.datanucleus.datatrail2.Node;
 import mydomain.datanucleus.datatrail2.NodeType;
+import mydomain.model.Address;
 import mydomain.model.ITrailDesc;
 import org.datanucleus.api.jdo.JDOTransaction;
 import org.datanucleus.enhancement.Persistable;
@@ -28,8 +29,10 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Optional;
 
 import static com.spotify.hamcrest.pojo.IsPojo.pojo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.hasToString;
@@ -244,5 +247,15 @@ abstract public class AbstractTest {
         } else {
             return objectId.toString();
         }
+    }
+
+
+    protected Optional<Node> filterEntity(Collection<Node> collection, Class<?> entityClass, Node.Action action){
+        return collection.stream()
+                        .filter(node ->
+                                node.getType() == NodeType.ENTITY
+                                && node.getClassName().equals(entityClass.getCanonicalName())
+                                && node.getAction() == action
+                        ).findFirst();
     }
 }

@@ -50,7 +50,7 @@ public class List<E> extends org.datanucleus.store.types.wrappers.backed.List<E>
 
     @Override
     public void clear() {
-        java.util.List copy = new ArrayList(delegate);
+        java.util.List copy = new ArrayList(this);
         super.clear();
         remove(changeTracker, copy, true);
     }
