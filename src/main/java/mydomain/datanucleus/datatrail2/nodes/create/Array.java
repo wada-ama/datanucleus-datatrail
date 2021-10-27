@@ -35,6 +35,6 @@ public class Array extends ContainerNode {
     private void addElements( Object[] elements ){
         // all new values, so use the raw collection values
         for(Object element : elements )
-            this.added.add(NodeFactory.getInstance().createNode(element, getAction(), null, this));
+            this.contents.add(NodeFactory.getInstance().createNode(element, getAction(), null, this));
     }
 }
