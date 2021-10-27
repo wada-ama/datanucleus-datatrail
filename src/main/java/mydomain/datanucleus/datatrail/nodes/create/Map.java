@@ -5,22 +5,13 @@ import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.MapEntry;
+import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 import java.util.Set;
 
+@NodeDefinition(type=NodeType.MAP, action = Node.Action.CREATE)
 public class Map extends ContainerNode {
-
-
-    @Override
-    public NodeType getType() {
-        return NodeType.MAP;
-    }
-
-    @Override
-    public Action getAction() {
-        return Action.CREATE;
-    }
 
     public Map(java.util.Map value, AbstractMemberMetaData mmd, Node parent) {
         super(mmd, parent);
@@ -40,8 +31,8 @@ public class Map extends ContainerNode {
     private void addElements( Set<java.util.Map.Entry> elements ){
         // all new values, so use the raw collection values
         for( java.util.Map.Entry element : elements){
-            Node key = NodeFactory.getInstance().createNode(element.getKey(), getAction(), null, this);
-            Node value = NodeFactory.getInstance().createNode(element.getValue(), getAction(), null, this);
+            Node key = NodeFactory.getInstance().createNode(element.getKey(), Action.CREATE, null, this);
+            Node value = NodeFactory.getInstance().createNode(element.getValue(), Action.CREATE, null, this);
 
             this.added.add(new MapEntry(key, value));
         }

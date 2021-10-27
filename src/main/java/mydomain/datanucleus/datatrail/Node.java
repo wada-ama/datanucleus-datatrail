@@ -2,6 +2,7 @@ package mydomain.datanucleus.datatrail;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
@@ -87,14 +88,19 @@ abstract public class Node {
      * returns the type of node represented by this object
      * @return
      */
-    abstract public NodeType getType();
+    public NodeType getType(){
+        NodeDefinition nodeDefn = this.getClass().getAnnotation(NodeDefinition.class);
+        return nodeDefn == null ? null : nodeDefn.type();
+    }
 
     /**
-     * returns the type of action supported by this object
-     * @return
+     * Returns the action for {@link NodeType#ENTITY} objects.
+     * @return action for {@link NodeType#ENTITY} objects.  Null otherwise
      */
-    abstract public Node.Action getAction();
-
+    public Action getAction(){
+        NodeDefinition nodeDefn = this.getClass().getAnnotation(NodeDefinition.class);
+        return ( nodeDefn != null && nodeDefn.type()  == NodeType.ENTITY ) ? nodeDefn.action() : null;
+    }
 
     public String getName() {
         return name;

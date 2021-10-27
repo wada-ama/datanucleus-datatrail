@@ -5,6 +5,7 @@ import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.MapEntry;
+import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import mydomain.datanucleus.types.wrappers.tracker.ChangeTrackable;
 import mydomain.datanucleus.types.wrappers.tracker.ChangeTracker;
 import org.datanucleus.metadata.AbstractMemberMetaData;
@@ -12,17 +13,8 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+@NodeDefinition(type=NodeType.MAP, action = Node.Action.UPDATE)
 public class Map extends ContainerNode {
-
-    @Override
-    public NodeType getType() {
-        return NodeType.MAP;
-    }
-
-    @Override
-    public Action getAction() {
-        return Action.UPDATE;
-    }
 
     public Map(java.util.Map value, AbstractMemberMetaData mmd, Node parent) {
         super(mmd, parent);
@@ -46,25 +38,25 @@ public class Map extends ContainerNode {
             ChangeTracker changeTracker = ((ChangeTrackable)map).getChangeTracker();
             this.changed = (java.util.Collection<Node>) changeTracker.getChanged().stream().map(o -> {
                 Entry keyValue = (Entry)o;
-                Node key = NodeFactory.getInstance().createNode(keyValue.getKey(), getAction(), null, this);
-                Node value = NodeFactory.getInstance().createNode(map.get(keyValue.getKey()), getAction(), null, this);
-                value.setPrev(NodeFactory.getInstance().createNode(keyValue.getValue(), getAction(), null, this));
+                Node key = NodeFactory.getInstance().createNode(keyValue.getKey(), Action.UPDATE, null, this);
+                Node value = NodeFactory.getInstance().createNode(map.get(keyValue.getKey()), Action.UPDATE, null, this);
+                value.setPrev(NodeFactory.getInstance().createNode(keyValue.getValue(), Action.UPDATE, null, this));
 
                 return new MapEntry(key,value);
             }).collect(Collectors.toSet());
 
             this.added = (java.util.Collection<Node>) changeTracker.getAdded().stream().map(o -> {
                 Entry keyValue = (Entry)o;
-                Node key = NodeFactory.getInstance().createNode(keyValue.getKey(), getAction(), null, this);
-                Node value = NodeFactory.getInstance().createNode(keyValue.getValue(), getAction(), null, this);
+                Node key = NodeFactory.getInstance().createNode(keyValue.getKey(), Action.UPDATE, null, this);
+                Node value = NodeFactory.getInstance().createNode(keyValue.getValue(), Action.UPDATE, null, this);
 
                 return new MapEntry(key,value);
             }).collect(Collectors.toSet());
 
             this.removed = (java.util.Collection<Node>) changeTracker.getRemoved().stream().map(o -> {
                 Entry keyValue = (Entry)o;
-                Node key = NodeFactory.getInstance().createNode(keyValue.getKey(), getAction(), null, this);
-                Node value = NodeFactory.getInstance().createNode(keyValue.getValue(), getAction(), null, this);
+                Node key = NodeFactory.getInstance().createNode(keyValue.getKey(), Action.UPDATE, null, this);
+                Node value = NodeFactory.getInstance().createNode(keyValue.getValue(), Action.UPDATE, null, this);
 
                 return new MapEntry(key,value);
             }).collect(Collectors.toSet());
@@ -73,8 +65,8 @@ public class Map extends ContainerNode {
             // not a trackable map
             this.contents = (java.util.Collection<Node>) map.keySet().stream().map(o -> {
                 Entry keyValue = (Entry)o;
-                Node key = NodeFactory.getInstance().createNode(keyValue.getKey(), getAction(), null, this);
-                Node value = NodeFactory.getInstance().createNode(keyValue.getValue(), getAction(), null, this);
+                Node key = NodeFactory.getInstance().createNode(keyValue.getKey(), Action.UPDATE, null, this);
+                Node value = NodeFactory.getInstance().createNode(keyValue.getValue(), Action.UPDATE, null, this);
 
                 return new MapEntry(key,value);
             }).collect(Collectors.toSet());

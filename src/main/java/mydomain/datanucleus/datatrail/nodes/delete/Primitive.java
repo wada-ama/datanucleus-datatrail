@@ -2,21 +2,11 @@ package mydomain.datanucleus.datatrail.nodes.delete;
 
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeType;
+import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
+@NodeDefinition(type=NodeType.PRIMITIVE, action = Node.Action.DELETE)
 public class Primitive extends Node {
-
-    @Override
-    public NodeType getType() {
-        return NodeType.PRIMITIVE;
-    }
-
-    @Override
-    public Action getAction() {
-        return Action.DELETE;
-    }
-
-
 
     /**
      * Default constructor.  Should only be called via the NodeFactory

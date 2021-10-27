@@ -4,18 +4,11 @@ import mydomain.datanucleus.datatrail.ContainerNode;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
+import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
+@NodeDefinition(type=NodeType.COLLECTION, action = Node.Action.CREATE)
 public class Collection extends ContainerNode {
-    @Override
-    public NodeType getType() {
-        return NodeType.COLLECTION;
-    }
-
-    @Override
-    public Action getAction() {
-        return Action.CREATE;
-    }
 
     public Collection(Object value, AbstractMemberMetaData mmd, Node parent) {
         super(mmd, parent);
@@ -35,6 +28,6 @@ public class Collection extends ContainerNode {
     private void addElements( java.util.Collection elements ){
         // all new values, so use the raw collection values
         for(Object element : elements )
-            this.added.add(NodeFactory.getInstance().createNode(element, getAction(), null, this));
+            this.added.add(NodeFactory.getInstance().createNode(element, Action.CREATE, null, this));
     }
 }

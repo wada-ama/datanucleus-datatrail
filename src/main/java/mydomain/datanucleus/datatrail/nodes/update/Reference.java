@@ -3,21 +3,12 @@ package mydomain.datanucleus.datatrail.nodes.update;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.ReferenceNode;
+import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
+@NodeDefinition(type=NodeType.REF, action = Node.Action.UPDATE)
 public class Reference extends ReferenceNode {
-
-    @Override
-    public NodeType getType() {
-        return NodeType.REF;
-    }
-
-    @Override
-    public Action getAction() {
-        return Action.UPDATE;
-    }
-
 
     /**
      * Default constructor.  Should only be called via the NodeFactory

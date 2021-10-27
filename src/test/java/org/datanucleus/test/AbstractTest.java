@@ -9,6 +9,7 @@ import h2.H2Server;
 import mydomain.audit.AuditListener;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeType;
+import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import mydomain.model.ITrailDesc;
 import org.datanucleus.api.jdo.JDOTransaction;
 import org.datanucleus.enhancement.Persistable;
@@ -251,10 +252,8 @@ abstract public class AbstractTest {
 
     protected Optional<Node> filterEntity(Collection<Node> collection, Class<?> entityClass, Node.Action action){
         return collection.stream()
-                        .filter(node ->
-                                node.getType() == NodeType.ENTITY
+                        .filter(node -> node.getType() == NodeType.ENTITY
                                 && node.getClassName().equals(entityClass.getCanonicalName())
-                                && node.getAction() == action
-                        ).findFirst();
+                                && node.getClass().getAnnotation(NodeDefinition.class).action() == action).findFirst();
     }
 }

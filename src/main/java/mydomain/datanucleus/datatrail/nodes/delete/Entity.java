@@ -7,6 +7,7 @@ import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.ReferenceNode;
+import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.api.jdo.NucleusJDOHelper;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.AbstractMemberMetaData;
@@ -20,17 +21,8 @@ import java.util.Set;
 /**
  * Definition of an Entity that is being Created
  */
+@NodeDefinition(type=NodeType.ENTITY, action = Node.Action.DELETE)
 public class Entity extends ReferenceNode {
-
-    @Override
-    public NodeType getType() {
-        return NodeType.ENTITY;
-    }
-
-    @Override
-    public Action getAction() {
-        return Action.DELETE;
-    }
 
 
     private Set<Node> fields = new HashSet<Node>();
@@ -65,7 +57,7 @@ public class Entity extends ReferenceNode {
             Object field = op.provideSavedField(position);
             AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
             if( mmd.isFieldToBePersisted()){
-                fields.add(NodeFactory.getInstance().createNode( field, getAction(), mmd, this));
+                fields.add(NodeFactory.getInstance().createNode( field, Action.DELETE, mmd, this));
             }
         }
     }

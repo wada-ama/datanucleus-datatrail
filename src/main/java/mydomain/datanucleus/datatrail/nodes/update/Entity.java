@@ -7,6 +7,7 @@ import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.ReferenceNode;
+import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
@@ -19,6 +20,7 @@ import java.util.Set;
 /**
  * Definition of an Entity that is being Created
  */
+@NodeDefinition(type=NodeType.ENTITY, action = Node.Action.UPDATE)
 public class Entity extends ReferenceNode {
 
     protected Instant dateModified;
@@ -36,16 +38,6 @@ public class Entity extends ReferenceNode {
         super(value, md, null);
         setFields(value);
         dateModified = Instant.now();
-    }
-
-    @Override
-    public NodeType getType() {
-        return NodeType.ENTITY;
-    }
-
-    @Override
-    public Action getAction() {
-        return Action.UPDATE;
     }
 
     @JsonProperty
@@ -68,8 +60,8 @@ public class Entity extends ReferenceNode {
             AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
 
             if (mmd.isFieldToBePersisted()) {
-                Node current = NodeFactory.getInstance().createNode(field, getAction(), mmd, this);
-                current.setPrev(NodeFactory.getInstance().createNode(prevField, getAction(), mmd, this));
+                Node current = NodeFactory.getInstance().createNode(field, Action.UPDATE, mmd, this);
+                current.setPrev(NodeFactory.getInstance().createNode(prevField, Action.UPDATE, mmd, this));
                 fields.add(current);
             }
         }

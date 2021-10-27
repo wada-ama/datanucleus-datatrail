@@ -23,16 +23,6 @@ public class MapEntry extends Node {
         return key;
     }
 
-    @Override
-    public NodeType getType() {
-        return null;
-    }
-
-    @Override
-    public Action getAction() {
-        return null;
-    }
-
     @JsonProperty("value")
     @Override
     public Node getValue() {
