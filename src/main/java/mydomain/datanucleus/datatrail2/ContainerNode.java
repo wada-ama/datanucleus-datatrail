@@ -10,6 +10,8 @@ abstract public class ContainerNode extends Node {
 
     protected Collection<Node> added = new ArrayList<>();
     protected Collection<Node> removed = new ArrayList<>();
+    protected Collection<Node> changed = new ArrayList<>();
+    protected Collection<Node> contents = new ArrayList<>();
 
     protected ContainerNode(AbstractMemberMetaData mmd, Node parent) {
         super(mmd, parent);
@@ -29,6 +31,14 @@ abstract public class ContainerNode extends Node {
         return removed;
     }
 
+    public Collection<Node> getChanged() {
+        return changed;
+    }
+
+    public Collection<Node> getContents() {
+        return contents;
+    }
+
     @JsonIgnore
     @Override
     public String getClassName() {
@@ -40,5 +50,7 @@ abstract public class ContainerNode extends Node {
         super.updateFields();
         added.stream().forEach( node -> node.updateFields());
         removed.stream().forEach( node -> node.updateFields());
+        changed.stream().forEach( node -> node.updateFields());
+        contents.stream().forEach( node -> node.updateFields());
     }
 }
