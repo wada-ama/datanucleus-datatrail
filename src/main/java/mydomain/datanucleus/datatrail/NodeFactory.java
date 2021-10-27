@@ -106,9 +106,9 @@ public class NodeFactory {
      */
     public Node createNode(Object value, Node.Action action, MetaData md, Node parent){
         // get the map by action
-        Map<NodeType, Class<? extends Node>> nodes = nodeTypes.get(action);
+        Map<NodeType, Class<? extends Node>> nodeClass = nodeTypes.get(action);
         NodeType type = getType(value, md, parent);
-        Class clazz = nodes.get(type);
+        Class clazz = nodeClass.get(type);
         if( clazz == null ){
             throw new IllegalArgumentException("No such type/action supported: " + type + " / " + action);
         }
