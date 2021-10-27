@@ -83,7 +83,6 @@ public class ReferenceTest extends AbstractTest {
     }
 
 
-    @Disabled
     @Test
     public void updateReference() throws IOException {
         executeTx(pm -> {
@@ -107,18 +106,9 @@ public class ReferenceTest extends AbstractTest {
 
         Collection<Node> entities = audit.getModifications();
 
-        final IsPojo<Node> countryCode = getEntity(Node.Action.DELETE, CountryCode.class, "1")
-                .withProperty("fields", hasItems(
-                        getField(NodeType.PRIMITIVE, String.class, "country", "Canada", null),
-                        getField(NodeType.PRIMITIVE, Integer.class, "code", "1", null)
-                ));
-
-        assertThat(entities, hasItem(countryCode));
-
-        final IsPojo<Node> telephone = getEntity(Node.Action.DELETE, Telephone.class, "1")
+        final IsPojo<Node> telephone = getEntity(Node.Action.UPDATE, Telephone.class, "1")
                 .withProperty( "fields", hasItems(
-                        getField(NodeType.PRIMITIVE, String.class, "number", "514-123-1234", null),
-                        getField(NodeType.REF, CountryCode.class, "countryCode", "1", null)
+                        getField(NodeType.REF, CountryCode.class, "countryCode", "2", "1")
                 ));
 
         assertThat(entities, containsInAnyOrder(telephone));
