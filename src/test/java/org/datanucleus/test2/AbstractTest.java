@@ -159,7 +159,8 @@ abstract public class AbstractTest {
 
     }
 
-    protected IsPojo getMapElement(NodeType keyType, Class keyClazz, String keyValue, NodeType valueType, Class valueClazz, String valueValue) {
+
+    protected IsPojo getMapElement(NodeType keyType, Class keyClazz, String keyValue, NodeType valueType, Class valueClazz, String valueValue, String prevValue) {
 
         IsPojo<Node> key = pojo(Node.class)
                 .withProperty("value", is(keyValue))
@@ -174,7 +175,7 @@ abstract public class AbstractTest {
         IsPojo<Node> value = pojo(Node.class)
                 .withProperty("value", is(valueValue))
                 .withProperty("type", hasToString(valueType.toString()))
-                .withProperty("prev", nullValue())
+                .withProperty("prev", prevValue == null ? nullValue() : is(prevValue))
                 .withProperty("className", is(valueClazz.getName()));
         ;
         if( ITrailDesc.class.isAssignableFrom(valueClazz)) {

@@ -5,5 +5,11 @@
                    container-handler="org.datanucleus.store.types.containers.ArrayListHandler" priority="10"/>
         <java-type name="java.util.Arrays$ArrayList" dfg="false" wrapper-type="org.datanucleus.store.types.wrappers.List" wrapper-type-backed="mydomain.datanucleus.types.wrappers.backed.List"
                    container-handler="org.datanucleus.store.types.containers.ArrayListHandler" priority="10"/>
+
+
+        <java-type name="java.util.Map" dfg="false" wrapper-type="org.datanucleus.store.types.wrappers.Map" wrapper-type-backed="mydomain.datanucleus.types.wrappers.backed.Map"
+                   container-handler="org.datanucleus.store.types.containers.HashMapHandler" priority="10"/>
+        <java-type name="java.util.HashMap" dfg="false" wrapper-type="org.datanucleus.store.types.wrappers.Map" wrapper-type-backed="mydomain.datanucleus.types.wrappers.backed.Map"
+                   container-handler="org.datanucleus.store.types.containers.HashMapHandler" priority="10"/>
     </extension>
 </plugin>
