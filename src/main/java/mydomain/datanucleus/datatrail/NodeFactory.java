@@ -1,10 +1,8 @@
 package mydomain.datanucleus.datatrail;
 
-import mydomain.datanucleus.datatrail.nodes.create.Array;
-import mydomain.datanucleus.datatrail.nodes.create.Collection;
-import mydomain.datanucleus.datatrail.nodes.create.Entity;
-import mydomain.datanucleus.datatrail.nodes.create.Primitive;
-import mydomain.datanucleus.datatrail.nodes.create.Reference;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ScanResult;
+import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
@@ -38,36 +36,34 @@ public class NodeFactory {
         registerNodes();
     }
 
-
-    // TODO move to a self-registering system where an individual node type will automatically be detected by the factory
-    // TODO reduce duplicate classes
-    // ex: service-pattern, or class scanning
     /**
-     * Helper function to register all types of nodes that are accessible to this factory
+     * Automatically scans and registers any {@link NodeDefinition} classes found in the same package or below from {@link Node}
      */
     private void registerNodes(){
-        nodeTypes.get(Node.Action.CREATE).put(NodeType.ENTITY, Entity.class);
-        nodeTypes.get(Node.Action.CREATE).put(NodeType.PRIMITIVE, Primitive.class);
-        nodeTypes.get(Node.Action.CREATE).put(NodeType.REF, Reference.class);
-        nodeTypes.get(Node.Action.CREATE).put(NodeType.COLLECTION, Collection.class);
-        nodeTypes.get(Node.Action.CREATE).put(NodeType.ARRAY, Array.class);
-        nodeTypes.get(Node.Action.CREATE).put(NodeType.MAP, mydomain.datanucleus.datatrail.nodes.create.Map.class);
+        try (ScanResult scanResult = new ClassGraph()
+                .enableAnnotationInfo()
+                .acceptPackages(Node.class.getPackage().getName())
+                .scan()){
 
-        nodeTypes.get(Node.Action.DELETE).put(NodeType.ENTITY, mydomain.datanucleus.datatrail.nodes.delete.Entity.class);
-        nodeTypes.get(Node.Action.DELETE).put(NodeType.PRIMITIVE, mydomain.datanucleus.datatrail.nodes.delete.Primitive.class);
-        nodeTypes.get(Node.Action.DELETE).put(NodeType.REF, mydomain.datanucleus.datatrail.nodes.delete.Reference.class);
-        nodeTypes.get(Node.Action.DELETE).put(NodeType.COLLECTION, mydomain.datanucleus.datatrail.nodes.delete.Collection.class);
-        nodeTypes.get(Node.Action.DELETE).put(NodeType.ARRAY, mydomain.datanucleus.datatrail.nodes.delete.Array.class);
-        nodeTypes.get(Node.Action.DELETE).put(NodeType.MAP, mydomain.datanucleus.datatrail.nodes.delete.Map.class);
-
-
-        nodeTypes.get(Node.Action.UPDATE).put(NodeType.ENTITY, mydomain.datanucleus.datatrail.nodes.update.Entity.class);
-        nodeTypes.get(Node.Action.UPDATE).put(NodeType.PRIMITIVE, mydomain.datanucleus.datatrail.nodes.update.Primitive.class);
-        nodeTypes.get(Node.Action.UPDATE).put(NodeType.REF, mydomain.datanucleus.datatrail.nodes.update.Reference.class);
-        nodeTypes.get(Node.Action.UPDATE).put(NodeType.COLLECTION, mydomain.datanucleus.datatrail.nodes.update.Collection.class);
-        nodeTypes.get(Node.Action.UPDATE).put(NodeType.ARRAY, mydomain.datanucleus.datatrail.nodes.update.Array.class);
-        nodeTypes.get(Node.Action.UPDATE).put(NodeType.MAP, mydomain.datanucleus.datatrail.nodes.update.Map.class);
+            scanResult.getClassesWithAnnotation(NodeDefinition.class).stream().forEach(classInfo -> {
+                Class clazz = classInfo.loadClass();
+                NodeDefinition nodeDefn = (NodeDefinition)clazz.getAnnotation(NodeDefinition.class);
+                registerNodeType(nodeDefn.type(), nodeDefn.action(), clazz);
+            });
+        }
     }
+
+
+    /**
+     * Registers an implementation of a {@link NodeType}.  The implementation must be a subclass {@link Node}
+     * @param type the type of node represented
+     * @param action the action occuring on the
+     * @param clazz the implementation class
+     */
+    public void registerNodeType( NodeType type,  Node.Action action, Class<? extends Node> clazz){
+        nodeTypes.get(action).put(type, clazz);
+    }
+
 
     /**
      * Retrieve the singleton

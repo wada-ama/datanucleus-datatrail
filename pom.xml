@@ -90,6 +90,11 @@
             <version>1.7.30</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.github.classgraph</groupId>
+            <artifactId>classgraph</artifactId>
+            <version>4.8.128</version>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
