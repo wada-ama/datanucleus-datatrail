@@ -32,7 +32,20 @@ public class AuditListener implements CreateLifecycleListener,
     // get a static slf4j logger for the class
     protected static final Logger logger = getLogger(AuditListener.class);
 
-    Map<Object, Node> modifications = new HashMap<Object, Node>();
+
+    // internal non-null valued map to store entity modifications throughout the transaction
+    private Map<Object, Node> modifications = new HashMap<Object, Node>(){
+        // Do not store null values
+        @Override
+        public Node put(Object key, Node value) {
+            // do not store null values
+            if( value == null ){
+                return value;
+            }
+
+            return super.put(key, value);
+        }
+    };
 
     public AuditListener() {
     }

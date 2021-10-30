@@ -2,6 +2,7 @@ package mydomain.datanucleus.datatrail;
 
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
+import mydomain.audit.DataTrail;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.AbstractMemberMetaData;
@@ -81,11 +82,21 @@ public class NodeFactory {
      * @return
      */
     public Node createRootNode(Object value, Node.Action action){
+        // make sure it is a persistable object
         if( !( value instanceof Persistable) ) {
             return null;
         }
 
+        // check if the object should be excluded from the data trail
+        if( value.getClass().getAnnotation(DataTrail.class) != null && value.getClass().getAnnotation(DataTrail.class).excludeFromDataTrail()){
+            // this element should be excluded, so skip it
+            logger.debug("{} is marked as excluded from the datatrail", value.getClass().getCanonicalName());
+            return null;
+        }
+
+
         MetaData md = ((ObjectProvider)((Persistable)value).dnGetStateManager()).getClassMetaData();
+
 
         return createNode(value, action, md, null);
     }
