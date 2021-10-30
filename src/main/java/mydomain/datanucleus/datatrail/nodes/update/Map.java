@@ -63,7 +63,7 @@ public class Map extends ContainerNode {
         } else {
 
             // not a trackable map
-            this.contents = (java.util.Collection<Node>) map.keySet().stream().map(o -> {
+            this.contents = (java.util.Collection<Node>) map.entrySet().stream().map(o -> {
                 Entry keyValue = (Entry)o;
                 Node key = NodeFactory.getInstance().createNode(keyValue.getKey(), Action.UPDATE, null, this);
                 Node value = NodeFactory.getInstance().createNode(keyValue.getValue(), Action.UPDATE, null, this);
