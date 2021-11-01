@@ -66,7 +66,7 @@ public class NodeFactory {
 
         NodeDefinition nodeDefn = (NodeDefinition)clazz.getAnnotation(NodeDefinition.class);
         NodePriority nodePriority = (NodePriority) clazz.getAnnotation(NodePriority.class);
-        int priority = nodePriority == null ? NodePriority.LOWEST_PRECEDENCE : nodePriority.priority();
+        int priority = nodePriority == null ? 0 : nodePriority.priority();
 
         registerNode(nodeDefn.type(), nodeDefn.action(), clazz, priority);
     }

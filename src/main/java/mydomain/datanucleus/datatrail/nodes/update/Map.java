@@ -9,6 +9,7 @@ import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import mydomain.datanucleus.types.wrappers.tracker.ChangeTrackable;
 import mydomain.datanucleus.types.wrappers.tracker.ChangeTracker;
 import org.datanucleus.metadata.AbstractMemberMetaData;
+import org.datanucleus.metadata.MetaData;
 
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -73,4 +74,11 @@ public class Map extends ContainerNode {
         }
 
     }
+
+
+    @Override
+    public boolean canProcess(Object value, MetaData md) {
+        return md instanceof AbstractMemberMetaData && ((AbstractMemberMetaData)md).hasMap();
+    }
+
 }

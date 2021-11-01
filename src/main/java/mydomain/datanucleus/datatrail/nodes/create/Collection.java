@@ -6,6 +6,7 @@ import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
+import org.datanucleus.metadata.MetaData;
 
 @NodeDefinition(type=NodeType.COLLECTION, action = Node.Action.CREATE)
 public class Collection extends ContainerNode {
@@ -30,4 +31,11 @@ public class Collection extends ContainerNode {
         for(Object element : elements )
             this.added.add(NodeFactory.getInstance().createNode(element, Action.CREATE, null, this));
     }
+
+
+    @Override
+    public boolean canProcess(Object value, MetaData md) {
+        return md instanceof AbstractMemberMetaData && ((AbstractMemberMetaData)md).hasCollection();
+    }
+
 }

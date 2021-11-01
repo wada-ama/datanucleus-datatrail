@@ -133,4 +133,14 @@ abstract public class Node {
         // by default, do nothing
     }
 
+
+    /**
+     * Identifies if the node knows how to handle this particular value.  If it returns true, than the node's {@link mydomain.datanucleus.datatrail.nodes.NodePriority}
+     * is used to determine if this will be type of node created for the value
+     * @param value
+     * @param md
+     * @return
+     */
+    abstract public boolean canProcess(Object value, MetaData md);
+
 }

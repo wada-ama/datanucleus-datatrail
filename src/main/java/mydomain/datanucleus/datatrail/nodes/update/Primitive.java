@@ -3,9 +3,12 @@ package mydomain.datanucleus.datatrail.nodes.update;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
+import mydomain.datanucleus.datatrail.nodes.NodePriority;
 import org.datanucleus.metadata.AbstractMemberMetaData;
+import org.datanucleus.metadata.MetaData;
 
 @NodeDefinition(type=NodeType.PRIMITIVE, action = Node.Action.UPDATE)
+@NodePriority(priority = NodePriority.LOWEST_PRECEDENCE)
 public class Primitive extends Node {
 
 
@@ -30,5 +33,11 @@ public class Primitive extends Node {
         }
 
         this.prev = this.getClass().cast(value).getValue();
+    }
+
+    @Override
+    public boolean canProcess(Object value, MetaData md) {
+        // can process any value as a primitive by using the value.toString()
+        return true;
     }
 }

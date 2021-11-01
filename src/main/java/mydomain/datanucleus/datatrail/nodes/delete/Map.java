@@ -7,6 +7,7 @@ import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.MapEntry;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
+import org.datanucleus.metadata.MetaData;
 
 import java.util.Set;
 
@@ -36,5 +37,10 @@ public class Map extends ContainerNode {
 
             this.removed.add(new MapEntry(key, value));
         }
+    }
+
+    @Override
+    public boolean canProcess(Object value, MetaData md) {
+        return md instanceof AbstractMemberMetaData && ((AbstractMemberMetaData)md).hasMap();
     }
 }

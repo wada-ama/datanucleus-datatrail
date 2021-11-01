@@ -37,4 +37,9 @@ public class Map extends ContainerNode {
             this.added.add(new MapEntry(key, value));
         }
     }
+
+    @Override
+    public boolean canProcess(Object value, MetaData md) {
+        return md instanceof AbstractMemberMetaData && ((AbstractMemberMetaData)md).hasMap();
+    }
 }

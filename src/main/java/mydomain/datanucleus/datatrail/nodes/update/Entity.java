@@ -10,7 +10,9 @@ import mydomain.datanucleus.datatrail.ReferenceNode;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import mydomain.datanucleus.datatrail.nodes.Updatable;
 import org.datanucleus.enhancement.Persistable;
+import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.AbstractMemberMetaData;
+import org.datanucleus.metadata.ClassMetaData;
 import org.datanucleus.metadata.MetaData;
 
 import javax.jdo.PersistenceManager;
@@ -82,5 +84,11 @@ public class Entity extends ReferenceNode {
     public void updateFields() {
         super.updateFields();
         fields.stream().filter(node -> node instanceof Updatable).forEach(node -> ((Updatable)node).updateFields());
+    }
+
+    @Override
+    public boolean canProcess(Object value, MetaData md) {
+        // can process any Persitable object that is passed as a class
+        return value instanceof Persistable && md instanceof AbstractClassMetaData;
     }
 }

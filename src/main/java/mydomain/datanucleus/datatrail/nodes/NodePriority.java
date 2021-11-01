@@ -18,5 +18,5 @@ public @interface NodePriority {
      * The priority/precedence level in which this node will be selected in case multiple nodes implementations are detected
      * @return
      */
-    int priority() default LOWEST_PRECEDENCE;
+    int priority() default 0;
 }
