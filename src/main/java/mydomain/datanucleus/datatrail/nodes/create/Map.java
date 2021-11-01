@@ -2,18 +2,38 @@ package mydomain.datanucleus.datatrail.nodes.create;
 
 import mydomain.datanucleus.datatrail.ContainerNode;
 import mydomain.datanucleus.datatrail.Node;
-import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.MapEntry;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
+import mydomain.datanucleus.datatrail.nodes.NodeFactory;
+import mydomain.datanucleus.datatrail.nodes.NodePriority;
 import org.datanucleus.metadata.AbstractMemberMetaData;
+import org.datanucleus.metadata.MetaData;
 
+import java.util.Optional;
 import java.util.Set;
 
-@NodeDefinition(type=NodeType.MAP, action = Node.Action.CREATE)
 public class Map extends ContainerNode {
 
-    public Map(java.util.Map value, AbstractMemberMetaData mmd, Node parent) {
+    @NodeDefinition(type=NodeType.MAP, action = Node.Action.CREATE)
+    static public class MapFactory implements NodeFactory {
+        @Override
+        public boolean supports(Object value, MetaData md) {
+            // can process any value as a primitive by using the value.toString()
+            return md instanceof AbstractMemberMetaData && ((AbstractMemberMetaData)md).hasMap();
+        }
+
+        @Override
+        public Optional<Node> create(Override value, MetaData md, Node parent) {
+            if( !supports( value, md ))
+                return Optional.empty();
+
+            return Optional.of(new Map(value, (AbstractMemberMetaData) md, parent));
+        }
+    }
+
+
+    protected Map(java.util.Map value, AbstractMemberMetaData mmd, Node parent) {
         super(mmd, parent);
 
         // value might be null, in which case there is nothing left to do

@@ -8,10 +8,29 @@ import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
 
-@NodeDefinition(type=NodeType.COLLECTION, action = Node.Action.CREATE)
+import java.util.Optional;
+
 public class Collection extends ContainerNode {
 
-    public Collection(Object value, AbstractMemberMetaData mmd, Node parent) {
+    @NodeDefinition(type=NodeType.COLLECTION, action = Node.Action.CREATE)
+    static public class MapFactory implements mydomain.datanucleus.datatrail.nodes.NodeFactory {
+        @Override
+        public boolean supports(Object value, MetaData md) {
+            // can process any field that is identified as a collection
+            return md instanceof AbstractMemberMetaData && ((AbstractMemberMetaData)md).hasCollection();
+
+        }
+
+        @Override
+        public Optional<Node> create(Object value, MetaData md, Node parent) {
+            if( !supports( value, md ))
+                return Optional.empty();
+
+            return Optional.of(new Collection(value, (AbstractMemberMetaData) md, parent));
+        }
+    }
+
+    protected Collection(Object value, AbstractMemberMetaData mmd, Node parent) {
         super(mmd, parent);
 
         // value might be null, in which case there is nothing left to do

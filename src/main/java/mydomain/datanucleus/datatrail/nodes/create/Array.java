@@ -9,15 +9,35 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
 import org.slf4j.Logger;
 
+import java.util.Optional;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
-@NodeDefinition(type=NodeType.ARRAY, action = Node.Action.CREATE)
 public class Array extends ContainerNode {
-    
+
+    @NodeDefinition(type=NodeType.ARRAY, action = Node.Action.CREATE)
+    static public class MapFactory implements mydomain.datanucleus.datatrail.nodes.NodeFactory {
+        @Override
+        public boolean supports(Object value, MetaData md) {
+            // can process any field that is identified as an array
+            return md instanceof AbstractMemberMetaData && ((AbstractMemberMetaData)md).hasArray();
+
+        }
+
+        @Override
+        public Optional<Node> create(Object value, MetaData md, Node parent) {
+            if( !supports( value, md ))
+                return Optional.empty();
+
+            return Optional.of(new Array(value, (AbstractMemberMetaData) md, parent));
+        }
+    }
+
+
     // get a static slf4j logger for the class
     protected static final Logger logger = getLogger(Array.class);
 
-    public Array(Object value, AbstractMemberMetaData mmd, Node parent) {
+    protected Array(Object value, AbstractMemberMetaData mmd, Node parent) {
         super(mmd, parent);
 
         logger.warn("Unable to track changes to objects with arrays. {}.{}", mmd.getClassName(), mmd.getName());
