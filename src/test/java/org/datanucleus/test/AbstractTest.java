@@ -128,7 +128,9 @@ abstract public class AbstractTest {
                 .withProperty("action", hasToString(action.toString()))
                 .withProperty("version", any(String.class))
                 .withProperty("dateModified", any(Instant.class))
-                .withProperty("username", anything());
+                .withProperty("username", anything())
+                .withProperty("transactionId", anything())
+                ;
 
         if( ITrailDesc.class.isAssignableFrom(clazz)) {
             entity = entity.withProperty("description", anything());
