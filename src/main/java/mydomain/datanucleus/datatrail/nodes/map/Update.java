@@ -1,4 +1,4 @@
-package mydomain.datanucleus.datatrail.nodes.update;
+package mydomain.datanucleus.datatrail.nodes.map;
 
 import mydomain.datanucleus.datatrail.ContainerNode;
 import mydomain.datanucleus.datatrail.Node;
@@ -15,9 +15,9 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 @NodeDefinition(type=NodeType.MAP, action = Node.Action.UPDATE)
-public class Map extends ContainerNode {
+public class Update extends ContainerNode {
 
-    public Map(java.util.Map value, AbstractMemberMetaData mmd, Node parent) {
+    public Update(java.util.Map value, AbstractMemberMetaData mmd, Node parent) {
         super(mmd, parent);
 
         // value might be null, in which case there is nothing left to do

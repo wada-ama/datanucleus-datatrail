@@ -1,4 +1,4 @@
-package mydomain.datanucleus.datatrail.nodes.delete;
+package mydomain.datanucleus.datatrail.nodes.array;
 
 import mydomain.datanucleus.datatrail.ContainerNode;
 import mydomain.datanucleus.datatrail.Node;
@@ -9,15 +9,18 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
 import org.slf4j.Logger;
 
+import java.util.Optional;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
-@NodeDefinition(type=NodeType.ARRAY, action = Node.Action.DELETE)
-public class Array extends ContainerNode {
+@NodeDefinition(type=NodeType.ARRAY, action = Node.Action.CREATE)
+public class Create extends ContainerNode {
+
 
     // get a static slf4j logger for the class
-    protected static final Logger logger = getLogger(Array.class);
+    protected static final Logger logger = getLogger(Create.class);
 
-    public Array(Object value, AbstractMemberMetaData mmd, Node parent) {
+    protected Create(Object value, AbstractMemberMetaData mmd, Node parent) {
         super(mmd, parent);
 
         logger.warn("Unable to track changes to objects with arrays. {}.{}", mmd.getClassName(), mmd.getName());
@@ -37,7 +40,7 @@ public class Array extends ContainerNode {
     private void addElements( Object[] elements ){
         // all new values, so use the raw collection values
         for(Object element : elements )
-            this.contents.add(NodeFactory.getInstance().createNode(element, Action.DELETE, null, this));
+            this.contents.add(NodeFactory.getInstance().createNode(element, Action.CREATE, null, this));
     }
 
     @Override

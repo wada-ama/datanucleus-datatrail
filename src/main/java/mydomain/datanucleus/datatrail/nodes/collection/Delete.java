@@ -1,4 +1,4 @@
-package mydomain.datanucleus.datatrail.nodes.delete;
+package mydomain.datanucleus.datatrail.nodes.collection;
 
 import mydomain.datanucleus.datatrail.ContainerNode;
 import mydomain.datanucleus.datatrail.Node;
@@ -9,9 +9,9 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
 
 @NodeDefinition(type=NodeType.COLLECTION, action = Node.Action.DELETE)
-public class Collection extends ContainerNode {
+public class Delete extends ContainerNode {
 
-    public Collection(Object value, AbstractMemberMetaData mmd, Node parent) {
+    public Delete(Object value, AbstractMemberMetaData mmd, Node parent) {
         super(mmd, parent);
 
         // value might be null, in which case there is nothing left to do

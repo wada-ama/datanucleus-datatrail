@@ -1,4 +1,4 @@
-package mydomain.datanucleus.datatrail.nodes.delete;
+package mydomain.datanucleus.datatrail.nodes.primitive;
 
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeType;
@@ -9,7 +9,7 @@ import org.datanucleus.metadata.MetaData;
 
 @NodeDefinition(type=NodeType.PRIMITIVE, action = Node.Action.DELETE)
 @NodePriority(priority = NodePriority.LOWEST_PRECEDENCE)
-public class Primitive extends Node {
+public class Delete extends Node {
 
     /**
      * Default constructor.  Should only be called via the NodeFactory
@@ -17,7 +17,7 @@ public class Primitive extends Node {
      * @param mmd
      * @param parent
      */
-    public Primitive(Object value, AbstractMemberMetaData mmd, Node parent){
+    public Delete(Object value, AbstractMemberMetaData mmd, Node parent){
         // an entity is the root node in the tree
         super(mmd, parent);
         this.value = value == null ? null : value.toString();

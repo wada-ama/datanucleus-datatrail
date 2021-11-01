@@ -1,6 +1,7 @@
 package mydomain.datanucleus.datatrail;
 
 import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import mydomain.audit.DataTrail;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
@@ -12,9 +13,14 @@ import org.datanucleus.state.ObjectProvider;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.datanucleus.util.ClassUtils.getConstructorWithArguments;
 
@@ -28,61 +34,78 @@ public class NodeFactory {
 
     static final private NodeFactory instance = new NodeFactory();
 
-    private Map<Node.Action,Map<NodeType, Class<? extends Node>>> nodeTypes = new HashMap<>();
+    private List<mydomain.datanucleus.datatrail.nodes.NodeFactory> factories = new ArrayList<>();
 
     private NodeFactory() {
-        // initialize the map
-        Arrays.stream(Node.Action.values()).forEach(action -> nodeTypes.put(action, new HashMap<>()));
-
         // scan through all availabe nodes and add them to the list
-        registerNodes();
+        registerNodeFactories();
     }
 
-    /**
-     * Automatically scans and registers any {@link NodeDefinition} classes found in the same package or below from {@link Node}
-     */
-    private void registerNodes(){
+
+    private void registerNodeFactories(){
         try (ScanResult scanResult = new ClassGraph()
                 .enableAnnotationInfo()
                 .acceptPackages(Node.class.getPackage().getName())
-                .scan()){
+                .scan()) {
 
-            scanResult.getClassesWithAnnotation(NodeDefinition.class).stream().forEach(classInfo -> {
-                Class clazz = classInfo.loadClass();
-                registerNode(clazz);
-            });
+            scanResult.getClassesImplementing(mydomain.datanucleus.datatrail.nodes.NodeFactory.class).stream()
+                    .map(ClassInfo::loadClass)
+                    .forEach(clazz -> {
+                        try {
+                            factories.add((mydomain.datanucleus.datatrail.nodes.NodeFactory) clazz.newInstance());
+                        } catch (InstantiationException | IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
         }
     }
 
-    /**
-     * Registers an implementation of a {@link NodeType}.  The implementation must be a subclass {@link Node}
-     * @param clazz the implementation class
-     */
-    public void registerNode(Class<? extends Node> clazz){
-        if( clazz.getAnnotation(NodeDefinition.class) == null ){
-            logger.warn("Unable to register a node without metadata information provided by {}", NodeDefinition.class.getCanonicalName());
-            return;
-        }
-
-        NodeDefinition nodeDefn = (NodeDefinition)clazz.getAnnotation(NodeDefinition.class);
-        NodePriority nodePriority = (NodePriority) clazz.getAnnotation(NodePriority.class);
-        int priority = nodePriority == null ? 0 : nodePriority.priority();
-
-        registerNode(nodeDefn.type(), nodeDefn.action(), clazz, priority);
-    }
-
-
-    /**
-     * Registers an implementation of a {@link NodeType}.  The implementation must be a subclass {@link Node}
-     * @param type the type of node represented
-     * @param action the action occuring on the
-     * @param clazz the implementation class
-     */
-    public void registerNode(NodeType type, Node.Action action, Class<? extends Node> clazz, int priority){
-        nodeTypes.get(action).put(type, clazz);
-    }
-
-
+//
+//    /**
+//     * Automatically scans and registers any {@link NodeDefinition} classes found in the same package or below from {@link Node}
+//     */
+//    private void registerNodes(){
+//        try (ScanResult scanResult = new ClassGraph()
+//                .enableAnnotationInfo()
+//                .acceptPackages(Node.class.getPackage().getName())
+//                .scan()){
+//
+//            scanResult.getClassesWithAnnotation(NodeDefinition.class).stream().forEach(classInfo -> {
+//                Class clazz = classInfo.loadClass();
+//                registerNode(clazz);
+//            });
+//        }
+//    }
+//
+//    /**
+//     * Registers an implementation of a {@link NodeType}.  The implementation must be a subclass {@link Node}
+//     * @param clazz the implementation class
+//     */
+//    public void registerNode(Class<Node> clazz){
+//        if( clazz.getAnnotation(NodeDefinition.class) == null ){
+//            logger.warn("Unable to register a node without metadata information provided by {}", NodeDefinition.class.getCanonicalName());
+//            return;
+//        }
+//
+//        NodeDefinition nodeDefn = (NodeDefinition)clazz.getAnnotation(NodeDefinition.class);
+//        NodePriority nodePriority = (NodePriority) clazz.getAnnotation(NodePriority.class);
+//        int priority = nodePriority == null ? 0 : nodePriority.priority();
+//
+//        registerNode(nodeDefn.type(), nodeDefn.action(), clazz, priority);
+//    }
+//
+//
+//    /**
+//     * Registers an implementation of a {@link NodeType}.  The implementation must be a subclass {@link Node}
+//     * @param type the type of node represented
+//     * @param action the action occuring on the
+//     * @param clazz the implementation class
+//     */
+//    public void registerNode(NodeType type, Node.Action action, Class<Node> clazz, int priority){
+//        nodeTypes.get(action).put(type, clazz);
+//    }
+//
+//
     /**
      * Retrieve the singleton
      * @return
@@ -129,70 +152,86 @@ public class NodeFactory {
      * @throws RuntimeException if unable to create the node
      */
     public Node createNode(Object value, Node.Action action, MetaData md, Node parent){
-        // get the map by action
-        Map<NodeType, Class<? extends Node>> nodeClass = nodeTypes.get(action);
-        NodeType type = getType(value, md, parent);
-        Class clazz = nodeClass.get(type);
-        if( clazz == null ){
-            throw new IllegalArgumentException("No such type/action supported: " + type + " / " + action);
-        }
 
-        Constructor ctor = getConstructorWithArguments(clazz, new Class[]{ClassUtils.getClass(value), ClassUtils.getClass(md), ClassUtils.getClass(parent)});
-        try {
-            return (Node)ctor.newInstance(value, md, parent);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        // find the factory for this type of value
+        mydomain.datanucleus.datatrail.nodes.NodeFactory factory = factories.stream().filter(nodeFactory -> nodeFactory.supports(value, md))
+                .sorted((o1, o2) -> {
+                    return o1.priority() - o2.priority();
+                })
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No type found to support: " + value.getClass().getCanonicalName() + " / " + action));
+
+
+        // create a node for this value
+        return factory.create(action, value, md, parent)
+                .orElseThrow(() -> new IllegalArgumentException("Factory unable to support: " + value.getClass().getCanonicalName() + " / " + action));
     }
+//
+//
+//    private NodeType getType(Object value, MetaData md, Node parent) {
+////        nodeTypes.get(Node.Action.UPDATE).values().stream().filter( nodeType -> {
+////            ((Node)nodeType).canProcess(value, md);
+////        })
+//////        return null;
+////
+//        Arrays.asList(Array.class, Collection.class, Entity.class).stream().filter(aClass -> {
+//            Method supports = aClass.getMethod("supports", ...);
+//            if(supports == null ) then print "cannot use";
+//
+//            supports.invoke( aClass, value, md );
+////            aClass.supports(value, md)
+//        }).findFirst();
+//    }
 
+//
+//
+//    // TODO move this logic to the individual Node implementation to determine if they can handle it or not
+//    /**
+//     * Determine the type of node needed for the given object
+//     * @param value
+//     * @return
+//     */
+//    private NodeType getType(Object value, MetaData md, Node parent){
+//        if( parent == null ){
+//            // by definition, the root object MUST be an Entity type
+//            return NodeType.ENTITY;
+//        }
+//
+//        // anything other than the root must have field metadata
+//        AbstractMemberMetaData mmd = (AbstractMemberMetaData)md;
+//
+//        // if the object is a peristable object, it must be a REF
+//        if( value instanceof Persistable ){
+//            return NodeType.REF;
+//        }
+//
+//        // if the value is not a persistable object, need to find if it is a special container (ie: collection / Map)
+//        // mmd can be null if the node is part of a container object
+//
+//        // TODO need to figure out how to identify MMD for individual container fields
+//        if( mmd != null ) {
+//            if( Persistable.class.isAssignableFrom(mmd.getType())){
+//                return NodeType.REF;
+//            }
+//
+//            if (mmd.hasArray()) {
+//                logger.warn("Unable to track changes to objects with arrays. {}.{}", mmd.getClassName(), mmd.getName());
+//                return NodeType.ARRAY;
+//            }
+//
+//            if (mmd.hasCollection()) {
+//                return NodeType.COLLECTION;
+//            }
+//
+//            if (mmd.hasMap()) {
+//                return NodeType.MAP;
+//            }
+//        }
+//
+//        // default case, treat as primitive field
+//        return NodeType.PRIMITIVE;
+//    }
+//
 
-    // TODO move this logic to the individual Node implementation to determine if they can handle it or not
-    /**
-     * Determine the type of node needed for the given object
-     * @param value
-     * @return
-     */
-    private NodeType getType(Object value, MetaData md, Node parent){
-        if( parent == null ){
-            // by definition, the root object MUST be an Entity type
-            return NodeType.ENTITY;
-        }
-
-        // anything other than the root must have field metadata
-        AbstractMemberMetaData mmd = (AbstractMemberMetaData)md;
-
-        // if the object is a peristable object, it must be a REF
-        if( value instanceof Persistable ){
-            return NodeType.REF;
-        }
-
-        // if the value is not a persistable object, need to find if it is a special container (ie: collection / Map)
-        // mmd can be null if the node is part of a container object
-
-        // TODO need to figure out how to identify MMD for individual container fields
-        if( mmd != null ) {
-            if( Persistable.class.isAssignableFrom(mmd.getType())){
-                return NodeType.REF;
-            }
-
-            if (mmd.hasArray()) {
-                logger.warn("Unable to track changes to objects with arrays. {}.{}", mmd.getClassName(), mmd.getName());
-                return NodeType.ARRAY;
-            }
-
-            if (mmd.hasCollection()) {
-                return NodeType.COLLECTION;
-            }
-
-            if (mmd.hasMap()) {
-                return NodeType.MAP;
-            }
-        }
-
-        // default case, treat as primitive field
-        return NodeType.PRIMITIVE;
-    }
-
-    
 
 }

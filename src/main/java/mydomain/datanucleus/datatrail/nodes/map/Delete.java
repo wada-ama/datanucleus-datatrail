@@ -1,4 +1,4 @@
-package mydomain.datanucleus.datatrail.nodes.delete;
+package mydomain.datanucleus.datatrail.nodes.map;
 
 import mydomain.datanucleus.datatrail.ContainerNode;
 import mydomain.datanucleus.datatrail.Node;
@@ -12,9 +12,9 @@ import org.datanucleus.metadata.MetaData;
 import java.util.Set;
 
 @NodeDefinition(type=NodeType.MAP, action = Node.Action.DELETE)
-public class Map extends ContainerNode {
+public class Delete extends ContainerNode {
 
-    public Map(java.util.Map value, AbstractMemberMetaData mmd, Node parent) {
+    public Delete(java.util.Map value, AbstractMemberMetaData mmd, Node parent) {
         super(mmd, parent);
 
         // value might be null, in which case there is nothing left to do

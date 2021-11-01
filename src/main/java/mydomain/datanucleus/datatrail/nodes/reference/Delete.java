@@ -1,16 +1,15 @@
-package mydomain.datanucleus.datatrail.nodes.update;
+package mydomain.datanucleus.datatrail.nodes.reference;
 
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.ReferenceNode;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.enhancement.Persistable;
-import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
 
-@NodeDefinition(type=NodeType.REF, action = Node.Action.UPDATE)
-public class Reference extends ReferenceNode {
+@NodeDefinition(type=NodeType.REF, action = Node.Action.DELETE)
+public class Delete extends ReferenceNode {
 
     /**
      * Default constructor.  Should only be called via the NodeFactory
@@ -18,21 +17,11 @@ public class Reference extends ReferenceNode {
      * @param mmd
      * @param parent
      */
-    public Reference(Persistable value, AbstractMemberMetaData mmd, Node parent){
+    public Delete(Persistable value, AbstractMemberMetaData mmd, Node parent){
         super(value, mmd, parent);
 
         if( mmd != null )
             this.name = mmd.getName();
-    }
-
-    @Override
-    public void setPrev(Object value) {
-        // previous must be of same type
-        if( value != null && value.getClass() != this.getClass()){
-            throw new IllegalArgumentException( "Previous value is not of the same type: " + value.getClass().getName() + " !=" + this.getClass().getName());
-        }
-
-        this.prev = this.getClass().cast(value).getValue();
     }
 
     @Override

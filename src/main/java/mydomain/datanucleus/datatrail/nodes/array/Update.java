@@ -1,4 +1,4 @@
-package mydomain.datanucleus.datatrail.nodes.update;
+package mydomain.datanucleus.datatrail.nodes.array;
 
 import mydomain.datanucleus.datatrail.ContainerNode;
 import mydomain.datanucleus.datatrail.Node;
@@ -12,12 +12,12 @@ import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @NodeDefinition(type=NodeType.ARRAY, action = Node.Action.UPDATE)
-public class Array extends ContainerNode {
+public class Update extends ContainerNode {
 
     // get a static slf4j logger for the class
-    protected static final Logger logger = getLogger(Array.class);
+    protected static final Logger logger = getLogger(Update.class);
 
-    public Array(Object value, AbstractMemberMetaData mmd, Node parent) {
+    public Update(Object value, AbstractMemberMetaData mmd, Node parent) {
         super(mmd, parent);
 
         logger.warn("Unable to track changes to objects with arrays. {}.{}", mmd.getClassName(), mmd.getName());

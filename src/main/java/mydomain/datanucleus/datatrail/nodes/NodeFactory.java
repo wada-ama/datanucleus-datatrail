@@ -22,7 +22,7 @@ public interface NodeFactory {
      * @param parent the parent node for this node.  Null if this is supposed to be the root of the tree
      * @return Only produces a node if the factory can create it
      */
-    Optional<Node> create(Object value, MetaData md, Node parent);
+    Optional<Node> create(Node.Action action, Object value, MetaData md, Node parent);
 
     /**
      * Type of node implemented by the class

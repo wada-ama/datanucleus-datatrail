@@ -1,4 +1,4 @@
-package mydomain.datanucleus.datatrail.nodes.delete;
+package mydomain.datanucleus.datatrail.nodes.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,7 +24,7 @@ import java.util.Set;
  * Definition of an Entity that is being Created
  */
 @NodeDefinition(type=NodeType.ENTITY, action = Node.Action.DELETE)
-public class Entity extends ReferenceNode {
+public class Delete extends ReferenceNode {
 
 
     private Set<Node> fields = new HashSet<Node>();
@@ -37,7 +37,7 @@ public class Entity extends ReferenceNode {
      * @param md
      * @param parent
      */
-    public Entity(Persistable value, MetaData md, Node parent){
+    public Delete(Persistable value, MetaData md, Node parent){
         // an entity is the root node in the tree
         super(value, md,null);
         setFields(value);

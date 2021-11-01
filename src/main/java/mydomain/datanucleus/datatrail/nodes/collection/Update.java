@@ -1,4 +1,4 @@
-package mydomain.datanucleus.datatrail.nodes.update;
+package mydomain.datanucleus.datatrail.nodes.collection;
 
 import mydomain.datanucleus.datatrail.ContainerNode;
 import mydomain.datanucleus.datatrail.Node;
@@ -13,9 +13,9 @@ import org.datanucleus.metadata.MetaData;
 import java.util.stream.Collectors;
 
 @NodeDefinition(type=NodeType.COLLECTION, action = Node.Action.UPDATE)
-public class Collection extends ContainerNode {
+public class Update extends ContainerNode {
 
-    public Collection(Object value, AbstractMemberMetaData mmd, Node parent) {
+    public Update(Object value, AbstractMemberMetaData mmd, Node parent) {
         super(mmd, parent);
 
         // value might be null, in which case there is nothing left to do
