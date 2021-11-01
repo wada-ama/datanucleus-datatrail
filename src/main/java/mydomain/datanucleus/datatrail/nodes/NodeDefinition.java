@@ -21,5 +21,5 @@ public @interface NodeDefinition {
      * Type of action implemented by the class
      * @return
      */
-    Action action();
+    Action[] action() default {};
 }

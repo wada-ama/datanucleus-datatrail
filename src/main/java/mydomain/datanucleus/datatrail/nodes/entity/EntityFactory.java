@@ -12,7 +12,7 @@ import org.datanucleus.metadata.MetaData;
 import java.util.Map;
 import java.util.Optional;
 
-@NodeDefinition(type = NodeType.ENTITY, action = Node.Action.CREATE)
+@NodeDefinition(type = NodeType.ENTITY, action = {Node.Action.CREATE, Node.Action.UPDATE, Node.Action.DELETE})
 public class EntityFactory implements NodeFactory {
     @Override
     public boolean supports(Object value, MetaData md) {

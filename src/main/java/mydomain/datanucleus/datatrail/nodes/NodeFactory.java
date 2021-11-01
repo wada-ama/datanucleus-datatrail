@@ -37,7 +37,7 @@ public interface NodeFactory {
      * Type of action implemented by the class
      * @return
      */
-    default Node.Action action(){
+    default Node.Action[] action(){
         NodeDefinition nodeDefn = this.getClass().getAnnotation(NodeDefinition.class);
         return nodeDefn == null ? null : nodeDefn.action();
     }

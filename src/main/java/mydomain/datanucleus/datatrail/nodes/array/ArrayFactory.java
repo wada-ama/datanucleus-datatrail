@@ -8,7 +8,7 @@ import org.datanucleus.metadata.MetaData;
 
 import java.util.Optional;
 
-@NodeDefinition(type = NodeType.ARRAY, action = Node.Action.CREATE)
+@NodeDefinition(type = NodeType.ARRAY, action = {Node.Action.CREATE, Node.Action.UPDATE, Node.Action.DELETE})
 public class ArrayFactory implements mydomain.datanucleus.datatrail.nodes.NodeFactory {
     @Override
     public boolean supports(Object value, MetaData md) {

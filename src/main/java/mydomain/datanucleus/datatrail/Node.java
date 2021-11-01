@@ -93,14 +93,6 @@ abstract public class Node {
         return nodeDefn == null ? null : nodeDefn.type();
     }
 
-    /**
-     * Returns the action for {@link NodeType#ENTITY} objects.
-     * @return action for {@link NodeType#ENTITY} objects.  Null otherwise
-     */
-    public Action getAction(){
-        NodeDefinition nodeDefn = this.getClass().getAnnotation(NodeDefinition.class);
-        return ( nodeDefn != null && nodeDefn.type()  == NodeType.ENTITY ) ? nodeDefn.action() : null;
-    }
 
     public String getName() {
         return name;

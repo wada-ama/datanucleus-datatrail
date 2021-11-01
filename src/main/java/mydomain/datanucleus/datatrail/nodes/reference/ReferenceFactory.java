@@ -11,7 +11,7 @@ import org.datanucleus.metadata.MetaData;
 
 import java.util.Optional;
 
-@NodeDefinition(type = NodeType.PRIMITIVE, action = Node.Action.CREATE)
+@NodeDefinition(type = NodeType.PRIMITIVE, action = {Node.Action.CREATE, Node.Action.UPDATE, Node.Action.DELETE})
 public class ReferenceFactory implements NodeFactory {
 
     @Override

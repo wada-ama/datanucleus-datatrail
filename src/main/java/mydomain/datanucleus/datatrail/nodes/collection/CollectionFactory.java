@@ -9,7 +9,7 @@ import org.datanucleus.metadata.MetaData;
 
 import java.util.Optional;
 
-@NodeDefinition(type = NodeType.COLLECTION, action = Node.Action.CREATE)
+@NodeDefinition(type = NodeType.COLLECTION, action = {Node.Action.CREATE, Node.Action.UPDATE, Node.Action.DELETE})
 public class CollectionFactory implements NodeFactory {
     @Override
     public boolean supports(Object value, MetaData md) {

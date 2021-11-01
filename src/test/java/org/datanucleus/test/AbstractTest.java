@@ -28,6 +28,7 @@ import javax.jdo.Transaction;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -254,6 +255,7 @@ abstract public class AbstractTest {
         return collection.stream()
                         .filter(node -> node.getType() == NodeType.ENTITY
                                 && node.getClassName().equals(entityClass.getCanonicalName())
-                                && node.getClass().getAnnotation(NodeDefinition.class).action() == action).findFirst();
+                                && Arrays.stream(node.getClass().getAnnotation(NodeDefinition.class).action()).anyMatch(action1 -> action1 == action)
+                        ).findFirst();
     }
 }

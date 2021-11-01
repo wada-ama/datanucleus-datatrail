@@ -16,6 +16,7 @@ import org.datanucleus.metadata.MetaData;
 
 import javax.jdo.PersistenceManager;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -89,5 +90,14 @@ public class Update extends ReferenceNode {
     public boolean canProcess(Object value, MetaData md) {
         // can process any Persitable object that is passed as a class
         return value instanceof Persistable && md instanceof AbstractClassMetaData;
+    }
+
+    /**
+     * Returns the action for {@link NodeType#ENTITY} objects.
+     * @return action for {@link NodeType#ENTITY} objects.  Null otherwise
+     */
+    public Action getAction(){
+        NodeDefinition nodeDefn = this.getClass().getAnnotation(NodeDefinition.class);
+        return nodeDefn == null ? null : Arrays.stream(nodeDefn.action()).findFirst().orElse(null);
     }
 }
