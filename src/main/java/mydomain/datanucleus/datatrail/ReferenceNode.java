@@ -2,6 +2,7 @@ package mydomain.datanucleus.datatrail;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import mydomain.datanucleus.datatrail.nodes.Updatable;
 import mydomain.model.ITrailDesc;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.identity.DatastoreId;
@@ -11,7 +12,7 @@ import org.datanucleus.metadata.MetaData;
 import javax.jdo.JDOHelper;
 import java.lang.ref.WeakReference;
 
-abstract public class ReferenceNode extends Node {
+abstract public class ReferenceNode extends Node implements Updatable {
 
     final protected WeakReference<Persistable> source;
     protected String version;
@@ -65,7 +66,6 @@ abstract public class ReferenceNode extends Node {
 
     @Override
     public void updateFields() {
-        super.updateFields();
         setId(getSource());
         setVersion(getSource());
     }

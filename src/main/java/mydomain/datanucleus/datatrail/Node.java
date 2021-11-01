@@ -133,8 +133,4 @@ abstract public class Node {
         // by default, do nothing
     }
 
-
-    public void updateFields(){
-
-    }
 }

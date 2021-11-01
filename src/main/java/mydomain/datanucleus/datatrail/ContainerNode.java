@@ -1,12 +1,13 @@
 package mydomain.datanucleus.datatrail;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import mydomain.datanucleus.datatrail.nodes.Updatable;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-abstract public class ContainerNode extends Node {
+abstract public class ContainerNode extends Node implements Updatable {
 
     protected Collection<Node> added = new ArrayList<>();
     protected Collection<Node> removed = new ArrayList<>();
@@ -47,10 +48,9 @@ abstract public class ContainerNode extends Node {
 
     @Override
     public void updateFields() {
-        super.updateFields();
-        added.stream().forEach( node -> node.updateFields());
-        removed.stream().forEach( node -> node.updateFields());
-        changed.stream().forEach( node -> node.updateFields());
-        contents.stream().forEach( node -> node.updateFields());
+        added.stream().filter(node -> node instanceof Updatable).forEach( node -> ((Updatable)node).updateFields());
+        removed.stream().filter(node -> node instanceof Updatable).forEach( node -> ((Updatable)node).updateFields());
+        changed.stream().filter(node -> node instanceof Updatable).forEach( node -> ((Updatable)node).updateFields());
+        contents.stream().filter(node -> node instanceof Updatable).forEach( node -> ((Updatable)node).updateFields());
     }
 }

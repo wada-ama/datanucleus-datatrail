@@ -2,6 +2,7 @@ package mydomain.audit;
 
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeFactory;
+import mydomain.datanucleus.datatrail.nodes.Updatable;
 import org.datanucleus.TransactionEventListener;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.state.ObjectProvider;
@@ -83,7 +84,10 @@ public class AuditListener implements CreateLifecycleListener,
 
         // check to see if the entity is already in the modifications map
         if( modifications.containsKey(pc)){
-            modifications.get(pc).updateFields();
+            Node node = modifications.get(pc);
+            if( node instanceof Updatable){
+                ((Updatable)node).updateFields();
+            }
         } else {
             // postStore called for both new objects and updating objects, so need to determine which is the state of the object
             logger.warn("New Persistable not already processed {}", pc.dnGetObjectId());
@@ -124,7 +128,10 @@ public class AuditListener implements CreateLifecycleListener,
 
         // check to see if the entity is already in the modifications map
         if( modifications.containsKey(pc)){
-            modifications.get(pc).updateFields();
+            Node node = modifications.get(pc);
+            if( node instanceof Updatable){
+                ((Updatable)node).updateFields();
+            }
         } else {
             // postStore called for both new objects and updating objects, so need to determine which is the state of the object
             logger.warn("New Persistable not already processed {}", pc.dnGetObjectId());
