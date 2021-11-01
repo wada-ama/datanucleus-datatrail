@@ -4,6 +4,7 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
 import mydomain.audit.DataTrail;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
+import mydomain.datanucleus.datatrail.nodes.NodePriority;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
@@ -48,10 +49,26 @@ public class NodeFactory {
 
             scanResult.getClassesWithAnnotation(NodeDefinition.class).stream().forEach(classInfo -> {
                 Class clazz = classInfo.loadClass();
-                NodeDefinition nodeDefn = (NodeDefinition)clazz.getAnnotation(NodeDefinition.class);
-                registerNodeType(nodeDefn.type(), nodeDefn.action(), clazz);
+                registerNode(clazz);
             });
         }
+    }
+
+    /**
+     * Registers an implementation of a {@link NodeType}.  The implementation must be a subclass {@link Node}
+     * @param clazz the implementation class
+     */
+    public void registerNode(Class<? extends Node> clazz){
+        if( clazz.getAnnotation(NodeDefinition.class) == null ){
+            logger.warn("Unable to register a node without metadata information provided by {}", NodeDefinition.class.getCanonicalName());
+            return;
+        }
+
+        NodeDefinition nodeDefn = (NodeDefinition)clazz.getAnnotation(NodeDefinition.class);
+        NodePriority nodePriority = (NodePriority) clazz.getAnnotation(NodePriority.class);
+        int priority = nodePriority == null ? NodePriority.LOWEST_PRECEDENCE : nodePriority.priority();
+
+        registerNode(nodeDefn.type(), nodeDefn.action(), clazz, priority);
     }
 
 
@@ -61,7 +78,7 @@ public class NodeFactory {
      * @param action the action occuring on the
      * @param clazz the implementation class
      */
-    public void registerNodeType( NodeType type,  Node.Action action, Class<? extends Node> clazz){
+    public void registerNode(NodeType type, Node.Action action, Class<? extends Node> clazz, int priority){
         nodeTypes.get(action).put(type, clazz);
     }
 
@@ -102,7 +119,7 @@ public class NodeFactory {
     }
 
 
-        // TODO Fix the exception handling when calling the constructor
+    // TODO Fix the exception handling when calling the constructor
     /**
      * Retrieve a node from the factory
      * @param value
@@ -175,5 +192,7 @@ public class NodeFactory {
         // default case, treat as primitive field
         return NodeType.PRIMITIVE;
     }
+
+    
 
 }
