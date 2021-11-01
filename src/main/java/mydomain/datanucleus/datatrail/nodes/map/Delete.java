@@ -1,8 +1,8 @@
 package mydomain.datanucleus.datatrail.nodes.map;
 
 import mydomain.datanucleus.datatrail.ContainerNode;
+import mydomain.datanucleus.datatrail.DataTrailFactory;
 import mydomain.datanucleus.datatrail.Node;
-import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.MapEntry;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
@@ -32,8 +32,8 @@ public class Delete extends ContainerNode {
     private void addElements( Set<java.util.Map.Entry> elements ){
         // all new values, so use the raw collection values
         for( java.util.Map.Entry element : elements){
-            Node key = NodeFactory.getInstance().createNode(element.getKey(), Action.DELETE, null, this);
-            Node value = NodeFactory.getInstance().createNode(element.getValue(), Action.DELETE, null, this);
+            Node key = getFactory().createNode(element.getKey(), Action.DELETE, null, this);
+            Node value = getFactory().createNode(element.getValue(), Action.DELETE, null, this);
 
             this.removed.add(new MapEntry(key, value));
         }

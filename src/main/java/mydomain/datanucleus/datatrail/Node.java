@@ -3,6 +3,7 @@ package mydomain.datanucleus.datatrail;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
+import mydomain.datanucleus.datatrail.nodes.NodeFactory;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
@@ -24,6 +25,9 @@ abstract public class Node {
     protected Object value;
     protected Object prev;
     protected MetaData md;
+
+    // reference to the factory that created the node
+    protected NodeFactory factory;
 
 
     /**
@@ -125,6 +129,21 @@ abstract public class Node {
         // by default, do nothing
     }
 
+
+    /**
+     * Recursive function to find a node in the tree with the data trail factory defined
+     * @return
+     */
+    @JsonIgnore
+    public NodeFactory getFactory(){
+        // if a factory is defined, return it
+        if( factory != null ){
+            return factory;
+        }
+
+        // return the parent factory if a parent exists
+        return parent != null ? parent.getFactory() : null;
+    }
 
     /**
      * Identifies if the node knows how to handle this particular value.  If it returns true, than the node's {@link mydomain.datanucleus.datatrail.nodes.NodePriority}

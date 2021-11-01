@@ -3,11 +3,12 @@ package mydomain.datanucleus.datatrail.nodes.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import mydomain.datanucleus.ExtendedReferentialStateManagerImpl;
+import mydomain.datanucleus.datatrail.DataTrailFactory;
 import mydomain.datanucleus.datatrail.Node;
-import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.ReferenceNode;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
+import mydomain.datanucleus.datatrail.nodes.NodeFactory;
 import mydomain.datanucleus.datatrail.nodes.Updatable;
 import org.datanucleus.api.jdo.NucleusJDOHelper;
 import org.datanucleus.enhancement.Persistable;
@@ -33,14 +34,15 @@ public class Delete extends ReferenceNode {
     protected String username;
 
     /**
-     * Default constructor.  Should only be called via the NodeFactory
+     * Default constructor.  Should only be called via the DataTrailFactory
      * @param value
      * @param md
      * @param parent
      */
-    public Delete(Persistable value, MetaData md, Node parent){
+    public Delete(Persistable value, MetaData md, Node parent, NodeFactory factory){
         // an entity is the root node in the tree
         super(value, md,null);
+        this.factory = factory;
         setFields(value);
         dateModified = Instant.now();
     }
@@ -60,7 +62,7 @@ public class Delete extends ReferenceNode {
             Object field = op.provideSavedField(position);
             AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
             if( mmd.isFieldToBePersisted()){
-                fields.add(NodeFactory.getInstance().createNode( field, Action.DELETE, mmd, this));
+                fields.add(getFactory().createNode( field, Action.DELETE, mmd, this));
             }
         }
     }

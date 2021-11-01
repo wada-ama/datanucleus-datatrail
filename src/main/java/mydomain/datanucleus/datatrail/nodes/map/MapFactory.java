@@ -1,5 +1,7 @@
 package mydomain.datanucleus.datatrail.nodes.map;
 
+import mydomain.datanucleus.datatrail.AbstractNodeFactory;
+import mydomain.datanucleus.datatrail.DataTrailFactory;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
@@ -11,7 +13,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @NodeDefinition(type = NodeType.MAP, action = {Node.Action.CREATE, Node.Action.UPDATE, Node.Action.DELETE})
-public class MapFactory implements NodeFactory {
+public class MapFactory extends AbstractNodeFactory {
+    public MapFactory(DataTrailFactory dataTrailFactory) {
+        super(dataTrailFactory);
+    }
+
     @Override
     public boolean supports(Object value, MetaData md) {
         // can process any value as a primitive by using the value.toString()

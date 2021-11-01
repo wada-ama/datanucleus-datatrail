@@ -24,6 +24,10 @@ public interface NodeFactory {
      */
     Optional<Node> create(Node.Action action, Object value, MetaData md, Node parent);
 
+    default Node createNode(Object value, Node.Action action, MetaData md, Node parent){
+        return create(action, value,  md, parent).get();
+    };
+
     /**
      * Type of node implemented by the class
      */

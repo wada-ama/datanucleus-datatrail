@@ -3,11 +3,12 @@ package mydomain.datanucleus.datatrail.nodes.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import mydomain.datanucleus.ExtendedReferentialStateManagerImpl;
+import mydomain.datanucleus.datatrail.DataTrailFactory;
 import mydomain.datanucleus.datatrail.Node;
-import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.ReferenceNode;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
+import mydomain.datanucleus.datatrail.nodes.NodeFactory;
 import mydomain.datanucleus.datatrail.nodes.Updatable;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.AbstractClassMetaData;
@@ -30,15 +31,16 @@ public class Update extends ReferenceNode {
     protected String username;
     private Set<Node> fields = new HashSet<Node>();
     /**
-     * Default constructor.  Should only be called via the NodeFactory
+     * Default constructor.  Should only be called via the DataTrailFactory
      *
      * @param value
      * @param md
      * @param parent
      */
-    public Update(Persistable value, MetaData md, Node parent) {
+    public Update(Persistable value, MetaData md, Node parent, NodeFactory factory) {
         // an entity is the root node in the tree
         super(value, md, null);
+        this.factory = factory;
         setFields(value);
         dateModified = Instant.now();
     }
@@ -63,8 +65,8 @@ public class Update extends ReferenceNode {
             AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
 
             if (mmd.isFieldToBePersisted()) {
-                Node current = NodeFactory.getInstance().createNode(field, Action.UPDATE, mmd, this);
-                current.setPrev(NodeFactory.getInstance().createNode(prevField, Action.UPDATE, mmd, this));
+                Node current = getFactory().createNode(field, Action.UPDATE, mmd, this);
+                current.setPrev(getFactory().createNode(prevField, Action.UPDATE, mmd, this));
                 fields.add(current);
             }
         }

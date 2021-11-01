@@ -3,19 +3,16 @@ package mydomain.datanucleus.datatrail.nodes.primitive;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
-import mydomain.datanucleus.datatrail.nodes.NodeFactory;
 import mydomain.datanucleus.datatrail.nodes.NodePriority;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
-
-import java.util.Optional;
 
 @NodeDefinition(type=NodeType.PRIMITIVE, action = Node.Action.CREATE)
 @NodePriority(priority = NodePriority.LOWEST_PRECEDENCE)
 public class Create extends Node{
 
     /**
-     * Default constructor.  Should only be called via the NodeFactory
+     * Default constructor.  Should only be called via the DataTrailFactory
      * @param value
      * @param mmd
      * @param parent

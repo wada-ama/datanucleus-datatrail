@@ -2,6 +2,7 @@ package mydomain.datanucleus.datatrail.nodes.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import mydomain.datanucleus.datatrail.DataTrailFactory;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.ReferenceNode;
@@ -19,7 +20,6 @@ import javax.jdo.PersistenceManager;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -34,14 +34,15 @@ public class Create extends ReferenceNode {
     protected String username;
 
     /**
-     * Default constructor.  Should only be called via the NodeFactory
+     * Default constructor.  Should only be called via the DataTrailFactory
      * @param value
      * @param md
      * @param parent
      */
-    protected Create(Persistable value, MetaData md, Node parent){
+    protected Create(Persistable value, MetaData md, Node parent, NodeFactory factory){
         // an entity is the root node in the tree
         super(value, md,null);
+        this.factory = factory;
         setFields(value);
         dateModified = Instant.now();
     }
@@ -61,7 +62,7 @@ public class Create extends ReferenceNode {
             Object field = op.provideField(position);
             AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
             if( mmd.isFieldToBePersisted()){
-                fields.add(mydomain.datanucleus.datatrail.NodeFactory.getInstance().createNode( field, Action.CREATE, mmd, this));
+                fields.add(getFactory().createNode( field, Action.CREATE, mmd, this));
             }
         }
     }

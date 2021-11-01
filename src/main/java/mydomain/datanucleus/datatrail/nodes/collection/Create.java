@@ -1,14 +1,12 @@
 package mydomain.datanucleus.datatrail.nodes.collection;
 
 import mydomain.datanucleus.datatrail.ContainerNode;
+import mydomain.datanucleus.datatrail.DataTrailFactory;
 import mydomain.datanucleus.datatrail.Node;
-import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
-
-import java.util.Optional;
 
 @NodeDefinition(type=NodeType.COLLECTION, action = Node.Action.CREATE)
 public class Create extends ContainerNode {
@@ -31,7 +29,7 @@ public class Create extends ContainerNode {
     private void addElements( java.util.Collection elements ){
         // all new values, so use the raw collection values
         for(Object element : elements )
-            this.added.add(NodeFactory.getInstance().createNode(element, Action.CREATE, null, this));
+            this.added.add(getFactory().createNode(element, Action.CREATE, null, this));
     }
 
 

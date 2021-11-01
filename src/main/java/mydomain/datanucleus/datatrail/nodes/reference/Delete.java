@@ -12,7 +12,7 @@ import org.datanucleus.metadata.MetaData;
 public class Delete extends ReferenceNode {
 
     /**
-     * Default constructor.  Should only be called via the NodeFactory
+     * Default constructor.  Should only be called via the DataTrailFactory
      * @param value
      * @param mmd
      * @param parent

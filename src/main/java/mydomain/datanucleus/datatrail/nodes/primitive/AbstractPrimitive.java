@@ -7,7 +7,7 @@ import org.datanucleus.metadata.MetaData;
 abstract public class AbstractPrimitive extends Node{
 
     /**
-     * Default constructor.  Should only be called via the NodeFactory
+     * Default constructor.  Should only be called via the DataTrailFactory
      * @param value
      * @param mmd
      * @param parent

@@ -1,7 +1,7 @@
 package mydomain.audit;
 
+import mydomain.datanucleus.datatrail.DataTrailFactory;
 import mydomain.datanucleus.datatrail.Node;
-import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.nodes.Updatable;
 import org.datanucleus.TransactionEventListener;
 import org.datanucleus.enhancement.Persistable;
@@ -32,6 +32,8 @@ public class AuditListener implements CreateLifecycleListener,
 
     // get a static slf4j logger for the class
     protected static final Logger logger = getLogger(AuditListener.class);
+
+    protected DataTrailFactory dataTrailFactory = DataTrailFactory.getDataTrailFactory();
 
 
     // internal non-null valued map to store entity modifications throughout the transaction
@@ -91,7 +93,7 @@ public class AuditListener implements CreateLifecycleListener,
         } else {
             // postStore called for both new objects and updating objects, so need to determine which is the state of the object
             logger.warn("New Persistable not already processed {}", pc.dnGetObjectId());
-            modifications.put(pc, NodeFactory.getInstance().createRootNode(pc, Node.Action.DELETE));
+            modifications.put(pc, dataTrailFactory.createNode(pc, Node.Action.DELETE));
         }
     }
 
@@ -113,7 +115,7 @@ public class AuditListener implements CreateLifecycleListener,
 
         // postStore called for both new objects and updating objects, so need to determine which is the state of the object
         Node.Action action = pc.dnGetStateManager().isNew(pc) ? Node.Action.CREATE : Node.Action.UPDATE;
-        modifications.put(pc, NodeFactory.getInstance().createRootNode(pc, action));
+        modifications.put(pc, dataTrailFactory.createNode(pc, action));
 
     }
 
@@ -136,7 +138,7 @@ public class AuditListener implements CreateLifecycleListener,
             // postStore called for both new objects and updating objects, so need to determine which is the state of the object
             logger.warn("New Persistable not already processed {}", pc.dnGetObjectId());
             Node.Action action = pc.dnGetStateManager().isNew(pc) ? Node.Action.CREATE : Node.Action.UPDATE;
-            modifications.put(pc, NodeFactory.getInstance().createRootNode(pc, action));
+            modifications.put(pc, dataTrailFactory.createNode(pc, action));
         }
 
 

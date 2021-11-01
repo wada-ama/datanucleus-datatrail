@@ -1,8 +1,8 @@
 package mydomain.datanucleus.datatrail.nodes.array;
 
 import mydomain.datanucleus.datatrail.ContainerNode;
+import mydomain.datanucleus.datatrail.DataTrailFactory;
 import mydomain.datanucleus.datatrail.Node;
-import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
@@ -37,7 +37,7 @@ public class Delete extends ContainerNode {
     private void addElements( Object[] elements ){
         // all new values, so use the raw collection values
         for(Object element : elements )
-            this.contents.add(NodeFactory.getInstance().createNode(element, Action.DELETE, null, this));
+            this.contents.add(getFactory().createNode(element, Action.DELETE, null, this));
     }
 
     @Override

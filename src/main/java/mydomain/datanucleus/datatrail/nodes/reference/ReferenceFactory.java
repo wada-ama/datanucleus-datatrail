@@ -1,10 +1,11 @@
 package mydomain.datanucleus.datatrail.nodes.reference;
 
+import mydomain.datanucleus.datatrail.AbstractNodeFactory;
+import mydomain.datanucleus.datatrail.DataTrailFactory;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import mydomain.datanucleus.datatrail.nodes.NodeFactory;
-import mydomain.datanucleus.datatrail.nodes.NodePriority;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
@@ -12,7 +13,11 @@ import org.datanucleus.metadata.MetaData;
 import java.util.Optional;
 
 @NodeDefinition(type = NodeType.PRIMITIVE, action = {Node.Action.CREATE, Node.Action.UPDATE, Node.Action.DELETE})
-public class ReferenceFactory implements NodeFactory {
+public class ReferenceFactory extends AbstractNodeFactory {
+
+    public ReferenceFactory(DataTrailFactory dataTrailFactory) {
+        super(dataTrailFactory);
+    }
 
     @Override
     public boolean supports(Object value, MetaData md) {

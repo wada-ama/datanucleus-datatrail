@@ -1,8 +1,8 @@
 package mydomain.datanucleus.datatrail.nodes.map;
 
 import mydomain.datanucleus.datatrail.ContainerNode;
+import mydomain.datanucleus.datatrail.DataTrailFactory;
 import mydomain.datanucleus.datatrail.Node;
-import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.MapEntry;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
@@ -39,25 +39,25 @@ public class Update extends ContainerNode {
             ChangeTracker changeTracker = ((ChangeTrackable)map).getChangeTracker();
             this.changed = (java.util.Collection<Node>) changeTracker.getChanged().stream().map(o -> {
                 Entry keyValue = (Entry)o;
-                Node key = NodeFactory.getInstance().createNode(keyValue.getKey(), Action.UPDATE, null, this);
-                Node value = NodeFactory.getInstance().createNode(map.get(keyValue.getKey()), Action.UPDATE, null, this);
-                value.setPrev(NodeFactory.getInstance().createNode(keyValue.getValue(), Action.UPDATE, null, this));
+                Node key = getFactory().createNode(keyValue.getKey(), Action.UPDATE, null, this);
+                Node value = getFactory().createNode(map.get(keyValue.getKey()), Action.UPDATE, null, this);
+                value.setPrev(getFactory().createNode(keyValue.getValue(), Action.UPDATE, null, this));
 
                 return new MapEntry(key,value);
             }).collect(Collectors.toSet());
 
             this.added = (java.util.Collection<Node>) changeTracker.getAdded().stream().map(o -> {
                 Entry keyValue = (Entry)o;
-                Node key = NodeFactory.getInstance().createNode(keyValue.getKey(), Action.UPDATE, null, this);
-                Node value = NodeFactory.getInstance().createNode(keyValue.getValue(), Action.UPDATE, null, this);
+                Node key = getFactory().createNode(keyValue.getKey(), Action.UPDATE, null, this);
+                Node value = getFactory().createNode(keyValue.getValue(), Action.UPDATE, null, this);
 
                 return new MapEntry(key,value);
             }).collect(Collectors.toSet());
 
             this.removed = (java.util.Collection<Node>) changeTracker.getRemoved().stream().map(o -> {
                 Entry keyValue = (Entry)o;
-                Node key = NodeFactory.getInstance().createNode(keyValue.getKey(), Action.UPDATE, null, this);
-                Node value = NodeFactory.getInstance().createNode(keyValue.getValue(), Action.UPDATE, null, this);
+                Node key = getFactory().createNode(keyValue.getKey(), Action.UPDATE, null, this);
+                Node value = getFactory().createNode(keyValue.getValue(), Action.UPDATE, null, this);
 
                 return new MapEntry(key,value);
             }).collect(Collectors.toSet());
@@ -66,8 +66,8 @@ public class Update extends ContainerNode {
             // not a trackable map
             this.contents = (java.util.Collection<Node>) map.entrySet().stream().map(o -> {
                 Entry keyValue = (Entry)o;
-                Node key = NodeFactory.getInstance().createNode(keyValue.getKey(), Action.UPDATE, null, this);
-                Node value = NodeFactory.getInstance().createNode(keyValue.getValue(), Action.UPDATE, null, this);
+                Node key = getFactory().createNode(keyValue.getKey(), Action.UPDATE, null, this);
+                Node value = getFactory().createNode(keyValue.getValue(), Action.UPDATE, null, this);
 
                 return new MapEntry(key,value);
             }).collect(Collectors.toSet());

@@ -1,19 +1,25 @@
 package mydomain.datanucleus.datatrail.nodes.entity;
 
+import mydomain.datanucleus.datatrail.AbstractNodeFactory;
+import mydomain.datanucleus.datatrail.DataTrailFactory;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import mydomain.datanucleus.datatrail.nodes.NodeFactory;
+import mydomain.datanucleus.datatrail.nodes.NodePriority;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.AbstractClassMetaData;
-import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
 
-import java.util.Map;
 import java.util.Optional;
 
 @NodeDefinition(type = NodeType.ENTITY, action = {Node.Action.CREATE, Node.Action.UPDATE, Node.Action.DELETE})
-public class EntityFactory implements NodeFactory {
+@NodePriority(priority = NodePriority.HIGHEST_PRECEDENCE)
+public class EntityFactory extends AbstractNodeFactory {
+    public EntityFactory(DataTrailFactory dataTrailFactory) {
+        super(dataTrailFactory);
+    }
+
     @Override
     public boolean supports(Object value, MetaData md) {
         // can process any Persitable object that is passed as a class
@@ -22,18 +28,23 @@ public class EntityFactory implements NodeFactory {
 
     @Override
     public Optional<Node> create(Node.Action action, Object value, MetaData md, Node parent) {
-        if (!supports(value, md))
-            return Optional.empty();
-
-        switch(action){
-            case CREATE:
-                return Optional.of(new Create( (Persistable) value, md, parent));
-            case DELETE:
-                return Optional.of(new Delete( (Persistable) value, md, parent));
-            case UPDATE:
-                return Optional.of(new Update( (Persistable) value, md, parent));
-            default:
-                return Optional.empty();
+        Optional<Node> node = Optional.empty();
+        if( supports(value, md )) {
+            // create the node internally.
+            switch (action) {
+                case CREATE:
+                    node = Optional.of(new Create((Persistable) value, md, parent, this));
+                    break;
+                case DELETE:
+                    node = Optional.of(new Delete((Persistable) value, md, parent, this));
+                    break;
+                case UPDATE:
+                    node = Optional.of(new Update((Persistable) value, md, parent, this));
+                    break;
+            }
         }
+
+        // if this factory is unable to create the node, then delegate to the data trail factory
+        return node.isPresent() ? node : Optional.of(dataTrailFactory.createNode(value, action, md, parent));
     }
 }

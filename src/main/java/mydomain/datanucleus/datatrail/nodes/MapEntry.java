@@ -2,7 +2,6 @@ package mydomain.datanucleus.datatrail.nodes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import mydomain.datanucleus.datatrail.Node;
-import mydomain.datanucleus.datatrail.NodeType;
 import org.datanucleus.metadata.MetaData;
 
 /**

@@ -1,15 +1,13 @@
 package mydomain.datanucleus.datatrail.nodes.array;
 
 import mydomain.datanucleus.datatrail.ContainerNode;
+import mydomain.datanucleus.datatrail.DataTrailFactory;
 import mydomain.datanucleus.datatrail.Node;
-import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
 import org.slf4j.Logger;
-
-import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -40,7 +38,7 @@ public class Create extends ContainerNode {
     private void addElements( Object[] elements ){
         // all new values, so use the raw collection values
         for(Object element : elements )
-            this.contents.add(NodeFactory.getInstance().createNode(element, Action.CREATE, null, this));
+            this.contents.add(getFactory().createNode(element, Action.CREATE, null, this));
     }
 
     @Override

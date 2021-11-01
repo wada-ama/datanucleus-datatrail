@@ -1,5 +1,7 @@
 package mydomain.datanucleus.datatrail.nodes.primitive;
 
+import mydomain.datanucleus.datatrail.AbstractNodeFactory;
+import mydomain.datanucleus.datatrail.DataTrailFactory;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
@@ -12,7 +14,11 @@ import java.util.Optional;
 
 @NodeDefinition(type = NodeType.PRIMITIVE, action = {Node.Action.CREATE, Node.Action.UPDATE, Node.Action.DELETE})
 @NodePriority(priority = NodePriority.LOWEST_PRECEDENCE)
-public class PrimitiveFactory implements NodeFactory {
+public class PrimitiveFactory extends AbstractNodeFactory {
+    public PrimitiveFactory(DataTrailFactory dataTrailFactory) {
+        super(dataTrailFactory);
+    }
+
     @Override
     public boolean supports(Object value, MetaData md) {
         // can process any value as a primitive by using the value.toString()

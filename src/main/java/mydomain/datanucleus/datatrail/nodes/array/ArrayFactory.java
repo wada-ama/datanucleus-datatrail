@@ -1,5 +1,7 @@
 package mydomain.datanucleus.datatrail.nodes.array;
 
+import mydomain.datanucleus.datatrail.AbstractNodeFactory;
+import mydomain.datanucleus.datatrail.DataTrailFactory;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
@@ -9,7 +11,12 @@ import org.datanucleus.metadata.MetaData;
 import java.util.Optional;
 
 @NodeDefinition(type = NodeType.ARRAY, action = {Node.Action.CREATE, Node.Action.UPDATE, Node.Action.DELETE})
-public class ArrayFactory implements mydomain.datanucleus.datatrail.nodes.NodeFactory {
+public class ArrayFactory extends AbstractNodeFactory {
+
+    public ArrayFactory(DataTrailFactory dataTrailFactory) {
+        super(dataTrailFactory);
+    }
+
     @Override
     public boolean supports(Object value, MetaData md) {
         // can process any field that is identified as an array
