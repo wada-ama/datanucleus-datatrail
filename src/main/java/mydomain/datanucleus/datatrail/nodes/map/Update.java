@@ -11,28 +11,23 @@ import mydomain.datanucleus.types.wrappers.tracker.ChangeTracker;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
 
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 @NodeDefinition(type=NodeType.MAP, action = Node.Action.UPDATE)
-public class Update extends ContainerNode {
+public class Update extends BaseMap {
 
-    public Update(java.util.Map value, AbstractMemberMetaData mmd, Node parent) {
-        super(mmd, parent);
-
-        // value might be null, in which case there is nothing left to do
-        if( value == null ){
-            return;
-        }
-
-        addElements(value);
+    protected Update(Map value, AbstractMemberMetaData mmd, Node parent) {
+        super(value, mmd, parent);
     }
 
     /**
      * Adds all the elements in the collection
      * @param map
      */
-    private void addElements( java.util.Map map ){
+    @Override
+    protected void addElements( java.util.Map map ){
         // check if the map is trackable
         if( map instanceof ChangeTrackable && ((ChangeTrackable)map).getChangeTracker().isTracking()){
             // get the tracker
@@ -74,11 +69,4 @@ public class Update extends ContainerNode {
         }
 
     }
-
-
-    @Override
-    public boolean canProcess(Object value, MetaData md) {
-        return md instanceof AbstractMemberMetaData && ((AbstractMemberMetaData)md).hasMap();
-    }
-
 }
