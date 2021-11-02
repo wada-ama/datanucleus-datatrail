@@ -11,10 +11,7 @@ import org.datanucleus.state.ObjectProvider;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -133,7 +130,7 @@ public class DataTrailFactory {
     public Node createNode(Object value, Node.Action action, MetaData md, Node parent){
 
         // find the factory for this type of value
-        mydomain.datanucleus.datatrail.nodes.NodeFactory factory = factories.stream().filter(nodeFactory -> nodeFactory.supports(value, md))
+        mydomain.datanucleus.datatrail.nodes.NodeFactory factory = factories.stream().filter(nodeFactory -> nodeFactory.supports(action, value, md))
                 .sorted(Comparator.comparingInt(NodeFactory::priority))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("No type found to support: " + value.getClass().getCanonicalName() + " / " + action));

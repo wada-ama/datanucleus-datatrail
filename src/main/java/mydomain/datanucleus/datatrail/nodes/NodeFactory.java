@@ -9,11 +9,13 @@ import java.util.Optional;
 public interface NodeFactory {
     /**
      * Identifies if this factory supports / can produce a node with the given parameters
+     *
+     * @param action
      * @param value the object to be represented by a DataTrail node
      * @param md the metadata relating to the given object
      * @return
      */
-    boolean supports(Object value, MetaData md);
+    boolean supports(Node.Action action, Object value, MetaData md);
 
     /**
      * Factory method to create a node with the given parameters.

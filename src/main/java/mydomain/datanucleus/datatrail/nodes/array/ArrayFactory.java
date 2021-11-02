@@ -18,15 +18,16 @@ public class ArrayFactory extends AbstractNodeFactory {
     }
 
     @Override
-    public boolean supports(Object value, MetaData md) {
+    public boolean supports(Node.Action action, Object value, MetaData md) {
         // can process any field that is identified as an array
-        return md instanceof AbstractMemberMetaData && ((AbstractMemberMetaData) md).hasArray();
-
+        return super.supports(action, value, md)
+                && md instanceof AbstractMemberMetaData
+                && ((AbstractMemberMetaData) md).hasArray();
     }
 
     @Override
     public Optional<Node> create(Node.Action action, Object value, MetaData md, Node parent) {
-        if (!supports(value, md))
+        if (!supports(action, value, md))
             return Optional.empty();
 
         switch(action){

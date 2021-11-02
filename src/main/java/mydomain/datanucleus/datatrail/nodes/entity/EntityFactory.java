@@ -5,7 +5,6 @@ import mydomain.datanucleus.datatrail.DataTrailFactory;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
-import mydomain.datanucleus.datatrail.nodes.NodeFactory;
 import mydomain.datanucleus.datatrail.nodes.NodePriority;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.AbstractClassMetaData;
@@ -21,15 +20,17 @@ public class EntityFactory extends AbstractNodeFactory {
     }
 
     @Override
-    public boolean supports(Object value, MetaData md) {
+    public boolean supports(Node.Action action, Object value, MetaData md) {
         // can process any Persitable object that is passed as a class
-        return value instanceof Persistable && md instanceof AbstractClassMetaData;
+        return  super.supports(action, value, md)
+                && value instanceof Persistable
+                && md instanceof AbstractClassMetaData;
     }
 
     @Override
     public Optional<Node> create(Node.Action action, Object value, MetaData md, Node parent) {
         Optional<Node> node = Optional.empty();
-        if( supports(value, md )) {
+        if( supports(action, value, md )) {
             // create the node internally.
             switch (action) {
                 case CREATE:
