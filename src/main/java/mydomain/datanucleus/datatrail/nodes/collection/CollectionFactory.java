@@ -13,10 +13,6 @@ import java.util.Optional;
 
 @NodeDefinition(type = NodeType.COLLECTION, action = {NodeAction.CREATE, NodeAction.UPDATE, NodeAction.DELETE})
 public class CollectionFactory extends AbstractNodeFactory {
-    public CollectionFactory(DataTrailFactory dataTrailFactory) {
-        super(dataTrailFactory);
-    }
-
     @Override
     public boolean supports(NodeAction action, Object value, MetaData md) {
         // can process any field that is identified as a collection
@@ -28,6 +24,7 @@ public class CollectionFactory extends AbstractNodeFactory {
 
     @Override
     public Optional<Node> create(NodeAction action, Object value, MetaData md, Node parent) {
+        assertConfigured();
         if (!supports(action, value, md))
             return Optional.empty();
 

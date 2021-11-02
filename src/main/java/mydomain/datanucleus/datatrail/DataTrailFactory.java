@@ -9,9 +9,8 @@ import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.MetaData;
 import org.datanucleus.state.ObjectProvider;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -37,9 +36,10 @@ public class DataTrailFactory {
 
     /**
      * Automatically scans for any non-abstract {@link NodeFactory} implementations and attempts to initialize them
+     *
      * @param classPackageToScan package of class to scan for any implementations
      */
-    public void registerNodeFactories(Class<?> classPackageToScan){
+    public void registerNodeFactories(Class<?> classPackageToScan) {
         synchronized (this) {
             try (ScanResult scanResult = new ClassGraph()
                     .enableAnnotationInfo()
@@ -55,19 +55,29 @@ public class DataTrailFactory {
         }
     }
 
+    /**
+     * Uses the service loader pattern to load all implementations of the {@link NodeFactory} declared in
+     * META-INF/services/mydomain.datanucleus.datatrail.NodeFactory files found within the classpath
+     */
+    public void registerNodeFactories() {
+        ServiceLoader<NodeFactory> serviceLoader = ServiceLoader.load(NodeFactory.class);
+        serviceLoader.forEach(nodeFactory -> registerFactory((Class<NodeFactory>) nodeFactory.getClass()));
+    }
 
     /**
      * Register a {@link NodeFactory} to the DataTrail factory.  This will make all the types exposed by the factory class
      * accessible to the DataTrail factory.  The {@link NodeFactory} class must supply a public constructor which takes a {@link DataTrailFactory} object
      * as a parameter
+     *
      * @param factory
      */
-    public void registerFactory(Class<NodeFactory> factory){
+    public void registerFactory(Class<NodeFactory> factory) {
         synchronized (this) {
             try {
-                Constructor ctor = factory.getConstructor(DataTrailFactory.class);
-                factories.add((NodeFactory) ctor.newInstance(this));
-            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                NodeFactory instance = factory.newInstance();
+                instance.setDataTrailFactory(this);
+                factories.add(instance);
+            } catch (InstantiationException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -77,14 +87,18 @@ public class DataTrailFactory {
     /**
      * Retrieve an instance of the factory
      * By default, automatically add any {@link NodeFactory} found in any subpackage of {@link BaseNode}
+     *
      * @return
      */
     static public DataTrailFactory getDataTrailFactory() {
-        return getDataTrailFactory(Node.class);
+        DataTrailFactory factory = new DataTrailFactory();
+        factory.registerNodeFactories();
+        return factory;
     }
 
     /**
      * Retrieve an instance of the factory
+     *
      * @return
      */
     static public DataTrailFactory getDataTrailFactory(Class<?> classPackageToScan) {
@@ -95,24 +109,25 @@ public class DataTrailFactory {
 
     /**
      * Retrieve a root node from the factory. Should only be used for persistable objects
+     *
      * @param value
      * @param action
      * @return
      */
-    public Node createNode(Object value, NodeAction action){
+    public Node createNode(Object value, NodeAction action) {
         // make sure it is a persistable object
-        if( !( value instanceof Persistable) ) {
+        if (!(value instanceof Persistable)) {
             return null;
         }
 
         // check if the object should be excluded from the data trail
-        if( value.getClass().getAnnotation(DataTrail.class) != null && value.getClass().getAnnotation(DataTrail.class).excludeFromDataTrail()){
+        if (value.getClass().getAnnotation(DataTrail.class) != null && value.getClass().getAnnotation(DataTrail.class).excludeFromDataTrail()) {
             // this element should be excluded, so skip it
             logger.debug("{} is marked as excluded from the datatrail", value.getClass().getCanonicalName());
             return null;
         }
 
-        MetaData md = ((ObjectProvider)((Persistable)value).dnGetStateManager()).getClassMetaData();
+        MetaData md = ((ObjectProvider) ((Persistable) value).dnGetStateManager()).getClassMetaData();
 
 
         return createNode(value, action, md, null);
@@ -121,13 +136,14 @@ public class DataTrailFactory {
 
     /**
      * Retrieve a node from the factory
+     *
      * @param value
      * @param md
      * @param parent
      * @return
      * @throws RuntimeException if unable to create the node
      */
-    public Node createNode(Object value, NodeAction action, MetaData md, Node parent){
+    public Node createNode(Object value, NodeAction action, MetaData md, Node parent) {
 
         // find the factory for this type of value
         NodeFactory factory = factories.stream().filter(nodeFactory -> nodeFactory.supports(action, value, md))

@@ -14,9 +14,6 @@ import java.util.Optional;
 
 @NodeDefinition(type = NodeType.MAP, action = {NodeAction.CREATE, NodeAction.UPDATE, NodeAction.DELETE})
 public class MapFactory extends AbstractNodeFactory {
-    public MapFactory(DataTrailFactory dataTrailFactory) {
-        super(dataTrailFactory);
-    }
 
     @Override
     public boolean supports(NodeAction action, Object value, MetaData md) {
@@ -28,6 +25,7 @@ public class MapFactory extends AbstractNodeFactory {
 
     @Override
     public Optional<Node> create(NodeAction action, Object value, MetaData md, Node parent) {
+        assertConfigured();
         if (!supports(action, value, md))
             return Optional.empty();
 

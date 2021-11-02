@@ -15,9 +15,6 @@ import java.util.Optional;
 @NodeDefinition(type = NodeType.PRIMITIVE, action = {NodeAction.CREATE, NodeAction.UPDATE, NodeAction.DELETE})
 @NodePriority(priority = NodePriority.LOWEST_PRECEDENCE)
 public class PrimitiveFactory extends AbstractNodeFactory {
-    public PrimitiveFactory(DataTrailFactory dataTrailFactory) {
-        super(dataTrailFactory);
-    }
 
     @Override
     public boolean supports(NodeAction action, Object value, MetaData md) {
@@ -27,6 +24,7 @@ public class PrimitiveFactory extends AbstractNodeFactory {
 
     @Override
     public Optional<Node> create(NodeAction action, Object value, MetaData md, Node parent) {
+        assertConfigured();
         if (!supports(action, value, md))
             return Optional.empty();
 

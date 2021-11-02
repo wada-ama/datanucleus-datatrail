@@ -8,6 +8,14 @@ import java.util.Optional;
 
 public interface NodeFactory {
     /**
+     * Sets the {@link DataTrailFactory} used to create this factory.  In order to protect the structural integrity of the generated Nodes,
+     * the dataTrailFactory cannot be changed once it is set.  A new factory needs to be instantiated instead.
+     *
+     * @param dataTrailFactory
+     */
+    void setDataTrailFactory(DataTrailFactory dataTrailFactory);
+
+    /**
      * Identifies if this factory supports / can produce a node with the given parameters
      *
      * @param action
@@ -57,4 +65,5 @@ public interface NodeFactory {
         NodePriority nodePriority = this.getClass().getAnnotation(NodePriority.class);
         return nodePriority == null ? 0 : nodePriority.priority();
     }
+
 }

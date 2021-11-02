@@ -15,10 +15,6 @@ import java.util.Optional;
 @NodeDefinition(type = NodeType.PRIMITIVE, action = {NodeAction.CREATE, NodeAction.UPDATE, NodeAction.DELETE})
 public class ReferenceFactory extends AbstractNodeFactory {
 
-    public ReferenceFactory(DataTrailFactory dataTrailFactory) {
-        super(dataTrailFactory);
-    }
-
     @Override
     public boolean supports(NodeAction action, Object value, MetaData md) {
         // either the is persistent, or the field is supposed to be persistable (ex: if the value is null)
@@ -30,6 +26,7 @@ public class ReferenceFactory extends AbstractNodeFactory {
 
     @Override
     public Optional<Node> create(NodeAction action, Object value, MetaData md, Node parent) {
+        assertConfigured();
         if (!supports(action, value, md))
             return Optional.empty();
 

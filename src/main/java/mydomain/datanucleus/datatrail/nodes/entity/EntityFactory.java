@@ -16,10 +16,6 @@ import java.util.Optional;
 @NodeDefinition(type = NodeType.ENTITY, action = {NodeAction.CREATE, NodeAction.UPDATE, NodeAction.DELETE})
 @NodePriority(priority = NodePriority.HIGHEST_PRECEDENCE)
 public class EntityFactory extends AbstractNodeFactory {
-    public EntityFactory(DataTrailFactory dataTrailFactory) {
-        super(dataTrailFactory);
-    }
-
     @Override
     public boolean supports(NodeAction action, Object value, MetaData md) {
         // can process any Persitable object that is passed as a class
@@ -30,6 +26,7 @@ public class EntityFactory extends AbstractNodeFactory {
 
     @Override
     public Optional<Node> create(NodeAction action, Object value, MetaData md, Node parent) {
+        assertConfigured();
         Optional<Node> node = Optional.empty();
         if( supports(action, value, md )) {
             // create the node internally.
