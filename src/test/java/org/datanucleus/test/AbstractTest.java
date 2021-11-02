@@ -33,7 +33,6 @@ import java.util.Collection;
 import java.util.Optional;
 
 import static com.spotify.hamcrest.pojo.IsPojo.pojo;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.hasToString;
@@ -128,7 +127,7 @@ abstract public class AbstractTest {
                 .withProperty("action", hasToString(action.toString()))
                 .withProperty("version", any(String.class))
                 .withProperty("dateModified", any(Instant.class))
-                .withProperty("username", anything())
+                .withProperty("username",  anything())
                 .withProperty("transactionId", anything())
                 ;
 
@@ -221,7 +220,7 @@ abstract public class AbstractTest {
      * @param
      * @return
      */
-    private Matcher<String> getValueMatcher(String value) {
+    protected Matcher<String> getValueMatcher(String value) {
         if( value == null )
             return nullValue(String.class);
         else if (ANY.equals(value)){
