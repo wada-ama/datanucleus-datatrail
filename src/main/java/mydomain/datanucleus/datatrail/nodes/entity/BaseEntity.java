@@ -94,7 +94,7 @@ abstract public class BaseEntity extends ReferenceNode {
 
         if( txInfo == null ){
             // create a new TxInfo object
-            txInfo = new TransactionInfo( Instant.now(), "MISSING");
+            txInfo = new TransactionInfo( Instant.now() );
             pm.putUserObject(TransactionInfo.class.getName(), txInfo);
         }
     }

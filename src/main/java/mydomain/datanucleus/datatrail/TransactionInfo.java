@@ -13,9 +13,16 @@ import java.util.UUID;
  * @author Eric Benzacar
  */
 public class TransactionInfo implements Serializable {
-    protected Instant dateModified;
-    protected String username;
-    protected String txId;
+
+    static public String NO_USERNAME = "__NOT_DEFINED__";
+
+    final protected Instant dateModified;
+    final protected String username;
+    final protected String txId;
+
+    public TransactionInfo(Instant dateModified) {
+        this(dateModified, NO_USERNAME);
+    }
 
     public TransactionInfo(Instant dateModified, String username) {
         this.dateModified = dateModified;
