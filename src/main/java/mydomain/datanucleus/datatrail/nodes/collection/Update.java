@@ -24,11 +24,11 @@ public class Update extends BaseCollection {
     protected void addElements( java.util.Collection collection ){
         if( collection instanceof ChangeTrackable && ((ChangeTrackable)collection).getChangeTracker().isTracking()){
             ChangeTracker changeTracker = ((ChangeTrackable)collection).getChangeTracker();
-            added = (java.util.Collection<Node>) changeTracker.getAdded().stream().map(o -> getFactory().createNode(o, NodeAction.UPDATE, null, this)).collect(Collectors.toList());
-            removed = (java.util.Collection<Node>) changeTracker.getRemoved().stream().map(o -> getFactory().createNode(o, NodeAction.UPDATE, null, this)).collect(Collectors.toList());
+            added = (java.util.Collection<Node>) changeTracker.getAdded().stream().map(o -> getFactory().createNode(NodeAction.UPDATE, o, null, this).get()).collect(Collectors.toList());
+            removed = (java.util.Collection<Node>) changeTracker.getRemoved().stream().map(o -> getFactory().createNode(NodeAction.UPDATE, o, null, this).get()).collect(Collectors.toList());
         } else {
             for (Object element : collection) {
-                contents.add(getFactory().createNode(element, NodeAction.UPDATE, null, this));
+                contents.add(getFactory().createNode(NodeAction.UPDATE, element, null, this).get());
             }
         }
     }

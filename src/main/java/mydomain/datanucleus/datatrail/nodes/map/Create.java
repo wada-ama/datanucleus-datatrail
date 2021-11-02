@@ -24,8 +24,8 @@ public class Create extends BaseMap {
     protected void addElements( Map map ){
         // all new values, so use the raw collection values
         map.entrySet().stream().forEach(element -> {
-            Node key = getFactory().createNode(((Map.Entry)element).getKey(), NodeAction.CREATE, null, this);
-            Node value = getFactory().createNode(((Map.Entry)element).getValue(), NodeAction.CREATE, null, this);
+            Node key = getFactory().createNode(NodeAction.CREATE, ((Map.Entry)element).getKey(), null, this).get();
+            Node value = getFactory().createNode(NodeAction.CREATE, ((Map.Entry)element).getValue(), null, this).get();
 
             this.added.add(new MapEntry(key, value));
         });

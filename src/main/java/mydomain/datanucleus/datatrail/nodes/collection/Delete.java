@@ -21,7 +21,7 @@ public class Delete extends BaseCollection {
     protected void addElements( java.util.Collection elements ){
         // all new values, so use the raw collection values
         for(Object element : elements )
-            this.removed.add(getFactory().createNode(element, NodeAction.DELETE, null, this));
+            this.removed.add(getFactory().createNode(NodeAction.DELETE, element, null, this).get());
     }
 
 }

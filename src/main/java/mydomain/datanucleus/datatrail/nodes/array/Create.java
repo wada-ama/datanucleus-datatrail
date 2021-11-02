@@ -21,6 +21,6 @@ public class Create extends BaseArray {
     protected void addElements( Object[] elements ){
         // all new values, so use the raw collection values
         for(Object element : elements )
-            this.contents.add(getFactory().createNode(element, NodeAction.CREATE, null, this));
+            this.contents.add(getFactory().createNode(NodeAction.CREATE, element, null, this).get());
     }
 }

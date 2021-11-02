@@ -48,7 +48,7 @@ public class Delete extends BaseEntity {
             Object field = op.provideSavedField(position);
             AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
             if( mmd.isFieldToBePersisted()){
-                fields.add(getFactory().createNode( field, NodeAction.DELETE, mmd, this));
+                fields.add(getFactory().createNode(NodeAction.DELETE, field, mmd, this).get());
             }
         }
     }

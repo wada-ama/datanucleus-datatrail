@@ -33,25 +33,25 @@ public class Update extends BaseMap {
             ChangeTracker changeTracker = ((ChangeTrackable)map).getChangeTracker();
             this.changed = (java.util.Collection<Node>) changeTracker.getChanged().stream().map(o -> {
                 Entry keyValue = (Entry)o;
-                Node key = getFactory().createNode(keyValue.getKey(), NodeAction.UPDATE, null, this);
-                BaseNode value = (BaseNode)getFactory().createNode(map.get(keyValue.getKey()), NodeAction.UPDATE, null, this);
-                value.setPrev(getFactory().createNode(keyValue.getValue(), NodeAction.UPDATE, null, this));
+                Node key = getFactory().createNode(NodeAction.UPDATE, keyValue.getKey(), null, this).get();
+                BaseNode value = (BaseNode)getFactory().createNode(NodeAction.UPDATE, map.get(keyValue.getKey()), null, this).get();
+                value.setPrev(getFactory().createNode(NodeAction.UPDATE, keyValue.getValue(), null, this).get());
 
                 return new MapEntry(key,value);
             }).collect(Collectors.toSet());
 
             this.added = (java.util.Collection<Node>) changeTracker.getAdded().stream().map(o -> {
                 Entry keyValue = (Entry)o;
-                Node key = getFactory().createNode(keyValue.getKey(), NodeAction.UPDATE, null, this);
-                Node value = getFactory().createNode(keyValue.getValue(), NodeAction.UPDATE, null, this);
+                Node key = getFactory().createNode(NodeAction.UPDATE, keyValue.getKey(), null, this).get();
+                Node value = getFactory().createNode(NodeAction.UPDATE, keyValue.getValue(), null, this).get();
 
                 return new MapEntry(key,value);
             }).collect(Collectors.toSet());
 
             this.removed = (java.util.Collection<Node>) changeTracker.getRemoved().stream().map(o -> {
                 Entry keyValue = (Entry)o;
-                Node key = getFactory().createNode(keyValue.getKey(), NodeAction.UPDATE, null, this);
-                Node value = getFactory().createNode(keyValue.getValue(), NodeAction.UPDATE, null, this);
+                Node key = getFactory().createNode(NodeAction.UPDATE, keyValue.getKey(), null, this).get();
+                Node value = getFactory().createNode(NodeAction.UPDATE, keyValue.getValue(), null, this).get();
 
                 return new MapEntry(key,value);
             }).collect(Collectors.toSet());
@@ -60,8 +60,8 @@ public class Update extends BaseMap {
             // not a trackable map
             this.contents = (java.util.Collection<Node>) map.entrySet().stream().map(o -> {
                 Entry keyValue = (Entry)o;
-                Node key = getFactory().createNode(keyValue.getKey(), NodeAction.UPDATE, null, this);
-                Node value = getFactory().createNode(keyValue.getValue(), NodeAction.UPDATE, null, this);
+                Node key = getFactory().createNode(NodeAction.UPDATE, keyValue.getKey(), null, this).get();
+                Node value = getFactory().createNode(NodeAction.UPDATE, keyValue.getValue(), null, this).get();
 
                 return new MapEntry(key,value);
             }).collect(Collectors.toSet());

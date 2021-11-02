@@ -21,6 +21,6 @@ public class Delete extends BaseArray {
     protected void addElements( Object[] elements ){
         // all new values, so use the raw collection values
         for(Object element : elements )
-            this.contents.add(getFactory().createNode(element, NodeAction.DELETE, null, this));
+            this.contents.add(getFactory().createNode(NodeAction.DELETE, element, null, this).get());
     }
 }

@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * Singleton factory responsible for instantiating a node type based on requirements
+ * Factory responsible for instantiating a node type based on requirements
  */
 public class DataTrailFactory {
     // get a static slf4j logger for the class
@@ -153,7 +153,7 @@ public class DataTrailFactory {
 
 
         // create a node for this value
-        return factory.create(action, value, md, parent)
+        return factory.createNode(action, value, md, parent)
                 .orElseThrow(() -> new IllegalArgumentException("Factory unable to support: " + value.getClass().getCanonicalName() + " / " + action));
     }
 

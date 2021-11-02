@@ -48,8 +48,8 @@ public class Update extends BaseEntity {
             AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
 
             if (mmd.isFieldToBePersisted()) {
-                BaseNode current = (BaseNode)getFactory().createNode(field, NodeAction.UPDATE, mmd, this);
-                current.setPrev(getFactory().createNode(prevField, NodeAction.UPDATE, mmd, this));
+                BaseNode current = (BaseNode)getFactory().createNode(NodeAction.UPDATE, field, mmd, this).get();
+                current.setPrev(getFactory().createNode(NodeAction.UPDATE, prevField, mmd, this).get());
                 fields.add(current);
             }
         }

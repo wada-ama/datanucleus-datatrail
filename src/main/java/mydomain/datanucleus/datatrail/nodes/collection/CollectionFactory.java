@@ -1,7 +1,6 @@
 package mydomain.datanucleus.datatrail.nodes.collection;
 
 import mydomain.datanucleus.datatrail.AbstractNodeFactory;
-import mydomain.datanucleus.datatrail.DataTrailFactory;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
@@ -23,7 +22,7 @@ public class CollectionFactory extends AbstractNodeFactory {
     }
 
     @Override
-    public Optional<Node> create(NodeAction action, Object value, MetaData md, Node parent) {
+    public Optional<Node> createNode(NodeAction action, Object value, MetaData md, Node parent) {
         assertConfigured();
         if (!supports(action, value, md))
             return Optional.empty();
