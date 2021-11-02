@@ -2,34 +2,28 @@ package mydomain.datanucleus.datatrail.nodes.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import mydomain.datanucleus.datatrail.Node;
+import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
-import mydomain.datanucleus.datatrail.ReferenceNode;
+import mydomain.datanucleus.datatrail.nodes.ReferenceNode;
 import mydomain.datanucleus.datatrail.TransactionInfo;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
-import mydomain.datanucleus.datatrail.nodes.NodeFactory;
+import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.nodes.Updatable;
-import mydomain.model.ITrailDesc;
-import org.datanucleus.api.jdo.NucleusJDOHelper;
 import org.datanucleus.enhancement.Persistable;
-import org.datanucleus.metadata.AbstractClassMetaData;
-import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
-import org.datanucleus.state.ObjectProvider;
 
 import javax.jdo.PersistenceManager;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Definition of an Entity that is being Created
  */
 abstract public class BaseEntity extends ReferenceNode {
-    protected Set<Node> fields = new HashSet<Node>();
+    protected Set<BaseNode> fields = new HashSet<BaseNode>();
     protected Instant dateModified;
     protected String username;
     protected TransactionInfo txInfo;
@@ -40,7 +34,7 @@ abstract public class BaseEntity extends ReferenceNode {
      * @param md
      * @param parent
      */
-    protected BaseEntity(Persistable value, MetaData md, Node parent, NodeFactory factory){
+    protected BaseEntity(Persistable value, MetaData md, BaseNode parent, NodeFactory factory){
         // an entity is the root node in the tree
         super(value, md,null);
         this.factory = factory;
@@ -52,7 +46,7 @@ abstract public class BaseEntity extends ReferenceNode {
     abstract protected void setFields(Persistable pc);
 
     @JsonProperty
-    public Set<Node> getFields() {
+    public Set<BaseNode> getFields() {
         return fields;
     }
 
@@ -79,18 +73,12 @@ abstract public class BaseEntity extends ReferenceNode {
         fields.stream().filter(node -> node instanceof Updatable).forEach(node -> ((Updatable)node).updateFields());
     }
 
-    @Override
-    public boolean canProcess(Object value, MetaData md) {
-        // can process any Persitable object that is passed as a class
-        return value instanceof Persistable && md instanceof AbstractClassMetaData;
-    }
-
 
     /**
      * Returns the action for {@link NodeType#ENTITY} objects.
      * @return action for {@link NodeType#ENTITY} objects.  Null otherwise
      */
-    public Action getAction(){
+    public NodeAction getAction(){
         NodeDefinition nodeDefn = this.getClass().getAnnotation(NodeDefinition.class);
         return nodeDefn == null ? null : Arrays.stream(nodeDefn.action()).findFirst().orElse(null);
     }

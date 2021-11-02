@@ -1,32 +1,23 @@
 package mydomain.datanucleus.datatrail.nodes.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jdk.nashorn.internal.ir.BaseNode;
 import mydomain.datanucleus.ExtendedReferentialStateManagerImpl;
-import mydomain.datanucleus.datatrail.DataTrailFactory;
-import mydomain.datanucleus.datatrail.Node;
+import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
-import mydomain.datanucleus.datatrail.ReferenceNode;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
-import mydomain.datanucleus.datatrail.nodes.NodeFactory;
-import mydomain.datanucleus.datatrail.nodes.Updatable;
+import mydomain.datanucleus.datatrail.NodeFactory;
 import org.datanucleus.api.jdo.NucleusJDOHelper;
 import org.datanucleus.enhancement.Persistable;
-import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
 
 import javax.jdo.PersistenceManager;
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Definition of an Entity that is being Created
  */
-@NodeDefinition(type=NodeType.ENTITY, action = Node.Action.DELETE)
+@NodeDefinition(type=NodeType.ENTITY, action = NodeAction.DELETE)
 public class Delete extends BaseEntity {
 
 
@@ -38,7 +29,7 @@ public class Delete extends BaseEntity {
      * @param parent
      * @param factory
      */
-    protected Delete(Persistable value, MetaData md, Node parent, NodeFactory factory) {
+    protected Delete(Persistable value, MetaData md, BaseNode parent, NodeFactory factory) {
         super(value, md, parent, factory);
     }
 
@@ -57,7 +48,7 @@ public class Delete extends BaseEntity {
             Object field = op.provideSavedField(position);
             AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
             if( mmd.isFieldToBePersisted()){
-                fields.add(getFactory().createNode( field, Action.DELETE, mmd, this));
+                fields.add(getFactory().createNode( field, NodeAction.DELETE, mmd, this));
             }
         }
     }

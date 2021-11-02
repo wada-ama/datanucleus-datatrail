@@ -1,7 +1,8 @@
 package mydomain.audit;
 
 import mydomain.datanucleus.datatrail.DataTrailFactory;
-import mydomain.datanucleus.datatrail.Node;
+import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.nodes.Updatable;
 import org.datanucleus.TransactionEventListener;
 import org.datanucleus.enhancement.Persistable;
@@ -37,10 +38,10 @@ public class AuditListener implements CreateLifecycleListener,
 
 
     // internal non-null valued map to store entity modifications throughout the transaction
-    private Map<Object, Node> modifications = new HashMap<Object, Node>(){
+    private Map<Object, BaseNode> modifications = new HashMap<Object, BaseNode>(){
         // Do not store null values
         @Override
-        public Node put(Object key, Node value) {
+        public BaseNode put(Object key, BaseNode value) {
             // do not store null values
             if( value == null ){
                 return value;
@@ -86,14 +87,14 @@ public class AuditListener implements CreateLifecycleListener,
 
         // check to see if the entity is already in the modifications map
         if( modifications.containsKey(pc)){
-            Node node = modifications.get(pc);
+            BaseNode node = modifications.get(pc);
             if( node instanceof Updatable){
                 ((Updatable)node).updateFields();
             }
         } else {
             // postStore called for both new objects and updating objects, so need to determine which is the state of the object
             logger.warn("New Persistable not already processed {}", pc.dnGetObjectId());
-            modifications.put(pc, dataTrailFactory.createNode(pc, Node.Action.DELETE));
+            modifications.put(pc, dataTrailFactory.createNode(pc, NodeAction.DELETE));
         }
     }
 
@@ -114,7 +115,7 @@ public class AuditListener implements CreateLifecycleListener,
         Persistable pc = (Persistable) event.getSource();
 
         // postStore called for both new objects and updating objects, so need to determine which is the state of the object
-        Node.Action action = pc.dnGetStateManager().isNew(pc) ? Node.Action.CREATE : Node.Action.UPDATE;
+        NodeAction action = pc.dnGetStateManager().isNew(pc) ? NodeAction.CREATE : NodeAction.UPDATE;
         modifications.put(pc, dataTrailFactory.createNode(pc, action));
 
     }
@@ -130,14 +131,14 @@ public class AuditListener implements CreateLifecycleListener,
 
         // check to see if the entity is already in the modifications map
         if( modifications.containsKey(pc)){
-            Node node = modifications.get(pc);
+            BaseNode node = modifications.get(pc);
             if( node instanceof Updatable){
                 ((Updatable)node).updateFields();
             }
         } else {
             // postStore called for both new objects and updating objects, so need to determine which is the state of the object
             logger.warn("New Persistable not already processed {}", pc.dnGetObjectId());
-            Node.Action action = pc.dnGetStateManager().isNew(pc) ? Node.Action.CREATE : Node.Action.UPDATE;
+            NodeAction action = pc.dnGetStateManager().isNew(pc) ? NodeAction.CREATE : NodeAction.UPDATE;
             modifications.put(pc, dataTrailFactory.createNode(pc, action));
         }
 
@@ -182,7 +183,7 @@ public class AuditListener implements CreateLifecycleListener,
     public void transactionRollbackToSavepoint(String name) {
     }
 
-    public Collection<Node> getModifications() {
+    public Collection<BaseNode> getModifications() {
         return modifications.values();
     }
 }

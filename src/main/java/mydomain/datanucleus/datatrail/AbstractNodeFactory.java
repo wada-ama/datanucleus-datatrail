@@ -1,7 +1,6 @@
 package mydomain.datanucleus.datatrail;
 
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
-import mydomain.datanucleus.datatrail.nodes.NodeFactory;
 import org.datanucleus.metadata.MetaData;
 
 import java.util.Arrays;
@@ -25,7 +24,7 @@ abstract public class AbstractNodeFactory implements NodeFactory {
      * @param md the metadata relating to the given object
      * @return
      */
-    public boolean supports(Node.Action action, Object value, MetaData md) {
+    public boolean supports(NodeAction action, Object value, MetaData md) {
         NodeDefinition nodeDefn = this.getClass().getAnnotation(NodeDefinition.class);
         return nodeDefn == null ? false : Arrays.asList(nodeDefn.action()).contains(action);
     }

@@ -2,7 +2,8 @@ package mydomain.datanucleus.datatrail.nodes.reference;
 
 import mydomain.datanucleus.datatrail.AbstractNodeFactory;
 import mydomain.datanucleus.datatrail.DataTrailFactory;
-import mydomain.datanucleus.datatrail.Node;
+import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.enhancement.Persistable;
@@ -11,7 +12,7 @@ import org.datanucleus.metadata.MetaData;
 
 import java.util.Optional;
 
-@NodeDefinition(type = NodeType.PRIMITIVE, action = {Node.Action.CREATE, Node.Action.UPDATE, Node.Action.DELETE})
+@NodeDefinition(type = NodeType.PRIMITIVE, action = {NodeAction.CREATE, NodeAction.UPDATE, NodeAction.DELETE})
 public class ReferenceFactory extends AbstractNodeFactory {
 
     public ReferenceFactory(DataTrailFactory dataTrailFactory) {
@@ -19,7 +20,7 @@ public class ReferenceFactory extends AbstractNodeFactory {
     }
 
     @Override
-    public boolean supports(Node.Action action, Object value, MetaData md) {
+    public boolean supports(NodeAction action, Object value, MetaData md) {
         // either the is persistent, or the field is supposed to be persistable (ex: if the value is null)
         return super.supports(action, value, md) &&
                 (value instanceof Persistable ||
@@ -28,7 +29,7 @@ public class ReferenceFactory extends AbstractNodeFactory {
     }
 
     @Override
-    public Optional<Node> create(Node.Action action, Object value, MetaData md, Node parent) {
+    public Optional<BaseNode> create(NodeAction action, Object value, MetaData md, BaseNode parent) {
         if (!supports(action, value, md))
             return Optional.empty();
 

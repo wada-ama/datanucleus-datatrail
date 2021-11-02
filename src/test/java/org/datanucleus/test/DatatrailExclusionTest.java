@@ -1,11 +1,11 @@
 package org.datanucleus.test;
 
 import com.spotify.hamcrest.pojo.IsPojo;
-import mydomain.datanucleus.datatrail.Node;
+import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.model.BaseTeacher;
 import mydomain.model.Teacher;
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +33,7 @@ public class DatatrailExclusionTest extends AbstractTest{
             pm.makePersistent(teacher);
         });
 
-        IsPojo<Node> teacher = getEntity(Node.Action.CREATE, Teacher.class, "1")
+        IsPojo<BaseNode> teacher = getEntity(NodeAction.CREATE, Teacher.class, "1")
                 .withProperty("fields",  hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "teacher", null)
                 ));
@@ -48,7 +48,7 @@ public class DatatrailExclusionTest extends AbstractTest{
             pm.makePersistent(teacher);
         });
 
-        IsPojo<Node> teacher = getEntity(Node.Action.CREATE, Teacher.class, ANY )
+        IsPojo<BaseNode> teacher = getEntity(NodeAction.CREATE, Teacher.class, ANY )
                 .withProperty("fields",  hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "name", "teacher", null),
                         getField(NodeType.REF, BaseTeacher.class, "mentor", ANY, null)

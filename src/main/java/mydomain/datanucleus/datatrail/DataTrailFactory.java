@@ -4,7 +4,6 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import mydomain.audit.DataTrail;
-import mydomain.datanucleus.datatrail.nodes.NodeFactory;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.MetaData;
 import org.datanucleus.state.ObjectProvider;
@@ -76,11 +75,11 @@ public class DataTrailFactory {
 
     /**
      * Retrieve an instance of the factory
-     * By default, automatically add any {@link NodeFactory} found in any subpackage of {@link Node}
+     * By default, automatically add any {@link NodeFactory} found in any subpackage of {@link BaseNode}
      * @return
      */
     static public DataTrailFactory getDataTrailFactory() {
-        return getDataTrailFactory(Node.class);
+        return getDataTrailFactory(BaseNode.class);
     }
 
     /**
@@ -99,7 +98,7 @@ public class DataTrailFactory {
      * @param action
      * @return
      */
-    public Node createNode(Object value, Node.Action action){
+    public BaseNode createNode(Object value, NodeAction action){
         // make sure it is a persistable object
         if( !( value instanceof Persistable) ) {
             return null;
@@ -127,17 +126,17 @@ public class DataTrailFactory {
      * @return
      * @throws RuntimeException if unable to create the node
      */
-    public Node createNode(Object value, Node.Action action, MetaData md, Node parent){
+    public BaseNode createNode(Object value, NodeAction action, MetaData md, BaseNode parent){
 
         // find the factory for this type of value
-        mydomain.datanucleus.datatrail.nodes.NodeFactory factory = factories.stream().filter(nodeFactory -> nodeFactory.supports(action, value, md))
+        NodeFactory factory = factories.stream().filter(nodeFactory -> nodeFactory.supports(action, value, md))
                 .sorted(Comparator.comparingInt(NodeFactory::priority))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("No type found to support: " + value.getClass().getCanonicalName() + " / " + action));
 
 
         // create a node for this value
-        Node node = factory.create(action, value, md, parent)
+        BaseNode node = factory.create(action, value, md, parent)
                 .orElseThrow(() -> new IllegalArgumentException("Factory unable to support: " + value.getClass().getCanonicalName() + " / " + action));
 
         return node;

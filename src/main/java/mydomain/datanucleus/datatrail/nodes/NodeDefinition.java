@@ -1,6 +1,6 @@
 package mydomain.datanucleus.datatrail.nodes;
 
-import mydomain.datanucleus.datatrail.Node.Action;
+import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 
 import java.lang.annotation.ElementType;
@@ -21,5 +21,5 @@ public @interface NodeDefinition {
      * Type of action implemented by the class
      * @return
      */
-    Action[] action() default {};
+    NodeAction[] action() default {};
 }

@@ -1,7 +1,7 @@
 package org.datanucleus.test;
 
 import com.spotify.hamcrest.pojo.IsPojo;
-import mydomain.datanucleus.datatrail.Node;
+import mydomain.datanucleus.datatrail.BaseNode;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.model.CountryCode;
 import mydomain.model.QStudent;
@@ -18,9 +18,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static mydomain.datanucleus.datatrail.Node.Action.CREATE;
-import static mydomain.datanucleus.datatrail.Node.Action.DELETE;
-import static mydomain.datanucleus.datatrail.Node.Action.UPDATE;
+import static mydomain.datanucleus.datatrail.NodeAction.CREATE;
+import static mydomain.datanucleus.datatrail.NodeAction.DELETE;
+import static mydomain.datanucleus.datatrail.NodeAction.UPDATE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -44,7 +44,7 @@ public class MapTest extends AbstractTest {
             pm.makePersistent(student);
         });
 
-        final IsPojo<Node> student = getEntity(CREATE, Student.class, "1")
+        final IsPojo<BaseNode> student = getEntity(CREATE, Student.class, "1")
                 .withProperty("fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "name", "student", null),
                         getContainerField(NodeType.MAP, "telephoneNbs")
@@ -54,20 +54,20 @@ public class MapTest extends AbstractTest {
                 ));
 
 
-        final IsPojo<Node> cc = getEntity(CREATE, CountryCode.class, "1")
+        final IsPojo<BaseNode> cc = getEntity(CREATE, CountryCode.class, "1")
                 .withProperty("fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "country", "canada", null),
                         getField(NodeType.PRIMITIVE, Integer.class, "code", "1", null)
                 ));
 
-        final IsPojo<Node> telephone = getEntity(CREATE, Telephone.class, "1")
+        final IsPojo<BaseNode> telephone = getEntity(CREATE, Telephone.class, "1")
                 .withProperty("fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "number", "514-555-5555", null),
                         getField(NodeType.REF, CountryCode.class, "countryCode", "1", null)
                 ));
 
 
-        Collection<Node> entities = audit.getModifications();
+        Collection<BaseNode> entities = audit.getModifications();
         assertThat(entities, hasItem(cc));
         assertThat(entities, hasItem(telephone));
         assertThat(entities, hasItem(student));
@@ -103,7 +103,7 @@ public class MapTest extends AbstractTest {
         });
 
 
-        final IsPojo<Node> student = getEntity(DELETE, Student.class, "1")
+        final IsPojo<BaseNode> student = getEntity(DELETE, Student.class, "1")
                 .withProperty("fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "name", "student", null),
                         getContainerField(NodeType.MAP, "telephoneNbs")
@@ -119,7 +119,7 @@ public class MapTest extends AbstractTest {
                 ));
 
 
-        Collection<Node> entities = audit.getModifications();
+        Collection<BaseNode> entities = audit.getModifications();
         assertThat(entities, hasItem(student));
         assertThat(entities, contains(student));
     }
@@ -155,7 +155,7 @@ public class MapTest extends AbstractTest {
         });
 
 
-        final IsPojo<Node> student = getEntity(UPDATE, Student.class, "1")
+        final IsPojo<BaseNode> student = getEntity(UPDATE, Student.class, "1")
                 .withProperty("fields", hasItems(
                         getContainerField(NodeType.MAP, "marks")
                             .withProperty("added", hasItems(
@@ -170,7 +170,7 @@ public class MapTest extends AbstractTest {
                 ));
 
 
-        Collection<Node> entities = audit.getModifications();
+        Collection<BaseNode> entities = audit.getModifications();
         assertThat(entities, hasItem(student));
         assertThat(entities, contains(student));
     }

@@ -1,13 +1,13 @@
 package mydomain.datanucleus.datatrail.nodes.primitive;
 
-import mydomain.datanucleus.datatrail.Node;
+import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import mydomain.datanucleus.datatrail.nodes.NodePriority;
 import org.datanucleus.metadata.AbstractMemberMetaData;
-import org.datanucleus.metadata.MetaData;
 
-@NodeDefinition(type=NodeType.PRIMITIVE, action = Node.Action.DELETE)
+@NodeDefinition(type=NodeType.PRIMITIVE, action = NodeAction.DELETE)
 @NodePriority(priority = NodePriority.LOWEST_PRECEDENCE)
 public class Delete extends BasePrimitive {
 
@@ -18,7 +18,7 @@ public class Delete extends BasePrimitive {
      * @param mmd
      * @param parent
      */
-    protected Delete(Object value, AbstractMemberMetaData mmd, Node parent) {
+    protected Delete(Object value, AbstractMemberMetaData mmd, BaseNode parent) {
         super(value, mmd, parent);
     }
 }

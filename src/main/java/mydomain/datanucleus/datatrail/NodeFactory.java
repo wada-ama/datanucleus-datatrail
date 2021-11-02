@@ -1,7 +1,7 @@
-package mydomain.datanucleus.datatrail.nodes;
+package mydomain.datanucleus.datatrail;
 
-import mydomain.datanucleus.datatrail.Node;
-import mydomain.datanucleus.datatrail.NodeType;
+import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
+import mydomain.datanucleus.datatrail.nodes.NodePriority;
 import org.datanucleus.metadata.MetaData;
 
 import java.util.Optional;
@@ -15,7 +15,7 @@ public interface NodeFactory {
      * @param md the metadata relating to the given object
      * @return
      */
-    boolean supports(Node.Action action, Object value, MetaData md);
+    boolean supports(NodeAction action, Object value, MetaData md);
 
     /**
      * Factory method to create a node with the given parameters.
@@ -24,9 +24,9 @@ public interface NodeFactory {
      * @param parent the parent node for this node.  Null if this is supposed to be the root of the tree
      * @return Only produces a node if the factory can create it
      */
-    Optional<Node> create(Node.Action action, Object value, MetaData md, Node parent);
+    Optional<BaseNode> create(NodeAction action, Object value, MetaData md, BaseNode parent);
 
-    default Node createNode(Object value, Node.Action action, MetaData md, Node parent){
+    default BaseNode createNode(Object value, NodeAction action, MetaData md, BaseNode parent){
         return create(action, value,  md, parent).get();
     };
 
@@ -43,7 +43,7 @@ public interface NodeFactory {
      * Type of action implemented by the class
      * @return
      */
-    default Node.Action[] action(){
+    default NodeAction[] action(){
         NodeDefinition nodeDefn = this.getClass().getAnnotation(NodeDefinition.class);
         return nodeDefn == null ? null : nodeDefn.action();
     }

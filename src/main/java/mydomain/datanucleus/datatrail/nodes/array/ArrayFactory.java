@@ -2,7 +2,8 @@ package mydomain.datanucleus.datatrail.nodes.array;
 
 import mydomain.datanucleus.datatrail.AbstractNodeFactory;
 import mydomain.datanucleus.datatrail.DataTrailFactory;
-import mydomain.datanucleus.datatrail.Node;
+import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
@@ -10,7 +11,7 @@ import org.datanucleus.metadata.MetaData;
 
 import java.util.Optional;
 
-@NodeDefinition(type = NodeType.ARRAY, action = {Node.Action.CREATE, Node.Action.UPDATE, Node.Action.DELETE})
+@NodeDefinition(type = NodeType.ARRAY, action = {NodeAction.CREATE, NodeAction.UPDATE, NodeAction.DELETE})
 public class ArrayFactory extends AbstractNodeFactory {
 
     public ArrayFactory(DataTrailFactory dataTrailFactory) {
@@ -18,7 +19,7 @@ public class ArrayFactory extends AbstractNodeFactory {
     }
 
     @Override
-    public boolean supports(Node.Action action, Object value, MetaData md) {
+    public boolean supports(NodeAction action, Object value, MetaData md) {
         // can process any field that is identified as an array
         return super.supports(action, value, md)
                 && md instanceof AbstractMemberMetaData
@@ -26,7 +27,7 @@ public class ArrayFactory extends AbstractNodeFactory {
     }
 
     @Override
-    public Optional<Node> create(Node.Action action, Object value, MetaData md, Node parent) {
+    public Optional<BaseNode> create(NodeAction action, Object value, MetaData md, BaseNode parent) {
         if (!supports(action, value, md))
             return Optional.empty();
 

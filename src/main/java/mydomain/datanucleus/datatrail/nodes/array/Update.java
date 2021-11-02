@@ -1,20 +1,17 @@
 package mydomain.datanucleus.datatrail.nodes.array;
 
-import mydomain.datanucleus.datatrail.ContainerNode;
-import mydomain.datanucleus.datatrail.DataTrailFactory;
-import mydomain.datanucleus.datatrail.Node;
+import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
-import org.datanucleus.metadata.MetaData;
-import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-@NodeDefinition(type=NodeType.ARRAY, action = Node.Action.UPDATE)
+@NodeDefinition(type=NodeType.ARRAY, action = NodeAction.UPDATE)
 public class Update extends BaseArray {
 
-    protected Update(Object value, AbstractMemberMetaData mmd, Node parent) {
+    protected Update(Object value, AbstractMemberMetaData mmd, BaseNode parent) {
         super(value, mmd, parent);
     }
 
@@ -26,6 +23,6 @@ public class Update extends BaseArray {
     protected void addElements( Object[] elements ){
         // all new values, so use the raw collection values
         for(Object element : elements )
-            this.contents.add(getFactory().createNode(element, Action.UPDATE, null, this));
+            this.contents.add(getFactory().createNode(element, NodeAction.UPDATE, null, this));
     }
 }

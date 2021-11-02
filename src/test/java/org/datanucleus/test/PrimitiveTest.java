@@ -1,7 +1,8 @@
 package org.datanucleus.test;
 
 import com.spotify.hamcrest.pojo.IsPojo;
-import mydomain.datanucleus.datatrail.Node;
+import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.model.Street;
 import org.datanucleus.identity.DatastoreIdImplKodo;
@@ -24,13 +25,13 @@ public class PrimitiveTest extends AbstractTest {
         });
 
 
-        final IsPojo<Node> calgary = getEntity(Node.Action.CREATE, Street.class, "1")
+        final IsPojo<BaseNode> calgary = getEntity(NodeAction.CREATE, Street.class, "1")
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Calgary", null)
                 ));
 
 
-        Collection<Node> entities = audit.getModifications();
+        Collection<BaseNode> entities = audit.getModifications();
         assertThat(entities, hasItem(calgary));
         assertThat(entities, containsInAnyOrder(calgary));
     }
@@ -52,9 +53,9 @@ public class PrimitiveTest extends AbstractTest {
         });
 
 
-        Collection<Node> entities = audit.getModifications();
+        Collection<BaseNode> entities = audit.getModifications();
 
-        final IsPojo<Node> regina = getEntity(Node.Action.DELETE, Street.class, "1")
+        final IsPojo<BaseNode> regina = getEntity(NodeAction.DELETE, Street.class, "1")
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Regina", null)
                 ));
