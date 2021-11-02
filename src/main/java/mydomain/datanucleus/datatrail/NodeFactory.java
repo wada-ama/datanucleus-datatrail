@@ -24,9 +24,9 @@ public interface NodeFactory {
      * @param parent the parent node for this node.  Null if this is supposed to be the root of the tree
      * @return Only produces a node if the factory can create it
      */
-    Optional<BaseNode> create(NodeAction action, Object value, MetaData md, BaseNode parent);
+    Optional<Node> create(NodeAction action, Object value, MetaData md, Node parent);
 
-    default BaseNode createNode(Object value, NodeAction action, MetaData md, BaseNode parent){
+    default Node createNode(Object value, NodeAction action, MetaData md, Node parent){
         return create(action, value,  md, parent).get();
     };
 

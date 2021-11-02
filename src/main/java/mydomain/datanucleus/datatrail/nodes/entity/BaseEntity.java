@@ -2,7 +2,7 @@ package mydomain.datanucleus.datatrail.nodes.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.ReferenceNode;
@@ -23,7 +23,7 @@ import java.util.Set;
  * Definition of an Entity that is being Created
  */
 abstract public class BaseEntity extends ReferenceNode {
-    protected Set<BaseNode> fields = new HashSet<BaseNode>();
+    protected Set<Node> fields = new HashSet<>();
     protected Instant dateModified;
     protected String username;
     protected TransactionInfo txInfo;
@@ -34,7 +34,7 @@ abstract public class BaseEntity extends ReferenceNode {
      * @param md
      * @param parent
      */
-    protected BaseEntity(Persistable value, MetaData md, BaseNode parent, NodeFactory factory){
+    protected BaseEntity(Persistable value, MetaData md, Node parent, NodeFactory factory){
         // an entity is the root node in the tree
         super(value, md,null);
         this.factory = factory;
@@ -46,7 +46,7 @@ abstract public class BaseEntity extends ReferenceNode {
     abstract protected void setFields(Persistable pc);
 
     @JsonProperty
-    public Set<BaseNode> getFields() {
+    public Set<Node> getFields() {
         return fields;
     }
 

@@ -1,7 +1,7 @@
 package mydomain.audit;
 
 import mydomain.datanucleus.datatrail.DataTrailFactory;
-import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.nodes.Updatable;
 import org.datanucleus.TransactionEventListener;
@@ -38,10 +38,10 @@ public class AuditListener implements CreateLifecycleListener,
 
 
     // internal non-null valued map to store entity modifications throughout the transaction
-    private Map<Object, BaseNode> modifications = new HashMap<Object, BaseNode>(){
+    private Map<Object, Node> modifications = new HashMap<Object, Node>(){
         // Do not store null values
         @Override
-        public BaseNode put(Object key, BaseNode value) {
+        public Node put(Object key, Node value) {
             // do not store null values
             if( value == null ){
                 return value;
@@ -87,7 +87,7 @@ public class AuditListener implements CreateLifecycleListener,
 
         // check to see if the entity is already in the modifications map
         if( modifications.containsKey(pc)){
-            BaseNode node = modifications.get(pc);
+            Node node = modifications.get(pc);
             if( node instanceof Updatable){
                 ((Updatable)node).updateFields();
             }
@@ -131,7 +131,7 @@ public class AuditListener implements CreateLifecycleListener,
 
         // check to see if the entity is already in the modifications map
         if( modifications.containsKey(pc)){
-            BaseNode node = modifications.get(pc);
+            Node node = modifications.get(pc);
             if( node instanceof Updatable){
                 ((Updatable)node).updateFields();
             }
@@ -183,7 +183,7 @@ public class AuditListener implements CreateLifecycleListener,
     public void transactionRollbackToSavepoint(String name) {
     }
 
-    public Collection<BaseNode> getModifications() {
+    public Collection<Node> getModifications() {
         return modifications.values();
     }
 }

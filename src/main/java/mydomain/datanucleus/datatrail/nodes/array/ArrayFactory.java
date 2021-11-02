@@ -2,7 +2,7 @@ package mydomain.datanucleus.datatrail.nodes.array;
 
 import mydomain.datanucleus.datatrail.AbstractNodeFactory;
 import mydomain.datanucleus.datatrail.DataTrailFactory;
-import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
@@ -27,7 +27,7 @@ public class ArrayFactory extends AbstractNodeFactory {
     }
 
     @Override
-    public Optional<BaseNode> create(NodeAction action, Object value, MetaData md, BaseNode parent) {
+    public Optional<Node> create(NodeAction action, Object value, MetaData md, Node parent) {
         if (!supports(action, value, md))
             return Optional.empty();
 

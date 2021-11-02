@@ -2,7 +2,7 @@ package mydomain.datanucleus.datatrail.nodes.entity;
 
 
 import mydomain.datanucleus.ExtendedReferentialStateManagerImpl;
-import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
@@ -29,7 +29,7 @@ public class Delete extends BaseEntity {
      * @param parent
      * @param factory
      */
-    protected Delete(Persistable value, MetaData md, BaseNode parent, NodeFactory factory) {
+    protected Delete(Persistable value, MetaData md, Node parent, NodeFactory factory) {
         super(value, md, parent, factory);
     }
 

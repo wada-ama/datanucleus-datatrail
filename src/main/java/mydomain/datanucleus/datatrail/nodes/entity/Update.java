@@ -2,7 +2,8 @@ package mydomain.datanucleus.datatrail.nodes.entity;
 
 
 import mydomain.datanucleus.ExtendedReferentialStateManagerImpl;
-import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.nodes.BaseNode;
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
@@ -27,7 +28,7 @@ public class Update extends BaseEntity {
      * @param parent
      * @param factory
      */
-    protected Update(Persistable value, MetaData md, BaseNode parent, NodeFactory factory) {
+    protected Update(Persistable value, MetaData md, Node parent, NodeFactory factory) {
         super(value, md, parent, factory);
     }
 
@@ -47,7 +48,7 @@ public class Update extends BaseEntity {
             AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
 
             if (mmd.isFieldToBePersisted()) {
-                BaseNode current = getFactory().createNode(field, NodeAction.UPDATE, mmd, this);
+                BaseNode current = (BaseNode)getFactory().createNode(field, NodeAction.UPDATE, mmd, this);
                 current.setPrev(getFactory().createNode(prevField, NodeAction.UPDATE, mmd, this));
                 fields.add(current);
             }

@@ -2,7 +2,7 @@ package mydomain.datanucleus.datatrail.nodes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.model.ITrailDesc;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.identity.DatastoreId;
@@ -18,7 +18,7 @@ abstract public class ReferenceNode extends BaseNode implements Updatable {
     protected String version;
     protected String description;
 
-    public ReferenceNode(Persistable source, MetaData mmd, BaseNode parent) {
+    public ReferenceNode(Persistable source, MetaData mmd, Node parent) {
         super(mmd, parent);
         this.source = new WeakReference(source);
         setId(source);

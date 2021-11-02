@@ -1,13 +1,13 @@
-package mydomain.datanucleus.datatrail;
+package mydomain.datanucleus.datatrail.nodes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
-import mydomain.datanucleus.datatrail.nodes.ReferenceNode;
+import mydomain.datanucleus.datatrail.ClassUtils;
+import mydomain.datanucleus.datatrail.Node;
+import mydomain.datanucleus.datatrail.NodeFactory;
+import mydomain.datanucleus.datatrail.NodeType;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
-import org.datanucleus.state.ObjectProvider;
 
 /**
  * Base class to represent a Node in the DataTrail object graph
@@ -16,7 +16,7 @@ import org.datanucleus.state.ObjectProvider;
  * @author Eric Benzacar
  */
 abstract public class BaseNode implements Node {
-    final private BaseNode parent;
+    final private Node parent;
     protected NodeType type;
 
     protected String name;
@@ -34,7 +34,7 @@ abstract public class BaseNode implements Node {
      * @param md
      * @param parent
      */
-    protected BaseNode(MetaData md, BaseNode parent) {
+    protected BaseNode(MetaData md, Node parent) {
         this.parent = parent;
         this.md = md;
         if( md == null ) {
@@ -102,7 +102,7 @@ abstract public class BaseNode implements Node {
     }
 
     @JsonIgnore
-    public BaseNode getParent() {
+    public Node getParent() {
         return parent;
     }
 
@@ -127,6 +127,6 @@ abstract public class BaseNode implements Node {
         }
 
         // return the parent factory if a parent exists
-        return parent != null ? parent.getFactory() : null;
+        return parent != null && parent instanceof BaseNode ? ((BaseNode)parent).getFactory() : null;
     }
 }

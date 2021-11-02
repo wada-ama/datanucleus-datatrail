@@ -1,17 +1,15 @@
 package mydomain.datanucleus.datatrail.nodes.array;
 
-import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 @NodeDefinition(type=NodeType.ARRAY, action = NodeAction.UPDATE)
 public class Update extends BaseArray {
 
-    protected Update(Object value, AbstractMemberMetaData mmd, BaseNode parent) {
+    protected Update(Object value, AbstractMemberMetaData mmd, Node parent) {
         super(value, mmd, parent);
     }
 

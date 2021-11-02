@@ -7,7 +7,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.spotify.hamcrest.pojo.IsPojo;
 import h2.H2Server;
 import mydomain.audit.AuditListener;
-import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.nodes.BaseNode;
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
@@ -106,7 +107,7 @@ abstract public class AbstractTest {
         pmf.getDataStoreCache().evictAll();
     }
 
-    protected String getJson(Collection<BaseNode> entities) throws IOException {
+    protected String getJson(Collection<Node> entities) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JavaTimeModule module = new JavaTimeModule();
         mapper.registerModule(module);
@@ -116,13 +117,13 @@ abstract public class AbstractTest {
         mapper.configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
 
         StringWriter sw = new StringWriter();
-        for (BaseNode entity : entities)
+        for (Node entity : entities)
             mapper.writeValue(sw, entity);
         return sw.toString();
     }
 
-    protected IsPojo<BaseNode> getEntity(NodeAction action, Class clazz, String id) {
-        IsPojo<BaseNode> entity = pojo(BaseNode.class)
+    protected IsPojo getEntity(NodeAction action, Class clazz, String id) {
+        IsPojo<? extends Node> entity = pojo(BaseNode.class)
                 .withProperty("className", is(clazz.getName()))
                 .withProperty("value", getValueMatcher(id))
                 .withProperty("action", hasToString(action.toString()))
@@ -139,8 +140,8 @@ abstract public class AbstractTest {
         return entity;
     }
 
-    protected IsPojo<BaseNode> getContainerField(NodeType type, String name) {
-        IsPojo<BaseNode> field = pojo(BaseNode.class)
+    protected IsPojo getContainerField(NodeType type, String name) {
+        IsPojo<? extends Node> field = pojo(BaseNode.class)
                 .withProperty("name", is(name))
                 .withProperty("type", hasToString(type.toString()))
                 .withProperty("prev", nullValue());
@@ -149,8 +150,8 @@ abstract public class AbstractTest {
 
     }
 
-    protected IsPojo<BaseNode> getListElement(NodeType type, Class clazz, String value) {
-        IsPojo<BaseNode> field = pojo(BaseNode.class)
+    protected IsPojo getListElement(NodeType type, Class clazz, String value) {
+        IsPojo<? extends Node> field = pojo(BaseNode.class)
                 .withProperty("value", is(value))
                 .withProperty("type", hasToString(type.toString()))
                 .withProperty("prev", nullValue())
@@ -198,7 +199,7 @@ abstract public class AbstractTest {
 
 
 
-    protected IsPojo<BaseNode> getField(NodeType type, Class clazz, String name, String value, String prevValue) {
+    protected IsPojo getField(NodeType type, Class clazz, String name, String value, String prevValue) {
         IsPojo<BaseNode> field = pojo(BaseNode.class)
                 .withProperty("name", is(name))
                 .withProperty("value", getValueMatcher(value))
@@ -253,7 +254,7 @@ abstract public class AbstractTest {
     }
 
 
-    protected Optional<BaseNode> filterEntity(Collection<BaseNode> collection, Class<?> entityClass, NodeAction action){
+    protected Optional<? extends Node> filterEntity(Collection<? extends Node> collection, Class<?> entityClass, NodeAction action){
         return collection.stream()
                         .filter(node -> node.getType() == NodeType.ENTITY
                                 && node.getClassName().equals(entityClass.getCanonicalName())

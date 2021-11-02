@@ -1,7 +1,7 @@
 package org.datanucleus.test;
 
 import com.spotify.hamcrest.pojo.IsPojo;
-import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.model.CountryCode;
 import mydomain.model.QStudent;
@@ -44,7 +44,7 @@ public class MapTest extends AbstractTest {
             pm.makePersistent(student);
         });
 
-        final IsPojo<BaseNode> student = getEntity(CREATE, Student.class, "1")
+        final IsPojo student = getEntity(CREATE, Student.class, "1")
                 .withProperty("fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "name", "student", null),
                         getContainerField(NodeType.MAP, "telephoneNbs")
@@ -54,20 +54,20 @@ public class MapTest extends AbstractTest {
                 ));
 
 
-        final IsPojo<BaseNode> cc = getEntity(CREATE, CountryCode.class, "1")
+        final IsPojo cc = getEntity(CREATE, CountryCode.class, "1")
                 .withProperty("fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "country", "canada", null),
                         getField(NodeType.PRIMITIVE, Integer.class, "code", "1", null)
                 ));
 
-        final IsPojo<BaseNode> telephone = getEntity(CREATE, Telephone.class, "1")
+        final IsPojo telephone = getEntity(CREATE, Telephone.class, "1")
                 .withProperty("fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "number", "514-555-5555", null),
                         getField(NodeType.REF, CountryCode.class, "countryCode", "1", null)
                 ));
 
 
-        Collection<BaseNode> entities = audit.getModifications();
+        Collection<? extends Node> entities = audit.getModifications();
         assertThat(entities, hasItem(cc));
         assertThat(entities, hasItem(telephone));
         assertThat(entities, hasItem(student));
@@ -103,7 +103,7 @@ public class MapTest extends AbstractTest {
         });
 
 
-        final IsPojo<BaseNode> student = getEntity(DELETE, Student.class, "1")
+        final IsPojo student = getEntity(DELETE, Student.class, "1")
                 .withProperty("fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "name", "student", null),
                         getContainerField(NodeType.MAP, "telephoneNbs")
@@ -119,7 +119,7 @@ public class MapTest extends AbstractTest {
                 ));
 
 
-        Collection<BaseNode> entities = audit.getModifications();
+        Collection<? extends Node> entities = audit.getModifications();
         assertThat(entities, hasItem(student));
         assertThat(entities, contains(student));
     }
@@ -155,7 +155,7 @@ public class MapTest extends AbstractTest {
         });
 
 
-        final IsPojo<BaseNode> student = getEntity(UPDATE, Student.class, "1")
+        final IsPojo student = getEntity(UPDATE, Student.class, "1")
                 .withProperty("fields", hasItems(
                         getContainerField(NodeType.MAP, "marks")
                             .withProperty("added", hasItems(
@@ -170,7 +170,7 @@ public class MapTest extends AbstractTest {
                 ));
 
 
-        Collection<BaseNode> entities = audit.getModifications();
+        Collection<? extends Node> entities = audit.getModifications();
         assertThat(entities, hasItem(student));
         assertThat(entities, contains(student));
     }

@@ -1,6 +1,6 @@
 package mydomain.datanucleus.datatrail.nodes.collection;
 
-import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
@@ -9,7 +9,7 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 @NodeDefinition(type=NodeType.COLLECTION, action = NodeAction.CREATE)
 public class Create extends BaseCollection {
 
-    protected Create(Object value, AbstractMemberMetaData mmd, BaseNode parent) {
+    protected Create(Object value, AbstractMemberMetaData mmd, Node parent) {
         super(value, mmd, parent);
     }
 

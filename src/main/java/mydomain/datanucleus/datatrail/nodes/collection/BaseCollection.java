@@ -1,12 +1,12 @@
 package mydomain.datanucleus.datatrail.nodes.collection;
 
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.nodes.ContainerNode;
-import mydomain.datanucleus.datatrail.BaseNode;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 abstract public class BaseCollection extends ContainerNode {
 
-    protected BaseCollection(Object value, AbstractMemberMetaData mmd, BaseNode parent) {
+    protected BaseCollection(Object value, AbstractMemberMetaData mmd, Node parent) {
         super(mmd, parent);
 
         // value might be null, in which case there is nothing left to do

@@ -1,7 +1,8 @@
 package org.datanucleus.test;
 
 import com.spotify.hamcrest.pojo.IsPojo;
-import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.nodes.BaseNode;
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.TransactionInfo;
@@ -43,9 +44,9 @@ public class TransactionInfoTest extends AbstractTest{
             pm.makePersistent(street);
         });
 
-        Collection<BaseNode> entities = audit.getModifications();
+        Collection<Node> entities = audit.getModifications();
 
-        final IsPojo<BaseNode> calgary = getEntity(NodeAction.CREATE, Street.class, ANY)
+        final IsPojo calgary = getEntity(NodeAction.CREATE, Street.class, ANY)
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Calgary", null)
                 ))
@@ -53,7 +54,7 @@ public class TransactionInfoTest extends AbstractTest{
                 .withProperty("username",  is(txInfo.getUsername()))
                 .withProperty("transactionId", is(txInfo.getTxId()));
 
-        final IsPojo<BaseNode> regina = getEntity(NodeAction.CREATE, Street.class, ANY)
+        final IsPojo regina = getEntity(NodeAction.CREATE, Street.class, ANY)
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Regina", null)
                 ))
@@ -76,10 +77,10 @@ public class TransactionInfoTest extends AbstractTest{
             pm.getUserObject(TransactionInfo.class);
         });
 
-        Collection<BaseNode> entities = audit.getModifications();
+        Collection<Node> entities = audit.getModifications();
 
 
-        final IsPojo<BaseNode> calgary = getEntity(NodeAction.CREATE, Street.class, ANY)
+        final IsPojo calgary = getEntity(NodeAction.CREATE, Street.class, ANY)
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Calgary", null)
                 ))
@@ -89,7 +90,7 @@ public class TransactionInfoTest extends AbstractTest{
 
 
 
-        final IsPojo<BaseNode> regina = getEntity(NodeAction.CREATE, Street.class, ANY)
+        final IsPojo regina = getEntity(NodeAction.CREATE, Street.class, ANY)
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Regina", null)
                 ))
@@ -105,8 +106,8 @@ public class TransactionInfoTest extends AbstractTest{
 
 
     @Override
-    protected IsPojo<BaseNode> getEntity(NodeAction action, Class clazz, String id) {
-            IsPojo<BaseNode> entity = pojo(BaseNode.class)
+    protected IsPojo getEntity(NodeAction action, Class clazz, String id) {
+            IsPojo entity = pojo(BaseNode.class)
                     .withProperty("className", is(clazz.getName()))
                     .withProperty("value", getValueMatcher(id))
                     .withProperty("action", hasToString(action.toString()))

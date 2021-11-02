@@ -1,7 +1,7 @@
 package mydomain.datanucleus.datatrail.nodes.map;
 
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.nodes.ContainerNode;
-import mydomain.datanucleus.datatrail.BaseNode;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 import java.util.Map;
@@ -9,7 +9,7 @@ import java.util.Map;
 abstract public class BaseMap extends ContainerNode {
 
 
-    protected BaseMap(java.util.Map value, AbstractMemberMetaData mmd, BaseNode parent) {
+    protected BaseMap(java.util.Map value, AbstractMemberMetaData mmd, Node parent) {
         super(mmd, parent);
 
         // value might be null, in which case there is nothing left to do

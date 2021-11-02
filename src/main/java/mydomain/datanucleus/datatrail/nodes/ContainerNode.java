@@ -1,7 +1,7 @@
 package mydomain.datanucleus.datatrail.nodes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.Node;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 import java.util.ArrayList;
@@ -9,12 +9,12 @@ import java.util.Collection;
 
 abstract public class ContainerNode extends BaseNode implements Updatable {
 
-    protected Collection<BaseNode> added = new ArrayList<>();
-    protected Collection<BaseNode> removed = new ArrayList<>();
-    protected Collection<BaseNode> changed = new ArrayList<>();
-    protected Collection<BaseNode> contents = new ArrayList<>();
+    protected Collection<Node> added = new ArrayList<>();
+    protected Collection<Node> removed = new ArrayList<>();
+    protected Collection<Node> changed = new ArrayList<>();
+    protected Collection<Node> contents = new ArrayList<>();
 
-    protected ContainerNode(AbstractMemberMetaData mmd, BaseNode parent) {
+    protected ContainerNode(AbstractMemberMetaData mmd, Node parent) {
         super(mmd, parent);
     }
 
@@ -24,19 +24,19 @@ abstract public class ContainerNode extends BaseNode implements Updatable {
         return null;
     }
 
-    public Collection<? extends BaseNode> getAdded() {
+    public Collection<Node> getAdded() {
         return added;
     }
 
-    public Collection<? extends BaseNode> getRemoved() {
+    public Collection<Node> getRemoved() {
         return removed;
     }
 
-    public Collection<BaseNode> getChanged() {
+    public Collection<Node> getChanged() {
         return changed;
     }
 
-    public Collection<BaseNode> getContents() {
+    public Collection<Node> getContents() {
         return contents;
     }
 

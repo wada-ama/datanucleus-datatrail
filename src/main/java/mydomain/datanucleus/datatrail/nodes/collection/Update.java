@@ -1,6 +1,6 @@
 package mydomain.datanucleus.datatrail.nodes.collection;
 
-import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @NodeDefinition(type=NodeType.COLLECTION, action = NodeAction.UPDATE)
 public class Update extends BaseCollection {
-    protected Update(Object value, AbstractMemberMetaData mmd, BaseNode parent) {
+    protected Update(Object value, AbstractMemberMetaData mmd, Node parent) {
         super(value, mmd, parent);
     }
 
@@ -24,8 +24,8 @@ public class Update extends BaseCollection {
     protected void addElements( java.util.Collection collection ){
         if( collection instanceof ChangeTrackable && ((ChangeTrackable)collection).getChangeTracker().isTracking()){
             ChangeTracker changeTracker = ((ChangeTrackable)collection).getChangeTracker();
-            added = (java.util.Collection<BaseNode>) changeTracker.getAdded().stream().map(o -> getFactory().createNode(o, NodeAction.UPDATE, null, this)).collect(Collectors.toList());
-            removed = (java.util.Collection<BaseNode>) changeTracker.getRemoved().stream().map(o -> getFactory().createNode(o, NodeAction.UPDATE, null, this)).collect(Collectors.toList());
+            added = (java.util.Collection<Node>) changeTracker.getAdded().stream().map(o -> getFactory().createNode(o, NodeAction.UPDATE, null, this)).collect(Collectors.toList());
+            removed = (java.util.Collection<Node>) changeTracker.getRemoved().stream().map(o -> getFactory().createNode(o, NodeAction.UPDATE, null, this)).collect(Collectors.toList());
         } else {
             for (Object element : collection) {
                 contents.add(getFactory().createNode(element, NodeAction.UPDATE, null, this));

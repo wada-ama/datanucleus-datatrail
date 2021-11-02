@@ -1,7 +1,7 @@
 package mydomain.datanucleus.datatrail.nodes.array;
 
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.nodes.ContainerNode;
-import mydomain.datanucleus.datatrail.BaseNode;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.slf4j.Logger;
 
@@ -11,7 +11,7 @@ abstract public class BaseArray extends ContainerNode {
     // get a static slf4j logger for the class
     protected static final Logger logger = getLogger(BaseArray.class);
 
-    protected BaseArray(Object value, AbstractMemberMetaData mmd, BaseNode parent) {
+    protected BaseArray(Object value, AbstractMemberMetaData mmd, Node parent) {
         super(mmd, parent);
 
         logger.warn("Unable to track changes to objects with arrays. {}.{}", mmd.getClassName(), mmd.getName());

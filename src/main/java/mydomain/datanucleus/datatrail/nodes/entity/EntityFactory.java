@@ -2,7 +2,7 @@ package mydomain.datanucleus.datatrail.nodes.entity;
 
 import mydomain.datanucleus.datatrail.AbstractNodeFactory;
 import mydomain.datanucleus.datatrail.DataTrailFactory;
-import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
@@ -29,8 +29,8 @@ public class EntityFactory extends AbstractNodeFactory {
     }
 
     @Override
-    public Optional<BaseNode> create(NodeAction action, Object value, MetaData md, BaseNode parent) {
-        Optional<BaseNode> node = Optional.empty();
+    public Optional<Node> create(NodeAction action, Object value, MetaData md, Node parent) {
+        Optional<Node> node = Optional.empty();
         if( supports(action, value, md )) {
             // create the node internally.
             switch (action) {

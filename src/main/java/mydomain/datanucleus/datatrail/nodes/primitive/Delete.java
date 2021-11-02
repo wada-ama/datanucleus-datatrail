@@ -1,6 +1,6 @@
 package mydomain.datanucleus.datatrail.nodes.primitive;
 
-import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
@@ -18,7 +18,7 @@ public class Delete extends BasePrimitive {
      * @param mmd
      * @param parent
      */
-    protected Delete(Object value, AbstractMemberMetaData mmd, BaseNode parent) {
+    protected Delete(Object value, AbstractMemberMetaData mmd, Node parent) {
         super(value, mmd, parent);
     }
 }

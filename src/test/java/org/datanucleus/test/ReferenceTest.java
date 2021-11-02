@@ -1,7 +1,7 @@
 package org.datanucleus.test;
 
 import com.spotify.hamcrest.pojo.IsPojo;
-import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.model.CountryCode;
@@ -27,9 +27,9 @@ public class ReferenceTest extends AbstractTest {
             pm.makePersistent(telephone);
         });
 
-        Collection<BaseNode> entities = audit.getModifications();
+        Collection<Node> entities = audit.getModifications();
 
-        final IsPojo<BaseNode> countryCode = getEntity(NodeAction.CREATE, CountryCode.class, "1")
+        final IsPojo countryCode = getEntity(NodeAction.CREATE, CountryCode.class, "1")
                 .withProperty("fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "country", "Canada", null),
                         getField(NodeType.PRIMITIVE, Integer.class, "code", "1", null)
@@ -37,7 +37,7 @@ public class ReferenceTest extends AbstractTest {
 
         assertThat(entities, hasItem(countryCode));
 
-        final IsPojo<BaseNode> telephone = getEntity(NodeAction.CREATE, Telephone.class, "1")
+        final IsPojo telephone = getEntity(NodeAction.CREATE, Telephone.class, "1")
                 .withProperty( "fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "number", "514-123-1234", null),
                         getField(NodeType.REF, CountryCode.class, "countryCode", "1", null)
@@ -69,9 +69,9 @@ public class ReferenceTest extends AbstractTest {
             pm.deletePersistent(usa);
         });
 
-        Collection<BaseNode> entities = audit.getModifications();
+        Collection<Node> entities = audit.getModifications();
 
-        final IsPojo<BaseNode> countryCode = getEntity(NodeAction.DELETE, CountryCode.class, "2")
+        final IsPojo countryCode = getEntity(NodeAction.DELETE, CountryCode.class, "2")
                 .withProperty("fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "country", "USA", null),
                         getField(NodeType.PRIMITIVE, Integer.class, "code", "1", null)
@@ -104,9 +104,9 @@ public class ReferenceTest extends AbstractTest {
             telephone.setCountryCode(usa);
         });
 
-        Collection<BaseNode> entities = audit.getModifications();
+        Collection<Node> entities = audit.getModifications();
 
-        final IsPojo<BaseNode> telephone = getEntity(NodeAction.UPDATE, Telephone.class, "1")
+        final IsPojo telephone = getEntity(NodeAction.UPDATE, Telephone.class, "1")
                 .withProperty( "fields", hasItems(
                         getField(NodeType.REF, CountryCode.class, "countryCode", "2", "1")
                 ));

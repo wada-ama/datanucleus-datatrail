@@ -1,6 +1,6 @@
 package mydomain.datanucleus.datatrail.nodes.reference;
 
-import mydomain.datanucleus.datatrail.BaseNode;
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.nodes.ReferenceNode;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.AbstractMemberMetaData;
@@ -12,7 +12,7 @@ abstract public class BaseReference extends ReferenceNode {
      * @param mmd
      * @param parent
      */
-    protected BaseReference(Persistable value, AbstractMemberMetaData mmd, BaseNode parent){
+    protected BaseReference(Persistable value, AbstractMemberMetaData mmd, Node parent){
         super(value, mmd, parent);
 
         if( mmd != null )

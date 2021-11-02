@@ -4,6 +4,7 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import mydomain.audit.DataTrail;
+import mydomain.datanucleus.datatrail.nodes.BaseNode;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.MetaData;
 import org.datanucleus.state.ObjectProvider;
@@ -79,7 +80,7 @@ public class DataTrailFactory {
      * @return
      */
     static public DataTrailFactory getDataTrailFactory() {
-        return getDataTrailFactory(BaseNode.class);
+        return getDataTrailFactory(Node.class);
     }
 
     /**
@@ -98,7 +99,7 @@ public class DataTrailFactory {
      * @param action
      * @return
      */
-    public BaseNode createNode(Object value, NodeAction action){
+    public Node createNode(Object value, NodeAction action){
         // make sure it is a persistable object
         if( !( value instanceof Persistable) ) {
             return null;
@@ -126,7 +127,7 @@ public class DataTrailFactory {
      * @return
      * @throws RuntimeException if unable to create the node
      */
-    public BaseNode createNode(Object value, NodeAction action, MetaData md, BaseNode parent){
+    public Node createNode(Object value, NodeAction action, MetaData md, Node parent){
 
         // find the factory for this type of value
         NodeFactory factory = factories.stream().filter(nodeFactory -> nodeFactory.supports(action, value, md))
@@ -136,10 +137,8 @@ public class DataTrailFactory {
 
 
         // create a node for this value
-        BaseNode node = factory.create(action, value, md, parent)
+        return factory.create(action, value, md, parent)
                 .orElseThrow(() -> new IllegalArgumentException("Factory unable to support: " + value.getClass().getCanonicalName() + " / " + action));
-
-        return node;
     }
 
 }
