@@ -147,6 +147,8 @@ public class AuditListener implements CreateLifecycleListener,
 
     public void transactionStarted() {
         NucleusLogger.GENERAL.info("Audit : TXN START");
+        // ensures that the audit trail is clear for this transaction
+        modifications.clear();
     }
 
     public void transactionEnded() {
@@ -165,6 +167,8 @@ public class AuditListener implements CreateLifecycleListener,
     public void transactionCommitted() {
         NucleusLogger.GENERAL.info("Audit : TXN COMMITTED");
         logger.info(modifications.toString());
+
+        // generate JSON blob
 
     }
 
