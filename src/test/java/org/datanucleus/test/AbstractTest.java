@@ -12,6 +12,7 @@ import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
+import mydomain.datanucleus.datatrail.nodes.map.MapEntry;
 import mydomain.model.ITrailDesc;
 import org.datanucleus.api.jdo.JDOTransaction;
 import org.datanucleus.enhancement.Persistable;
@@ -65,7 +66,7 @@ abstract public class AbstractTest {
      * Clear the embedded DB before each test execution to ensure that IDs are reset to 1
      */
     @BeforeEach
-    protected void resetDatabase() {
+    protected void resetTransaction() {
         pmf = JDOHelper.getPersistenceManagerFactory("MyTest");
     }
 
@@ -167,13 +168,14 @@ abstract public class AbstractTest {
     }
 
 
-    protected IsPojo<Node>getMapElement(NodeType keyType, Class<?> keyClazz, String keyValue, NodeType valueType, Class<?> valueClazz, String valueValue, String prevValue) {
+    protected IsPojo<MapEntry>getMapElement(NodeType keyType, Class<?> keyClazz, String keyValue, NodeType valueType, Class<?> valueClazz, String valueValue, String prevValue) {
 
         IsPojo<Node> key = pojo(Node.class)
                 .withProperty("value", is(keyValue))
                 .withProperty("type", hasToString(keyType.toString()))
                 .withProperty("prev", nullValue())
-                .withProperty("className", is(keyClazz.getName()));
+                .withProperty("className", is(keyClazz.getName()))
+                ;
         if( ITrailDesc.class.isAssignableFrom(keyClazz)) {
             key = key.withProperty("description", anything());
         }
@@ -189,7 +191,7 @@ abstract public class AbstractTest {
             value = value.withProperty("description", anything());
         }
 
-        IsPojo mapEntry = pojo(Object.class)
+        IsPojo<MapEntry> mapEntry = pojo(MapEntry.class)
                 .withProperty("key", is(key))
                 .withProperty("value", is(value));
 
