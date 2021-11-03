@@ -181,7 +181,7 @@
                 <version>${dn.maven.plugin.ver}</version>
                 <configuration>
                     <api>JDO</api>
-                    <persistenceUnitName>MyTest</persistenceUnitName>
+<!--                    <persistenceUnitName>MyTest</persistenceUnitName>-->
                     <fork>false</fork>
                     <verbose>false</verbose>
                     <log4jConfiguration>${basedir}/src/main/resources/log4j.properties</log4jConfiguration>
@@ -190,10 +190,22 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>compile</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>enhance</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                        <configuration>
+                            <metadataDirectory>${project.build.testOutputDirectory}</metadataDirectory>
+                            <verbose>true</verbose>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
