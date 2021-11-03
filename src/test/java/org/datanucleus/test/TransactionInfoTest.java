@@ -46,7 +46,7 @@ public class TransactionInfoTest extends AbstractTest{
 
         Collection<Node> entities = audit.getModifications();
 
-        final IsPojo calgary = getEntity(NodeAction.CREATE, Street.class, ANY)
+        final IsPojo<Node>calgary = getEntity(NodeAction.CREATE, Street.class, ANY)
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Calgary", null)
                 ))
@@ -54,7 +54,7 @@ public class TransactionInfoTest extends AbstractTest{
                 .withProperty("username",  is(txInfo.getUsername()))
                 .withProperty("transactionId", is(txInfo.getTxId()));
 
-        final IsPojo regina = getEntity(NodeAction.CREATE, Street.class, ANY)
+        final IsPojo<Node>regina = getEntity(NodeAction.CREATE, Street.class, ANY)
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Regina", null)
                 ))
@@ -80,21 +80,21 @@ public class TransactionInfoTest extends AbstractTest{
         Collection<Node> entities = audit.getModifications();
 
 
-        final IsPojo calgary = getEntity(NodeAction.CREATE, Street.class, ANY)
+        final IsPojo<Node>calgary = getEntity(NodeAction.CREATE, Street.class, ANY)
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Calgary", null)
                 ))
-                .withProperty("username", is("MISSING"))
+                .withProperty("username", is(TransactionInfo.NO_USERNAME))
                 .withProperty("dateModified", instanceOf(Instant.class))
                 .withProperty("transactionId", anything());
 
 
 
-        final IsPojo regina = getEntity(NodeAction.CREATE, Street.class, ANY)
+        final IsPojo<Node>regina = getEntity(NodeAction.CREATE, Street.class, ANY)
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Regina", null)
                 ))
-                .withProperty("username", is("MISSING"))
+                .withProperty("username", is(TransactionInfo.NO_USERNAME))
                 .withProperty("dateModified", instanceOf(Instant.class))
                 .withProperty("transactionId", anything());
 
@@ -106,8 +106,8 @@ public class TransactionInfoTest extends AbstractTest{
 
 
     @Override
-    protected IsPojo getEntity(NodeAction action, Class clazz, String id) {
-            IsPojo entity = pojo(BaseNode.class)
+    protected IsPojo<Node>getEntity(NodeAction action, Class clazz, String id) {
+            IsPojo<Node>entity = pojo(Node.class)
                     .withProperty("className", is(clazz.getName()))
                     .withProperty("value", getValueMatcher(id))
                     .withProperty("action", hasToString(action.toString()))

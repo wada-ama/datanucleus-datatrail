@@ -25,13 +25,13 @@ public class PrimitiveTest extends AbstractTest {
         });
 
 
-        final IsPojo calgary = getEntity(NodeAction.CREATE, Street.class, "1")
+        final IsPojo<Node> calgary = getEntity(NodeAction.CREATE, Street.class, "1")
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Calgary", null)
                 ));
 
 
-        Collection<? extends Node> entities = audit.getModifications();
+        Collection<Node>  entities = audit.getModifications();
         assertThat(entities, hasItem(calgary));
         assertThat(entities, containsInAnyOrder(calgary));
     }
@@ -53,9 +53,9 @@ public class PrimitiveTest extends AbstractTest {
         });
 
 
-        Collection<? extends Node> entities = audit.getModifications();
+        Collection<Node>  entities = audit.getModifications();
 
-        final IsPojo regina = getEntity(NodeAction.DELETE, Street.class, "1")
+        final IsPojo<Node> regina = getEntity(NodeAction.DELETE, Street.class, "1")
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Regina", null)
                 ));

@@ -45,13 +45,13 @@ public class CollectionTest extends AbstractTest {
             pm.makePersistent(address);
         });
 
-        final IsPojo street = getEntity(CREATE, Street.class, "1")
+        final IsPojo<Node> street = getEntity(CREATE, Street.class, "1")
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Regina", null)
                 ));
 
 
-        final IsPojo address = getEntity(CREATE, Address.class, "1")
+        final IsPojo<Node> address = getEntity(CREATE, Address.class, "1")
                 .withProperty("fields", hasItem(
                         getContainerField(NodeType.ARRAY, "street")
                                 .withProperty("contents", hasItem(
@@ -88,19 +88,19 @@ public class CollectionTest extends AbstractTest {
         });
 
 
-        final IsPojo regina = getEntity(CREATE, Street.class, "1")
+        final IsPojo<Node> regina = getEntity(CREATE, Street.class, "1")
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Regina", null)
                 ));
 
 
-        final IsPojo road = getEntity(CREATE, Street.class, "2")
+        final IsPojo<Node> road = getEntity(CREATE, Street.class, "2")
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Road", null)
                 ));
 
 
-        final IsPojo address = getEntity(CREATE, Address.class, "1")
+        final IsPojo<Node> address = getEntity(CREATE, Address.class, "1")
                 .withProperty("fields", hasItem(
                         getContainerField(NodeType.ARRAY, "street")
                                 .withProperty("contents", hasItems(
@@ -110,12 +110,12 @@ public class CollectionTest extends AbstractTest {
                 ));
 
 
-        final IsPojo student = getEntity(CREATE, Student.class, "1")
+        final IsPojo<Node> student = getEntity(CREATE, Student.class, "1")
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Charline", null)
                 ));
 
-        final IsPojo school = getEntity(CREATE, School.class, "1")
+        final IsPojo<Node> school = getEntity(CREATE, School.class, "1")
                 .withProperty("fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "name", "WADA", null),
                         getContainerField(NodeType.COLLECTION, "addresses")
@@ -174,7 +174,7 @@ public class CollectionTest extends AbstractTest {
         });
 
 
-        final IsPojo address = getEntity(DELETE, Address.class, "1")
+        final IsPojo<Node> address = getEntity(DELETE, Address.class, "1")
                 .withProperty("fields", hasItem(
                         getContainerField(NodeType.ARRAY, "street")
                                 .withProperty("contents", hasItems(
@@ -183,7 +183,7 @@ public class CollectionTest extends AbstractTest {
                                 ))
                 ));
 
-        final IsPojo school = getEntity(DELETE, School.class, "1")
+        final IsPojo<Node> school = getEntity(DELETE, School.class, "1")
                 .withProperty("fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "name", "WADA", null),
                         getContainerField(NodeType.COLLECTION, "addresses")
@@ -233,12 +233,12 @@ public class CollectionTest extends AbstractTest {
 
 
 
-        final IsPojo calgary = getEntity(CREATE, Street.class, "3")
+        final IsPojo<Node> calgary = getEntity(CREATE, Street.class, "3")
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Calgary", null)
                 ));
 
-        final IsPojo address = getEntity(UPDATE, Address.class, "1")
+        final IsPojo<Node> address = getEntity(UPDATE, Address.class, "1")
                 .withProperty("fields", hasItem(
                         getContainerField(NodeType.ARRAY, "street")
                                 .withProperty("contents", hasItems(
@@ -292,13 +292,13 @@ public class CollectionTest extends AbstractTest {
 
         });
 
-        IsPojo calgarySt = getEntity(CREATE, Street.class, "3")
+        IsPojo<Node> calgarySt = getEntity(CREATE, Street.class, "3")
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Calgary", null)
                 ));
 
 
-        IsPojo calgaryAddr = getEntity(CREATE, Address.class, "2")
+        IsPojo<Node> calgaryAddr = getEntity(CREATE, Address.class, "2")
                 .withProperty("fields", hasItem(
                         getContainerField(NodeType.ARRAY, "street")
                                 .withProperty("contents", hasItem(
@@ -306,7 +306,7 @@ public class CollectionTest extends AbstractTest {
                                 ))
                 ));
 
-        IsPojo school = getEntity(UPDATE, School.class, "1")
+        IsPojo<Node> school = getEntity(UPDATE, School.class, "1")
                 .withProperty("fields", hasItems(
                         getContainerField(NodeType.COLLECTION, "addresses")
                                 .withProperty("added", hasItem(
@@ -354,7 +354,7 @@ public class CollectionTest extends AbstractTest {
         });
 
 
-        final IsPojo five555 = getEntity(CREATE, Telephone.class, ANY)
+        final IsPojo<Node> five555 = getEntity(CREATE, Telephone.class, ANY)
                 .withProperty( "fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "number", "514-555-5555", null),
                         getField(NodeType.REF, CountryCode.class, "countryCode", "1", null)
@@ -362,7 +362,7 @@ public class CollectionTest extends AbstractTest {
                 );
 
 
-        final IsPojo one113 = getEntity(DELETE, Telephone.class, ANY)
+        final IsPojo<Node> one113 = getEntity(DELETE, Telephone.class, ANY)
                 .withProperty( "fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "number", "514-555-1113", null),
                         getField(NodeType.REF, CountryCode.class, "countryCode", "1", null)
@@ -370,7 +370,7 @@ public class CollectionTest extends AbstractTest {
                 );
 
 
-        final IsPojo telephoneBook = getEntity(UPDATE, TelephoneBook.class, "1")
+        final IsPojo<Node> telephoneBook = getEntity(UPDATE, TelephoneBook.class, "1")
                 .withProperty("fields", hasItem(
                         getContainerField(NodeType.COLLECTION, "telephoneNumbers")
                                 .withProperty("added", hasItem(

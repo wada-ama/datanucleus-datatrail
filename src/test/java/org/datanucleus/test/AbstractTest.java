@@ -122,8 +122,8 @@ abstract public class AbstractTest {
         return sw.toString();
     }
 
-    protected IsPojo getEntity(NodeAction action, Class clazz, String id) {
-        IsPojo<? extends Node> entity = pojo(BaseNode.class)
+    protected IsPojo<Node>getEntity(NodeAction action, Class<?> clazz, String id) {
+        IsPojo<Node> entity = pojo(Node.class)
                 .withProperty("className", is(clazz.getName()))
                 .withProperty("value", getValueMatcher(id))
                 .withProperty("action", hasToString(action.toString()))
@@ -140,8 +140,8 @@ abstract public class AbstractTest {
         return entity;
     }
 
-    protected IsPojo getContainerField(NodeType type, String name) {
-        IsPojo<? extends Node> field = pojo(BaseNode.class)
+    protected IsPojo<Node>getContainerField(NodeType type, String name) {
+        IsPojo<Node> field = pojo(Node.class)
                 .withProperty("name", is(name))
                 .withProperty("type", hasToString(type.toString()))
                 .withProperty("prev", nullValue());
@@ -150,8 +150,8 @@ abstract public class AbstractTest {
 
     }
 
-    protected IsPojo getListElement(NodeType type, Class clazz, String value) {
-        IsPojo<? extends Node> field = pojo(BaseNode.class)
+    protected IsPojo<Node>getListElement(NodeType type, Class<?> clazz, String value) {
+        IsPojo<Node> field = pojo(Node.class)
                 .withProperty("value", is(value))
                 .withProperty("type", hasToString(type.toString()))
                 .withProperty("prev", nullValue())
@@ -167,9 +167,9 @@ abstract public class AbstractTest {
     }
 
 
-    protected IsPojo getMapElement(NodeType keyType, Class keyClazz, String keyValue, NodeType valueType, Class valueClazz, String valueValue, String prevValue) {
+    protected IsPojo<Node>getMapElement(NodeType keyType, Class<?> keyClazz, String keyValue, NodeType valueType, Class<?> valueClazz, String valueValue, String prevValue) {
 
-        IsPojo<BaseNode> key = pojo(BaseNode.class)
+        IsPojo<Node> key = pojo(Node.class)
                 .withProperty("value", is(keyValue))
                 .withProperty("type", hasToString(keyType.toString()))
                 .withProperty("prev", nullValue())
@@ -179,10 +179,10 @@ abstract public class AbstractTest {
         }
 
 
-        IsPojo<BaseNode> value = pojo(BaseNode.class)
-                .withProperty("value", is(valueValue))
+        IsPojo<Node> value = pojo(Node.class)
+                .withProperty("value", getValueMatcher(valueValue))
                 .withProperty("type", hasToString(valueType.toString()))
-                .withProperty("prev", prevValue == null ? nullValue() : is(prevValue))
+                .withProperty("prev", getValueMatcher(prevValue))
                 .withProperty("className", is(valueClazz.getName()));
         ;
         if( ITrailDesc.class.isAssignableFrom(valueClazz)) {
@@ -199,12 +199,12 @@ abstract public class AbstractTest {
 
 
 
-    protected IsPojo getField(NodeType type, Class clazz, String name, String value, String prevValue) {
-        IsPojo<BaseNode> field = pojo(BaseNode.class)
+    protected IsPojo<Node> getField(NodeType type, Class<?> clazz, String name, String value, String prevValue) {
+        IsPojo<Node> field = pojo(Node.class)
                 .withProperty("name", is(name))
                 .withProperty("value", getValueMatcher(value))
                 .withProperty("type", hasToString(type.toString()))
-                .withProperty("prev", prevValue == null ? nullValue() : is(prevValue))
+                .withProperty("prev", getValueMatcher(prevValue))
                 .withProperty("className", is(clazz.getName()));
         ;
 
@@ -254,7 +254,7 @@ abstract public class AbstractTest {
     }
 
 
-    protected Optional<? extends Node> filterEntity(Collection<? extends Node> collection, Class<?> entityClass, NodeAction action){
+    protected Optional<Node> filterEntity(Collection<Node> collection, Class<?> entityClass, NodeAction action){
         return collection.stream()
                         .filter(node -> node.getType() == NodeType.ENTITY
                                 && node.getClassName().equals(entityClass.getCanonicalName())

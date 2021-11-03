@@ -1,6 +1,7 @@
 package org.datanucleus.test;
 
 import com.spotify.hamcrest.pojo.IsPojo;
+import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.model.CountryCode;
@@ -31,7 +32,7 @@ public class DateTest extends AbstractTest{
             telephone.setCreated(Date.from(testStart));
         });
 
-        IsPojo telephone = getEntity(NodeAction.CREATE, Telephone.class, ANY)
+        IsPojo<Node> telephone = getEntity(NodeAction.CREATE, Telephone.class, ANY)
                 .withProperty("fields", Matchers.hasItem(
                         getField(NodeType.PRIMITIVE, Date.class, "created", ANY, null)
                 ));
