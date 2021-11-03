@@ -1,5 +1,6 @@
 package mydomain.model;
 
+import javax.jdo.JDOHelper;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
@@ -27,5 +28,18 @@ public class CountryCode implements ITrailDesc{
     @Override
     public String minimalTxtDesc() {
         return country + " => +" + code;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CountryCode that = (CountryCode) o;
+        return getCode() == that.getCode() && Objects.equals(getCountry(), that.getCountry()) && Objects.equals(JDOHelper.getObjectId(this), JDOHelper.getObjectId(that));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCountry(), getCode(), JDOHelper.getObjectId(this));
     }
 }

@@ -6,6 +6,7 @@ import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.nodes.Updatable;
 import org.datanucleus.TransactionEventListener;
 import org.datanucleus.enhancement.Persistable;
+import org.datanucleus.identity.IdentityReference;
 import org.datanucleus.state.ObjectProvider;
 import org.datanucleus.util.NucleusLogger;
 import org.slf4j.Logger;
@@ -37,19 +38,50 @@ public class AuditListener implements CreateLifecycleListener,
     protected DataTrailFactory dataTrailFactory = DataTrailFactory.getDataTrailFactory();
 
 
-    // internal non-null valued map to store entity modifications throughout the transaction
-    private Map<Object, Node> modifications = new HashMap<Object, Node>(){
-        // Do not store null values
-        @Override
-        public Node put(Object key, Node value) {
-            // do not store null values
+    /**
+     * Class to store the Modifications to the objects used in the Audit Trail
+     */
+    private static class Modifications {
+        private Map<Object, Node> delegate = new HashMap<>();
+
+        private IdentityReference getReference( Object key ){
+            return new IdentityReference(key);
+        }
+
+        /**
+         * Ignores NULL values
+         * @param key
+         * @param value
+         * @return
+         */
+        public Node put(Object key, Node value){
             if( value == null ){
                 return value;
             }
 
-            return super.put(key, value);
+            return delegate.put( getReference(key), value);
         }
-    };
+
+        public Node get(Object key){
+            return delegate.get( getReference(key));
+        }
+
+        public boolean containsKey(Object key){
+            return delegate.containsKey( getReference(key));
+        }
+
+        public Collection<Node> values(){
+            return delegate.values();
+        }
+
+        public void clear(){
+            delegate.clear();
+        }
+    }
+
+
+    private Modifications modifications = new Modifications();
+
 
     public AuditListener() {
     }

@@ -367,7 +367,7 @@ public class MapTest extends AbstractTest {
 
 
     @Disabled
-    @DisplayName("Updating Map with same key/value pair should not trigger a DataTrail entry")
+    @DisplayName("Updating Map with same key/value pair should trigger a DataTrail entry with a version change only")
     @Test
     public void updateMapWithSameKeyValuePair() {
         executeTx(pm -> {
@@ -376,13 +376,27 @@ public class MapTest extends AbstractTest {
             pm.makePersistent(sut);
         }, false);
 
+        final Map<String, String> ids = new HashMap<>();
         executeTx(pm -> {
             MapClass sut = pm.newJDOQLTypedQuery(MapClass.class).executeUnique();
             Map.Entry<Street, CountryCode> entry = sut.getStreetMap().entrySet().iterator().next();
             sut.getStreetMap().put(entry.getKey(), entry.getValue());
+
+            ids.put("Victoria", getId((Persistable) entry.getKey()));
+            ids.put("Montreal", getId((Persistable) entry.getValue()));
         });
 
-        assertThat("Should be 0 modification entries since no changes made to the map", audit.getModifications(), hasSize(0));
+
+        IsPojo<Node> mapClass = getEntity(UPDATE, MapClass.class, ANY)
+                .withProperty("fields", hasItem(
+                        getContainerField(NodeType.MAP, "streetMap")
+                                .withProperty("changed", hasItems(
+                                        getMapElement(NodeType.REF, Street.class, ids.get("Victoria"), NodeType.REF, CountryCode.class, ids.get("Montreal"), ids.get("Montreal"))
+                                ))
+                ))
+                ;
+
+        assertThat("Should be 1 modification update since the version has effectively changed", audit.getModifications(), contains(mapClass));
     }
 
 }
