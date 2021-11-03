@@ -6,5 +6,5 @@ package mydomain.datanucleus.datatrail.nodes;
  */
 public interface Updatable {
 
-    default void updateFields() {};
+    void updateFields();
 }

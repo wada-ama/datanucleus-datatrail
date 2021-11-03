@@ -1,7 +1,9 @@
-package mydomain.datanucleus.datatrail.nodes;
+package mydomain.datanucleus.datatrail.nodes.map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import mydomain.datanucleus.datatrail.Node;
+import mydomain.datanucleus.datatrail.nodes.BaseNode;
+import mydomain.datanucleus.datatrail.nodes.Updatable;
 
 import java.util.Arrays;
 
@@ -9,7 +11,7 @@ import java.util.Arrays;
  * Class to represent the key/value information found in the map.  Must not implement a Map.MapEntry as Jackson will automatically serialize those
  * differently
  */
-public class MapEntry extends BaseNode implements Updatable{
+public class MapEntry extends BaseNode implements Updatable {
     Node key;
     Node value;
 
