@@ -1,34 +1,42 @@
 package org.datanucleus.test;
 
-import com.google.common.collect.Lists;
 import com.spotify.hamcrest.pojo.IsPojo;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.model.CountryCode;
 import mydomain.model.QCountryCode;
+import mydomain.model.QStreet;
 import mydomain.model.QStudent;
+import mydomain.model.Street;
 import mydomain.model.Student;
 import mydomain.model.Telephone;
 import mydomain.model.TelephoneType;
 import org.datanucleus.enhancement.Persistable;
+import org.datanucleus.test.model.MapClass;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.io.IOException;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static mydomain.datanucleus.datatrail.NodeAction.CREATE;
 import static mydomain.datanucleus.datatrail.NodeAction.DELETE;
 import static mydomain.datanucleus.datatrail.NodeAction.UPDATE;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 @Execution(ExecutionMode.SAME_THREAD)
@@ -52,9 +60,9 @@ public class MapTest extends AbstractTest {
                 .withProperty("fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "name", "student", null),
                         getContainerField(NodeType.MAP, "telephoneNbs")
-                            .withProperty("added", hasItem(
-                                    getMapElement(NodeType.PRIMITIVE, TelephoneType.class, TelephoneType.HOME.toString(), NodeType.REF, Telephone.class, "1", null)
-                            ))
+                                .withProperty("added", hasItem(
+                                        getMapElement(NodeType.PRIMITIVE, TelephoneType.class, TelephoneType.HOME.toString(), NodeType.REF, Telephone.class, "1", null)
+                                ))
                 ));
 
 
@@ -96,8 +104,8 @@ public class MapTest extends AbstractTest {
 
             pm.makePersistent(student);
 
-            ids.put( TelephoneType.HOME, getId((Persistable) student.getTelephoneNbs().get(TelephoneType.HOME)));
-            ids.put( TelephoneType.MOBILE, getId((Persistable) student.getTelephoneNbs().get(TelephoneType.MOBILE)));
+            ids.put(TelephoneType.HOME, getId((Persistable) student.getTelephoneNbs().get(TelephoneType.HOME)));
+            ids.put(TelephoneType.MOBILE, getId((Persistable) student.getTelephoneNbs().get(TelephoneType.MOBILE)));
         }, false);
 
 
@@ -113,15 +121,15 @@ public class MapTest extends AbstractTest {
                 .withProperty("fields", hasItems(
                         getField(NodeType.PRIMITIVE, String.class, "name", "student", null),
                         getContainerField(NodeType.MAP, "telephoneNbs")
-                            .withProperty("removed", hasItems(
-                                    getMapElement(NodeType.PRIMITIVE, TelephoneType.class, TelephoneType.HOME.toString(), NodeType.REF, Telephone.class, ids.get(TelephoneType.HOME), null),
-                                    getMapElement(NodeType.PRIMITIVE, TelephoneType.class, TelephoneType.MOBILE.toString(), NodeType.REF, Telephone.class, ids.get(TelephoneType.MOBILE), null)
-                            )),
+                                .withProperty("removed", hasItems(
+                                        getMapElement(NodeType.PRIMITIVE, TelephoneType.class, TelephoneType.HOME.toString(), NodeType.REF, Telephone.class, ids.get(TelephoneType.HOME), null),
+                                        getMapElement(NodeType.PRIMITIVE, TelephoneType.class, TelephoneType.MOBILE.toString(), NodeType.REF, Telephone.class, ids.get(TelephoneType.MOBILE), null)
+                                )),
                         getContainerField(NodeType.MAP, "marks")
-                            .withProperty("removed", hasItems(
-                                    getMapElement(NodeType.PRIMITIVE, String.class, "english", NodeType.PRIMITIVE, String.class, "A", null),
-                                    getMapElement(NodeType.PRIMITIVE, String.class, "french", NodeType.PRIMITIVE, String.class, "A+", null)
-                            ))
+                                .withProperty("removed", hasItems(
+                                        getMapElement(NodeType.PRIMITIVE, String.class, "english", NodeType.PRIMITIVE, String.class, "A", null),
+                                        getMapElement(NodeType.PRIMITIVE, String.class, "french", NodeType.PRIMITIVE, String.class, "A+", null)
+                                ))
                 ));
 
 
@@ -147,8 +155,8 @@ public class MapTest extends AbstractTest {
 
             pm.makePersistent(student);
 
-            ids.put( TelephoneType.HOME, getId((Persistable) student.getTelephoneNbs().get(TelephoneType.HOME)));
-            ids.put( TelephoneType.MOBILE, getId((Persistable) student.getTelephoneNbs().get(TelephoneType.MOBILE)));
+            ids.put(TelephoneType.HOME, getId((Persistable) student.getTelephoneNbs().get(TelephoneType.HOME)));
+            ids.put(TelephoneType.MOBILE, getId((Persistable) student.getTelephoneNbs().get(TelephoneType.MOBILE)));
         }, false);
 
 
@@ -165,15 +173,15 @@ public class MapTest extends AbstractTest {
         final IsPojo<Node> student = getEntity(UPDATE, Student.class, "1")
                 .withProperty("fields", hasItems(
                         getContainerField(NodeType.MAP, "marks")
-                            .withProperty("added", hasItems(
-                                    getMapElement(NodeType.PRIMITIVE, String.class, "german", NodeType.PRIMITIVE, String.class, "B", null)
-                            ))
-                            .withProperty("removed", hasItems(
-                                    getMapElement(NodeType.PRIMITIVE, String.class, "french", NodeType.PRIMITIVE, String.class, "A+", null)
-                            ))
-                            .withProperty("changed", hasItems(
-                                    getMapElement(NodeType.PRIMITIVE, String.class, "english", NodeType.PRIMITIVE, String.class, "B", "A")
-                            ))
+                                .withProperty("added", hasItems(
+                                        getMapElement(NodeType.PRIMITIVE, String.class, "german", NodeType.PRIMITIVE, String.class, "B", null)
+                                ))
+                                .withProperty("removed", hasItems(
+                                        getMapElement(NodeType.PRIMITIVE, String.class, "french", NodeType.PRIMITIVE, String.class, "A+", null)
+                                ))
+                                .withProperty("changed", hasItems(
+                                        getMapElement(NodeType.PRIMITIVE, String.class, "english", NodeType.PRIMITIVE, String.class, "B", "A")
+                                ))
                 ));
 
 
@@ -197,8 +205,8 @@ public class MapTest extends AbstractTest {
 
             pm.makePersistent(student);
 
-            ids.put( TelephoneType.HOME, getId((Persistable) student.getTelephoneNbs().get(TelephoneType.HOME)));
-            ids.put( TelephoneType.MOBILE, getId((Persistable) student.getTelephoneNbs().get(TelephoneType.MOBILE)));
+            ids.put(TelephoneType.HOME, getId((Persistable) student.getTelephoneNbs().get(TelephoneType.HOME)));
+            ids.put(TelephoneType.MOBILE, getId((Persistable) student.getTelephoneNbs().get(TelephoneType.MOBILE)));
         }, false);
 
 
@@ -222,9 +230,9 @@ public class MapTest extends AbstractTest {
         final IsPojo<Node> student = getEntity(UPDATE, Student.class, "1")
                 .withProperty("fields", hasItems(
                         getContainerField(NodeType.MAP, "telephoneNbs")
-                            .withProperty("changed", hasItems(
-                                    getMapElement(NodeType.PRIMITIVE, TelephoneType.class, TelephoneType.MOBILE.toString(), NodeType.REF, Telephone.class, ANY, ids.get(TelephoneType.MOBILE))
-                            ))
+                                .withProperty("changed", hasItems(
+                                        getMapElement(NodeType.PRIMITIVE, TelephoneType.class, TelephoneType.MOBILE.toString(), NodeType.REF, Telephone.class, ANY, ids.get(TelephoneType.MOBILE))
+                                ))
                 ));
 
         final IsPojo<Node> usa = getEntity(CREATE, CountryCode.class, ANY)
@@ -239,9 +247,142 @@ public class MapTest extends AbstractTest {
 
         assertThat(filterEntity(entities, Student.class, UPDATE).get(), is(student));
         assertThat(entities, hasItem(student));
-        assertThat(entities, containsInAnyOrder(student,usa, telephone));
+        assertThat(entities, containsInAnyOrder(student, usa, telephone));
 
     }
 
+
+    @DisplayName("Test Map<Ref, Ref> objects")
+    @Test
+    public void updateMapRefRefTest() {
+
+        // Create necessary objects
+        Map<String, Persistable> ids = new HashMap<>();
+        executeTx(pm -> {
+            List<Object> objs = Arrays.asList(
+                    // streets
+                    new Street("Victoria"),
+                    new Street("Younge"),
+                    new Street("Hastings"),
+
+                    // country codes (reuse as area code)
+                    new CountryCode("Montreal", 514),
+                    new CountryCode("Toronto", 416),
+                    new CountryCode("Vancouver", 604)
+            );
+
+            objs.forEach(pc -> {
+                pm.makePersistent(pc);
+
+                // save detached copies for future reuse
+                String key = pc instanceof Street ? ((Street) pc).getName() : ((CountryCode) pc).getCountry();
+                ids.put(key, (Persistable) pm.detachCopy(pc));
+            });
+        }, false);
+
+
+        // set all streets to montreal area code
+        executeTx(pm -> {
+            // fetch all the streets
+            List<Street> streets = pm.newJDOQLTypedQuery(Street.class).executeList();
+            CountryCode montreal = pm.newJDOQLTypedQuery(CountryCode.class).filter(QCountryCode.candidate().code.eq(514)).executeUnique();
+
+            MapClass sut = new MapClass();
+            pm.makePersistent(sut);
+
+            Map<Street, CountryCode> map = sut.getStreetMap();
+            streets.stream().forEach(street -> map.put(street, montreal));
+        });
+
+
+        IsPojo<Node> mapClass = getEntity(CREATE, MapClass.class, ANY)
+                .withProperty("fields", hasItem(
+                        getContainerField(NodeType.MAP, "streetMap")
+                                .withProperty("added", hasItems(
+                                        // create a mapElement for each street
+                                        getMapElement(NodeType.REF, Street.class, getId(ids.get("Victoria")), NodeType.REF, CountryCode.class, getId(ids.get("Montreal")), null),
+                                        getMapElement(NodeType.REF, Street.class, getId(ids.get("Younge")), NodeType.REF, CountryCode.class, getId(ids.get("Montreal")), null),
+                                        getMapElement(NodeType.REF, Street.class, getId(ids.get("Hastings")), NodeType.REF, CountryCode.class, getId(ids.get("Montreal")), null)
+                                ))
+                ));
+
+        assertThat("All streets mapped to Mtl area code", audit.getModifications(), contains(mapClass));
+
+
+        // Change the streets to their propert area codes
+        executeTx(pm -> {
+            MapClass sut = pm.newJDOQLTypedQuery(MapClass.class).executeUnique();
+
+            // updates all entries in the maps as per the `streetCodes` list
+            Arrays.asList(
+                    new SimpleEntry<>("Victoria", "Montreal"),
+                    new SimpleEntry<>("Younge", "Toronto"),
+                    new SimpleEntry<>("Hastings", "Vancouver")
+            ).stream().forEach(entry -> {
+                Street street = pm.newJDOQLTypedQuery(Street.class).filter(QStreet.candidate().name.eq(entry.getKey())).executeUnique();
+                CountryCode countryCode = pm.newJDOQLTypedQuery(CountryCode.class).filter(QCountryCode.candidate().country.eq(entry.getValue())).executeUnique();
+                sut.getStreetMap().put(street, countryCode);
+            });
+
+            assertThat("Only 3 area codes exist", sut.getStreetMap(), aMapWithSize(3));
+        });
+
+
+        mapClass = getEntity(UPDATE, MapClass.class, ANY)
+                .withProperty("fields", hasItem(
+                        getContainerField(NodeType.MAP, "streetMap")
+                                .withProperty("changed", hasItems(
+                                        // create a mapElement for each street
+                                        // Montreal is considered as changed even though it is the same value
+                                        getMapElement(NodeType.REF, Street.class, getId(ids.get("Victoria")), NodeType.REF, CountryCode.class, getId(ids.get("Montreal")), getId(ids.get("Montreal"))),
+                                        getMapElement(NodeType.REF, Street.class, getId(ids.get("Younge")), NodeType.REF, CountryCode.class, getId(ids.get("Toronto")), getId(ids.get("Montreal"))),
+                                        getMapElement(NodeType.REF, Street.class, getId(ids.get("Hastings")), NodeType.REF, CountryCode.class, getId(ids.get("Vancouver")), getId(ids.get("Montreal")))
+                                ))
+                ));
+
+        assertThat("All streets mapped to their proper area codes", audit.getModifications(), contains(mapClass));
+
+
+
+        // delete an item from the map
+        executeTx(pm -> {
+            MapClass sut = pm.newJDOQLTypedQuery(MapClass.class).executeUnique();
+
+            Street street = pm.newJDOQLTypedQuery(Street.class).filter(QStreet.candidate().name.eq( "Victoria")).executeUnique();
+            sut.getStreetMap().remove(street);
+
+            assertThat("Only 2 area codes exist", sut.getStreetMap(), aMapWithSize(2));
+        });
+
+        mapClass = getEntity(UPDATE, MapClass.class, ANY)
+                .withProperty("fields", hasItem(
+                        getContainerField(NodeType.MAP, "streetMap")
+                                .withProperty("removed", hasItems(
+                                        getMapElement(NodeType.REF, Street.class, getId(ids.get("Victoria")), NodeType.REF, CountryCode.class, getId(ids.get("Montreal")), null)
+                                ))
+                ));
+
+        assertThat("Victoria street has been deleted", audit.getModifications(), contains(mapClass));
+    }
+
+
+    @Disabled
+    @DisplayName("Updating Map with same key/value pair should not trigger a DataTrail entry")
+    @Test
+    public void updateMapWithSameKeyValuePair() {
+        executeTx(pm -> {
+            MapClass sut = new MapClass();
+            sut.getStreetMap().put(new Street("Victoria"), new CountryCode("Montreal", 514));
+            pm.makePersistent(sut);
+        }, false);
+
+        executeTx(pm -> {
+            MapClass sut = pm.newJDOQLTypedQuery(MapClass.class).executeUnique();
+            Map.Entry<Street, CountryCode> entry = sut.getStreetMap().entrySet().iterator().next();
+            sut.getStreetMap().put(entry.getKey(), entry.getValue());
+        });
+
+        assertThat("Should be 0 modification entries since no changes made to the map", audit.getModifications(), hasSize(0));
+    }
 
 }
