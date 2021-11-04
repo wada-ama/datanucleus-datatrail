@@ -398,4 +398,41 @@ public class MapTest extends AbstractTest {
         assertThat("Should be 1 modification update since the version has effectively changed", audit.getModifications(), contains(mapClass));
     }
 
+
+    @DisplayName("Add key and update key in same tx Map<Ref,Ref>.  Should show as added")
+    @Test
+    public void addKeyAndUpdate(){
+        executeTx(pm -> {
+            MapClass sut = new MapClass();
+            pm.makePersistent(sut);
+        }, false);
+
+
+        Map<String, String> ids = new HashMap<>();
+        executeTx(pm ->{
+            MapClass sut = pm.newJDOQLTypedQuery(MapClass.class).executeUnique();
+            Street victoria = new Street("Victoria");
+            CountryCode vancouver = new CountryCode("Vancouver", 604);
+            sut.getStreetMap().put(victoria, new CountryCode("Montreal", 514));
+            sut.getStreetMap().put(victoria, vancouver);
+            pm.flush();
+
+            ids.put( "Victoria", getId((Persistable) victoria));
+            ids.put( "Vancouver", getId((Persistable) vancouver));
+
+        });
+
+
+        IsPojo<Node> mapClass = getEntity(UPDATE, MapClass.class, ANY)
+                .withProperty("fields", hasItem(
+                        getContainerField(NodeType.MAP, "streetMap")
+                                .withProperty("added", hasItems(
+                                        getMapElement(NodeType.REF, Street.class, ids.get("Victoria"), NodeType.REF, CountryCode.class, ids.get("Vancouver"), null)
+                                ))
+                ))
+                ;
+
+        assertThat("Should be 1 modification added", audit.getModifications(), hasItem(mapClass));
+
+    }
 }

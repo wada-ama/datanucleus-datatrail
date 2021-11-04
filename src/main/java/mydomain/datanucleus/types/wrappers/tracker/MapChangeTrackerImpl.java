@@ -59,7 +59,7 @@ public class MapChangeTrackerImpl
         else
             super.added(val);
 
-        _prevValues.putIfAbsent(key, val);
+        _prevValues.put(key, val);
     }
 
     public void removed(Object key, Object val) {
@@ -80,7 +80,13 @@ public class MapChangeTrackerImpl
             super.added(newVal);
         }
 
-        _prevValues.putIfAbsent(key, oldVal);
+        // if this is a new addition, so there is no original value that should be retained
+        if( add != null && add.contains(key) ) {
+            _prevValues.put(key, newVal);
+        } else {
+            // this is a change or removal, then only set the value the first time
+            _prevValues.putIfAbsent(key, oldVal);
+        }
     }
 
 
