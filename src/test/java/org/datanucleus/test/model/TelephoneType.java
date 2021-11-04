@@ -1,4 +1,4 @@
-package mydomain.model;
+package org.datanucleus.test.model;
 
 public enum TelephoneType {
     HOME("home"),

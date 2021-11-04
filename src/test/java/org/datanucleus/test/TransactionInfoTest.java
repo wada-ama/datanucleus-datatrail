@@ -1,13 +1,12 @@
 package org.datanucleus.test;
 
 import com.spotify.hamcrest.pojo.IsPojo;
-import mydomain.datanucleus.datatrail.nodes.BaseNode;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.TransactionInfo;
-import mydomain.model.ITrailDesc;
-import mydomain.model.Street;
+import mydomain.datanucleus.datatrail.ITrailDesc;
+import org.datanucleus.test.model.Street;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;

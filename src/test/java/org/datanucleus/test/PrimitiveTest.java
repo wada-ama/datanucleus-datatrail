@@ -4,7 +4,7 @@ import com.spotify.hamcrest.pojo.IsPojo;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
-import mydomain.model.Street;
+import org.datanucleus.test.model.Street;
 import org.datanucleus.identity.DatastoreIdImplKodo;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,6 @@
-package mydomain.model;
+package org.datanucleus.test.model;
+
+import mydomain.datanucleus.datatrail.ITrailDesc;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Version;

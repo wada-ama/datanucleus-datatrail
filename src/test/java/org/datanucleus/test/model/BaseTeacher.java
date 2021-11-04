@@ -1,20 +1,13 @@
-package mydomain.model;
+package org.datanucleus.test.model;
 
 import mydomain.audit.DataTrail;
+import mydomain.datanucleus.datatrail.ITrailDesc;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.Join;
-import javax.jdo.annotations.Key;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Value;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
-import java.util.HashMap;
-import java.util.Map;
 
 @PersistenceCapable
 @Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME, column="TYP", indexed="true")

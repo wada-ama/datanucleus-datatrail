@@ -4,13 +4,10 @@ import com.spotify.hamcrest.pojo.IsPojo;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
-import mydomain.model.CountryCode;
-import mydomain.model.QTelephone;
-import mydomain.model.Street;
-import mydomain.model.Telephone;
-import org.hamcrest.MatcherAssert;
+import org.datanucleus.test.model.CountryCode;
+import org.datanucleus.test.model.QTelephone;
+import org.datanucleus.test.model.Telephone;
 import org.hamcrest.Matchers;
-import org.hamcrest.text.MatchesPattern;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;

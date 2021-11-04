@@ -1,8 +1,5 @@
 package org.datanucleus.test.model;
 
-import mydomain.model.CountryCode;
-import mydomain.model.Street;
-
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.Key;
 import javax.jdo.annotations.PersistenceCapable;

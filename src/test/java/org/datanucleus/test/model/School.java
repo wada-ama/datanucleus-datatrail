@@ -1,4 +1,4 @@
-package mydomain.model;
+package org.datanucleus.test.model;
 
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Join;

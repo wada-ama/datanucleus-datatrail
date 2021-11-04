@@ -2,8 +2,8 @@ package mydomain.datanucleus.datatrail.nodes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import mydomain.datanucleus.datatrail.ITrailDesc;
 import mydomain.datanucleus.datatrail.Node;
-import mydomain.model.ITrailDesc;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.identity.DatastoreId;
 import org.datanucleus.identity.IdentityUtils;

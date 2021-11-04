@@ -6,7 +6,6 @@
 
     <persistence-unit name="MyTest">
         <!-- Add all of your model classes here -->
-
         <properties>
             <!-- Update these datastore details if different -->
             <property name="javax.jdo.PersistenceManagerFactoryClass" value="org.datanucleus.api.jdo.JDOPersistenceManagerFactory"/>

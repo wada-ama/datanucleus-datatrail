@@ -3,14 +3,14 @@ package org.datanucleus.test;
 import com.spotify.hamcrest.pojo.IsPojo;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeType;
-import mydomain.model.CountryCode;
-import mydomain.model.QCountryCode;
-import mydomain.model.QStreet;
-import mydomain.model.QStudent;
-import mydomain.model.Street;
-import mydomain.model.Student;
-import mydomain.model.Telephone;
-import mydomain.model.TelephoneType;
+import org.datanucleus.test.model.CountryCode;
+import org.datanucleus.test.model.QCountryCode;
+import org.datanucleus.test.model.QStreet;
+import org.datanucleus.test.model.QStudent;
+import org.datanucleus.test.model.Street;
+import org.datanucleus.test.model.Student;
+import org.datanucleus.test.model.Telephone;
+import org.datanucleus.test.model.TelephoneType;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.test.model.MapClass;
 import org.junit.jupiter.api.Disabled;
@@ -366,7 +366,6 @@ public class MapTest extends AbstractTest {
     }
 
 
-    @Disabled
     @DisplayName("Updating Map with same key/value pair should trigger a DataTrail entry with a version change only")
     @Test
     public void updateMapWithSameKeyValuePair() {

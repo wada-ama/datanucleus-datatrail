@@ -4,8 +4,8 @@ import com.spotify.hamcrest.pojo.IsPojo;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
-import mydomain.model.BaseTeacher;
-import mydomain.model.Teacher;
+import org.datanucleus.test.model.BaseTeacher;
+import org.datanucleus.test.model.Teacher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 

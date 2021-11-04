@@ -1,4 +1,4 @@
-package mydomain.model;
+package org.datanucleus.test.model;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Version;

@@ -1,4 +1,4 @@
-package mydomain.model;
+package org.datanucleus.test.model;
 
 import mydomain.audit.DataTrail;
 
