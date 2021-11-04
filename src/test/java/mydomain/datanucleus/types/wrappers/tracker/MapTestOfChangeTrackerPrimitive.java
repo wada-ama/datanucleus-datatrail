@@ -1,5 +1,9 @@
 package mydomain.datanucleus.types.wrappers.tracker;
 
+import com.spotify.hamcrest.pojo.IsPojo;
+import mydomain.datanucleus.datatrail.Node;
+import mydomain.datanucleus.datatrail.NodeAction;
+import mydomain.datanucleus.datatrail.NodeType;
 import org.datanucleus.test.AbstractTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,11 +13,13 @@ import java.util.Collection;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.isA;
 
-public class MapTestOfChangeTracker extends AbstractTest {
+public class MapTestOfChangeTrackerPrimitive extends AbstractTest {
 
 
     @DisplayName("Adds multiple values to the map.  Only the final value should be tracked.")
@@ -41,7 +47,19 @@ public class MapTestOfChangeTracker extends AbstractTest {
 
             assertThat( "SimpleEntry should be the last value added", (Collection<Object>)changeTracker.getAdded(), hasItems( new SimpleEntry("key", "lastValue")) );
         });
+
+
+        IsPojo<Node> primMapClass = getEntity(NodeAction.CREATE, PrimitiveMapClass.class, ANY )
+                .withProperty("fields", hasItem(
+                        getContainerField(NodeType.MAP, "primitiveMap")
+                                .withProperty("added", hasItems(
+                                        getMapElement(NodeType.PRIMITIVE, String.class, "key", NodeType.PRIMITIVE, String.class, "lastValue", null)
+                                ))
+                ));
+
+        assertThat(audit.getModifications(), contains(primMapClass));
     }
+
 
     @DisplayName("Put and remove values in the map in the same tx.  Nothing should be recorded.")
     @Test
@@ -68,6 +86,14 @@ public class MapTestOfChangeTracker extends AbstractTest {
             assertThat( "Should contain zero removed objects", (Collection<Object>)changeTracker.getRemoved(), hasSize(0) );
             assertThat( "Should contain zero added objects", (Collection<Object>)changeTracker.getAdded(), hasSize(0) );
         });
+
+
+        IsPojo<Node> primMapClass = getEntity(NodeAction.CREATE, PrimitiveMapClass.class, ANY )
+                .withProperty("fields", hasItem(
+                        getContainerField(NodeType.MAP, "primitiveMap")
+                ));
+
+        assertThat(audit.getModifications(), contains(primMapClass));
     }
 
 
@@ -101,5 +127,16 @@ public class MapTestOfChangeTracker extends AbstractTest {
 
             assertThat( "SimpleEntry should be the initial value of the map", (Collection<Object>)changeTracker.getChanged(), hasItems( new SimpleEntry("key", "initialValue")) );
         });
+
+
+        IsPojo<Node> primMapClass = getEntity(NodeAction.UPDATE, PrimitiveMapClass.class, ANY )
+                .withProperty("fields", hasItem(
+                        getContainerField(NodeType.MAP, "primitiveMap")
+                                .withProperty("changed", hasItems(
+                                        getMapElement(NodeType.PRIMITIVE, String.class, "key", NodeType.PRIMITIVE, String.class, "lastValue", "initialValue")
+                                ))
+                ));
+
+        assertThat(audit.getModifications(), contains(primMapClass));
     }
 }

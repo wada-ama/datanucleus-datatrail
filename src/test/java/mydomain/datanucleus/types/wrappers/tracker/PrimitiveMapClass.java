@@ -18,7 +18,15 @@ public class PrimitiveMapClass {
     @Join
     Map<String, String> primitiveMap = new HashMap<>();
 
+    @Join
+    @Value(column = "STREET_ID")
+    Map<String, Street> primitiveRefMap = new HashMap<>();
+
     public Map<String, String> getPrimitiveMap() {
         return primitiveMap;
+    }
+
+    public Map<String, Street> getPrimitiveRefMap() {
+        return primitiveRefMap;
     }
 }
