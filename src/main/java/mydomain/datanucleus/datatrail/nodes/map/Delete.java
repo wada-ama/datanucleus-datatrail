@@ -22,8 +22,8 @@ public class Delete extends BaseMap {
     protected void addElements( Map map ){
         // all new values, so use the raw collection values
         map.entrySet().stream().forEach(element -> {
-            Node key = getFactory().createNode(NodeAction.CREATE, ((Map.Entry)element).getKey(), null, this).get();
-            Node value = getFactory().createNode(NodeAction.CREATE, ((Map.Entry)element).getValue(), null, this).get();
+            Node key = getFactory().createNode(NodeAction.DELETE, ((Map.Entry)element).getKey(), null, this).get();
+            Node value = getFactory().createNode(NodeAction.DELETE, ((Map.Entry)element).getValue(), null, this).get();
 
             this.removed.add(new MapEntry(key, value));
         });
