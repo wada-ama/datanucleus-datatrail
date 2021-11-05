@@ -15,6 +15,7 @@ import org.datanucleus.test.model.Student;
 import org.datanucleus.test.model.Telephone;
 import org.datanucleus.test.model.TelephoneBook;
 import org.datanucleus.identity.DatastoreIdImplKodo;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -29,6 +30,7 @@ import static mydomain.datanucleus.datatrail.NodeAction.CREATE;
 import static mydomain.datanucleus.datatrail.NodeAction.DELETE;
 import static mydomain.datanucleus.datatrail.NodeAction.UPDATE;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
@@ -384,4 +386,42 @@ public class CollectionTest extends AbstractTest {
         assertThat(filterEntity(entities, TelephoneBook.class, UPDATE).get(), is(telephoneBook));
         assertThat(entities, containsInAnyOrder(five555, one113, telephoneBook));
     }
+
+
+    @DisplayName("Changes the order of a items in a list")
+    @Test
+    public void updateListOrderTest() {
+        executeTx(pm -> {
+            TelephoneBook book = new TelephoneBook("Montreal");
+            CountryCode canada = new CountryCode("Canada", 1);
+            for( int i = 0; i< 3; i++){
+                Telephone telephone = new Telephone( "514-555-111" + i, canada);
+                book.addTelephoneNumber(telephone);
+            }
+            pm.makePersistent( book);
+        }, false);
+
+
+        // move the first telephone number to the last one in the list
+        executeTx(pm -> {
+            TelephoneBook telephoneBook = pm.newJDOQLTypedQuery(TelephoneBook.class).filter(QTelephoneBook.candidate().name.eq("Montreal")).executeUnique();
+
+            List<Telephone> telephones = telephoneBook.getTelephoneNumbers();
+            telephones.add(telephones.remove(0));
+        });
+
+        final IsPojo<Node> telephoneBook = getEntity(UPDATE, TelephoneBook.class, "1")
+                .withProperty("fields", hasItem(
+                        getContainerField(NodeType.COLLECTION, "telephoneNumbers")
+                                .withProperty("contents", contains(
+                                        getListElement(NodeType.REF, Telephone.class, "2"),
+                                        getListElement(NodeType.REF, Telephone.class, "3"),
+                                        getListElement(NodeType.REF, Telephone.class, "1")
+                                ))
+                ));
+
+
+
+    }
+
 }
