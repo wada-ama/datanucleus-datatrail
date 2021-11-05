@@ -258,7 +258,7 @@ abstract public class AbstractTest {
     protected Optional<Node> filterEntity(Collection<Node> collection, Class<?> entityClass, NodeAction action){
         return collection.stream()
                         .filter(node -> node.getType() == NodeType.ENTITY
-                                && node.getClassName().equals(entityClass.getCanonicalName())
+                                && node.getClassName().equals(entityClass.getName())
                                 && Arrays.stream(node.getClass().getAnnotation(NodeDefinition.class).action()).anyMatch(action1 -> action1 == action)
                         ).findFirst();
     }
