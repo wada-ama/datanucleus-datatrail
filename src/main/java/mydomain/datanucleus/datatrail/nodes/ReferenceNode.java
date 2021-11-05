@@ -24,10 +24,8 @@ abstract public class ReferenceNode extends BaseNode implements Updatable {
         setId(source);
         setVersion(source);
         setDescription(source);
-        setClassName(source, false);
-//        if( className == null && source != null ){
-//            className = ClassUtils.getClass(source).getName();
-//        }
+        // set the class name to come from the source classname and not only from the metadata
+        setClassName(source, true);
     }
 
     /**

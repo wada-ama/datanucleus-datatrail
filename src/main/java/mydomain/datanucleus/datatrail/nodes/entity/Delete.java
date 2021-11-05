@@ -42,9 +42,7 @@ public class Delete extends BaseEntity {
         ExtendedReferentialStateManagerImpl op = (ExtendedReferentialStateManagerImpl)pc.dnGetStateManager();
 
         // need to include all loaded fields
-        String[] fieldNames = NucleusJDOHelper.getLoadedFields( pc, pm);
-        for(String fieldName : fieldNames) {
-            int position = op.getClassMetaData().getAbsolutePositionOfMember(fieldName);
+        for(int position : op.getLoadedFieldNumbers()) {
             Object field = op.provideSavedField(position);
             AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
             if( mmd.isFieldToBePersisted()){

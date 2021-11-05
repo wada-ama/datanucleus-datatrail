@@ -42,9 +42,7 @@ public class Create extends BaseEntity {
         ObjectProvider op = (ObjectProvider)pc.dnGetStateManager();
 
         // need to include all loaded fields
-        String[] fieldNames = NucleusJDOHelper.getLoadedFields( pc, pm);
-        for(String fieldName : fieldNames) {
-            int position = op.getClassMetaData().getAbsolutePositionOfMember(fieldName);
+        for(int position : op.getLoadedFieldNumbers()) {
             Object field = op.provideField(position);
             AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
             if( mmd.isFieldToBePersisted()){
