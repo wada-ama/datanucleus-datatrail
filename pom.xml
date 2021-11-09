@@ -101,6 +101,8 @@
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>
             <version>4.8.128</version>
+            <scope>compile</scope>
+            <optional>true</optional>
         </dependency>
 
         <dependency>

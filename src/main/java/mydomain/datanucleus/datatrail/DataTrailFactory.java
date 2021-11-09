@@ -37,6 +37,8 @@ public class DataTrailFactory {
     /**
      * Automatically scans for any non-abstract {@link NodeFactory} implementations and attempts to initialize them
      *
+     * Requires the optional dependency {@code io.github.classgraph:classgraph} to be present in the classpath
+     *
      * @param classPackageToScan package of class to scan for any implementations
      */
     public void registerNodeFactories(Class<?> classPackageToScan) {
@@ -66,8 +68,7 @@ public class DataTrailFactory {
 
     /**
      * Register a {@link NodeFactory} to the DataTrail factory.  This will make all the types exposed by the factory class
-     * accessible to the DataTrail factory.  The {@link NodeFactory} class must supply a public constructor which takes a {@link DataTrailFactory} object
-     * as a parameter
+     * accessible to the DataTrail factory.  The {@link NodeFactory} class must supply a no-arg public constructor
      *
      * @param factory
      */
@@ -86,7 +87,8 @@ public class DataTrailFactory {
 
     /**
      * Retrieve an instance of the factory
-     * By default, automatically add any {@link NodeFactory} found in any subpackage of {@link BaseNode}
+     * By default, use the ServiceLoader pattern to automatically add any {@link NodeFactory} declared in
+     * {@code META-INF/services/mydomain.datanucleus.datatrail.NodeFactory}
      *
      * @return
      */
@@ -97,9 +99,12 @@ public class DataTrailFactory {
     }
 
     /**
-     * Retrieve an instance of the factory
+     * Retrieve an instance of the factory and automatically add any {@link NodeFactory} classes found in any child package
+     * of the {@code classPackageToScan} parameter.
      *
-     * @return
+     * Requires the optional dependency {@code io.github.classgraph:classgraph} to be present in the classpath
+     *
+     * @param classPackageToScan package of class to scan for any implementations
      */
     static public DataTrailFactory getDataTrailFactory(Class<?> classPackageToScan) {
         DataTrailFactory factory = new DataTrailFactory();
