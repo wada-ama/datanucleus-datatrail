@@ -28,7 +28,7 @@ public class Update extends BaseCollection {
             removed = (java.util.Collection<Node>) changeTracker.getRemoved().stream().map(o -> getFactory().createNode(NodeAction.UPDATE, o, null, this).get()).collect(Collectors.toList());
         } else {
             for (Object element : collection) {
-                contents.add(getFactory().createNode(NodeAction.UPDATE, element, null, this).get());
+                getFactory().createNode(NodeAction.UPDATE, element, null, this).ifPresent(node -> contents.add(node));
             }
         }
     }

@@ -6,6 +6,8 @@ import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
+import java.util.Optional;
+
 @NodeDefinition(type=NodeType.ARRAY, action = NodeAction.CREATE)
 public class Create extends BaseArray {
 
@@ -20,7 +22,8 @@ public class Create extends BaseArray {
     @Override
     protected void addElements( Object[] elements ){
         // all new values, so use the raw collection values
-        for(Object element : elements )
-            this.contents.add(getFactory().createNode(NodeAction.CREATE, element, null, this).get());
+        for(Object element : elements ) {
+            getFactory().createNode(NodeAction.CREATE, element, null, this).ifPresent(node -> this.contents.add(node));
+        }
     }
 }

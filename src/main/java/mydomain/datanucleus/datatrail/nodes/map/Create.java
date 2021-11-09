@@ -7,6 +7,7 @@ import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 import java.util.Map;
+import java.util.Optional;
 
 @NodeDefinition(type=NodeType.MAP, action = NodeAction.CREATE)
 public class Create extends BaseMap {
@@ -23,10 +24,13 @@ public class Create extends BaseMap {
     protected void addElements( Map map ){
         // all new values, so use the raw collection values
         map.entrySet().stream().forEach(element -> {
-            Node key = getFactory().createNode(NodeAction.CREATE, ((Map.Entry)element).getKey(), null, this).get();
-            Node value = getFactory().createNode(NodeAction.CREATE, ((Map.Entry)element).getValue(), null, this).get();
+            // only add the entry to the set if a node can be created for both the key and the value
+            Optional<Node> key = getFactory().createNode(NodeAction.CREATE, ((Map.Entry)element).getKey(), null, this);
+            Optional<Node> value = getFactory().createNode(NodeAction.CREATE, ((Map.Entry)element).getValue(), null, this);
 
-            this.added.add(new MapEntry(key, value));
+            if( key.isPresent() && value.isPresent() ){
+                this.added.add(new MapEntry(key.get(), value.get()));
+            }
         });
     }
 }

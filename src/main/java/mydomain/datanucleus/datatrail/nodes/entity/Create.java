@@ -46,7 +46,7 @@ public class Create extends BaseEntity {
             Object field = op.provideField(position);
             AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
             if( mmd.isFieldToBePersisted()){
-                fields.add(getFactory().createNode(NodeAction.CREATE, field, mmd, this).get());
+                getFactory().createNode(NodeAction.CREATE, field, mmd, this).ifPresent( node -> fields.add(node));
             }
         }
     }

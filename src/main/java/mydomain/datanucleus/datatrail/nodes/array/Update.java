@@ -21,6 +21,6 @@ public class Update extends BaseArray {
     protected void addElements( Object[] elements ){
         // all new values, so use the raw collection values
         for(Object element : elements )
-            this.contents.add(getFactory().createNode(NodeAction.UPDATE, element, null, this).get());
+            getFactory().createNode(NodeAction.UPDATE, element, null, this).ifPresent(node -> this.contents.add(node));
     }
 }

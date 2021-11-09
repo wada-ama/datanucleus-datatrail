@@ -7,6 +7,7 @@ import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 import java.util.Map;
+import java.util.Optional;
 
 @NodeDefinition(type=NodeType.MAP, action = NodeAction.DELETE)
 public class Delete extends BaseMap {
@@ -22,10 +23,12 @@ public class Delete extends BaseMap {
     protected void addElements( Map map ){
         // all new values, so use the raw collection values
         map.entrySet().stream().forEach(element -> {
-            Node key = getFactory().createNode(NodeAction.DELETE, ((Map.Entry)element).getKey(), null, this).get();
-            Node value = getFactory().createNode(NodeAction.DELETE, ((Map.Entry)element).getValue(), null, this).get();
+            Optional<Node> key = getFactory().createNode(NodeAction.DELETE, ((Map.Entry)element).getKey(), null, this);
+            Optional<Node> value = getFactory().createNode(NodeAction.DELETE, ((Map.Entry)element).getValue(), null, this);
 
-            this.removed.add(new MapEntry(key, value));
+            if( key.isPresent() && value.isPresent() ){
+                this.removed.add(new MapEntry(key.get(), value.get()));
+            }
         });
     }
 }

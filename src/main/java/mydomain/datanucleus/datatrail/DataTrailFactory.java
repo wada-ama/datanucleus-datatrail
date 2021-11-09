@@ -10,6 +10,7 @@ import org.datanucleus.metadata.MetaData;
 import org.datanucleus.state.ObjectProvider;
 
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -135,7 +136,7 @@ public class DataTrailFactory {
         MetaData md = ((ObjectProvider) ((Persistable) value).dnGetStateManager()).getClassMetaData();
 
 
-        return createNode(value, action, md, null);
+        return createNode(value, action, md, null).orElse(null);
     }
 
 
@@ -148,18 +149,16 @@ public class DataTrailFactory {
      * @return
      * @throws RuntimeException if unable to create the node
      */
-    public Node createNode(Object value, NodeAction action, MetaData md, Node parent) {
+    public Optional<Node> createNode(Object value, NodeAction action, MetaData md, Node parent) {
 
-        // find the factory for this type of value
-        NodeFactory factory = factories.stream().filter(nodeFactory -> nodeFactory.supports(action, value, md))
+        // find the factory for this type of value and use it to create the node
+        return factories.stream().filter(nodeFactory -> nodeFactory.supports(action, value, md))
                 .sorted(Comparator.comparingInt(NodeFactory::priority))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("No type found to support: " + value.getClass().getCanonicalName() + " / " + action));
-
-
-        // create a node for this value
-        return factory.createNode(action, value, md, parent)
-                .orElseThrow(() -> new IllegalArgumentException("Factory unable to support: " + value.getClass().getCanonicalName() + " / " + action));
+                .map( nodeFactory -> nodeFactory.createNode(action, value, md, parent ).orElseGet(() -> {
+                    logger.debug( "Unable to find a node factory to support {}/{}", value.getClass().getCanonicalName(), action);
+                    return null;
+                }));
     }
 
 }

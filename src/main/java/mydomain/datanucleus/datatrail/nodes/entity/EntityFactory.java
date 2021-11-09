@@ -43,6 +43,6 @@ public class EntityFactory extends AbstractNodeFactory {
         }
 
         // if this factory is unable to create the node, then delegate to the data trail factory
-        return node.isPresent() ? node : Optional.of(dataTrailFactory.createNode(value, action, md, parent));
+        return node.isPresent() ? node : dataTrailFactory.createNode(value, action, md, parent);
     }
 }

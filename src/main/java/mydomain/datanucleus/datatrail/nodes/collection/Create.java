@@ -21,7 +21,7 @@ public class Create extends BaseCollection {
     protected void addElements( java.util.Collection elements ){
         // all new values, so use the raw collection values
         for(Object element : elements )
-            this.added.add(getFactory().createNode(NodeAction.CREATE, element, null, this).get());
+            getFactory().createNode(NodeAction.CREATE, element, null, this).ifPresent(node -> this.added.add(node));
     }
 
 
