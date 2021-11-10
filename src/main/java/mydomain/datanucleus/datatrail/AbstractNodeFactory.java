@@ -1,5 +1,6 @@
 package mydomain.datanucleus.datatrail;
 
+import mydomain.datanucleus.datatrail.annotation.DataTrailAnnotationHandler;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.MetaData;
 
@@ -40,7 +41,7 @@ abstract public class AbstractNodeFactory implements NodeFactory {
     public boolean supports(NodeAction action, Object value, MetaData md) {
         assertConfigured();
         NodeDefinition nodeDefn = this.getClass().getAnnotation(NodeDefinition.class);
-        return isObjectUpdatable(md) && isSupported(nodeDefn, action);
+        return isObjectIncluded(md) && isObjectUpdatable(md) && isSupported(nodeDefn, action);
     }
 
 
@@ -71,6 +72,24 @@ abstract public class AbstractNodeFactory implements NodeFactory {
 
         // either the class or the field can be identified as read only
         return !classReadOnly && !fieldReadOnly;
+    }
+
+
+    /**
+     * Checks to see if the object is included in the datatrail.  By default, all fields and classes are part of the data trail
+     * @param md
+     * @return
+     */
+    protected boolean isObjectIncluded(MetaData md){
+        // by default, everything is included
+        if( md == null ){
+            return true;
+        }
+
+        boolean classExcluded = "true".equals(md.getValueForExtension(DataTrailAnnotationHandler.EXTENSION_CLASS_DATATRAIL_EXCLUDE));
+        boolean fieldExcluded = "true".equals(md.getValueForExtension(DataTrailAnnotationHandler.EXTENSION_MEMBER_DATATRAIL_EXCLUDE));
+
+        return !classExcluded &&  !fieldExcluded;
     }
 
 }

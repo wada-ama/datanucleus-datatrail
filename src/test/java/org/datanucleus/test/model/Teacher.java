@@ -14,8 +14,12 @@ public class Teacher extends BaseTeacher{
 
     private BaseTeacher mentor;
 
+    @DataTrail(excludeFromDataTrail = true)
+    private String nickname;
+
     public Teacher(String name, BaseTeacher mentor) {
         super(name);
         this.mentor = mentor;
+        this.nickname = "nickname";
     }
 }

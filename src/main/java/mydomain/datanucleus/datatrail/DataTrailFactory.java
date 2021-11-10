@@ -126,13 +126,6 @@ public class DataTrailFactory {
             return null;
         }
 
-        // check if the object should be excluded from the data trail
-        if (value.getClass().getAnnotation(DataTrail.class) != null && value.getClass().getAnnotation(DataTrail.class).excludeFromDataTrail()) {
-            // this element should be excluded, so skip it
-            logger.debug("{} is marked as excluded from the datatrail", value.getClass().getCanonicalName());
-            return null;
-        }
-
         MetaData md = ((ObjectProvider) ((Persistable) value).dnGetStateManager()).getClassMetaData();
 
 
