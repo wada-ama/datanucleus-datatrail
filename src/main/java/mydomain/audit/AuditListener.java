@@ -19,8 +19,12 @@ import javax.jdo.listener.InstanceLifecycleEvent;
 import javax.jdo.listener.LoadLifecycleListener;
 import javax.jdo.listener.StoreLifecycleListener;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -42,38 +46,90 @@ public class AuditListener implements CreateLifecycleListener,
      * Class to store the Modifications to the objects used in the Audit Trail
      */
     private static class Modifications {
-        private Map<Object, Node> delegate = new HashMap<>();
+        private Map<Object, Set<Node>> delegate = new ConcurrentHashMap<>();
 
         private IdentityReference getReference( Object key ){
             return new IdentityReference(key);
         }
 
         /**
-         * Ignores NULL values
-         * @param key
+         * Adds the {@link Node} corresponding to the {@link Persistable} object to the list of modifications occured during
+         * the current transaction
+         * @param pc
          * @param value
          * @return
          */
-        public Node put(Object key, Node value){
+        public void add(Persistable pc, Node value){
             if( value == null ){
-                return value;
+                return;
             }
 
-            return delegate.put( getReference(key), value);
+            IdentityReference key = getReference(pc);
+
+            if(!delegate.containsKey(key)){
+                delegate.put(key, new HashSet<>());
+            }
+
+            // adds the node to the list, but must follow these rules
+            // if CREATE + DELETE ==> Nothing
+            // If UPDATE + DELETE ==> DELETE
+            // if DELETE ==> DELETE
+            // if CREATE + UPDATE + DELETE => Nothing
+            // if DELETE + CREATE ==> DELETE (DN won't do the CREATE)
+            if( value.getAction() == NodeAction.DELETE ) {
+                // remove any CREATE or UPDATE nodes that are part of the same tx as the DELETE superceeds them
+                delegate.get(key).removeIf(node -> (node.getAction() == NodeAction.UPDATE));
+                boolean createRemoved = delegate.get(key).removeIf(node -> (node.getAction() == NodeAction.CREATE));
+
+                if( createRemoved ){
+                    // ignore the DELETE node b/c a CREATED node was found in the same tx, so they cancel each other out
+                    return;
+                }
+            }
+
+            // replace any existing node with the same action with the new value
+            delegate.get(key).removeIf( node -> node.getAction() == value.getAction());
+            delegate.get(key).add(value);
         }
 
-        public Node get(Object key){
-            return delegate.get( getReference(key));
+
+        /**
+         * Gets the node with the specified action
+         * @param pc
+         * @param action
+         * @return Node if present.  null if not
+         */
+        public Node get(Persistable pc, NodeAction action){
+            return delegate.getOrDefault(getReference(pc), Collections.emptySet()).stream()
+                    .filter( node -> node.getAction() == action )
+                    .findFirst()
+                    .orElse(null);
         }
 
-        public boolean containsKey(Object key){
-            return delegate.containsKey( getReference(key));
+
+        /**
+         * Checks if this {@link Persistable} has already been added to the tracked modifications
+         * @param pc
+         * @return
+         */
+        public boolean contains(Persistable pc){
+            return delegate.containsKey( getReference(pc));
         }
 
+
+        /**
+         * Gets an unordered Set of all the different modifications that were added to this audit trail.
+         * @return
+         */
         public Collection<Node> values(){
-            return delegate.values();
+            return delegate.values().stream()
+                    .flatMap(nodes -> nodes.stream())
+                    .collect(Collectors.toCollection(HashSet::new));
         }
 
+        /**
+         * Clears the list of all modifications
+         */
         public void clear(){
             delegate.clear();
         }
@@ -118,29 +174,23 @@ public class AuditListener implements CreateLifecycleListener,
         op.loadUnloadedFields();
 
         // check to see if the entity is already in the modifications map
-        if( modifications.containsKey(pc)){
-            Node node = modifications.get(pc);
+        if( modifications.contains(pc)){
+            Node node = modifications.get(pc, NodeAction.DELETE);
             if( node instanceof Updatable){
                 ((Updatable)node).updateFields();
             }
         } else {
             // postStore called for both new objects and updating objects, so need to determine which is the state of the object
             logger.warn("New Persistable not already processed {}", pc.dnGetObjectId());
-            modifications.put(pc, dataTrailFactory.createNode(pc, NodeAction.DELETE));
+            modifications.add(pc, dataTrailFactory.createNode(pc, NodeAction.DELETE));
         }
     }
 
     public void postDelete(InstanceLifecycleEvent event) {
         // TODO handle any pre-delete Instance Callbacks
-
-        NucleusLogger.GENERAL.info("Audit : postDelete for " + ((Persistable) event.getSource()).dnGetObjectId());
-//        modifications.push(new Entity((Persistable)event.getSource()));
-
     }
 
     public void postLoad(InstanceLifecycleEvent event) {
-        NucleusLogger.GENERAL.info("Audit : load for " +
-                ((Persistable) event.getSource()).dnGetObjectId());
     }
 
     public void preStore(InstanceLifecycleEvent event) {
@@ -148,7 +198,7 @@ public class AuditListener implements CreateLifecycleListener,
 
         // postStore called for both new objects and updating objects, so need to determine which is the state of the object
         NodeAction action = pc.dnGetStateManager().isNew(pc) ? NodeAction.CREATE : NodeAction.UPDATE;
-        modifications.put(pc, dataTrailFactory.createNode(pc, action));
+        modifications.add(pc, dataTrailFactory.createNode(pc, action));
 
     }
 
@@ -162,16 +212,16 @@ public class AuditListener implements CreateLifecycleListener,
         }
 
         // check to see if the entity is already in the modifications map
-        if( modifications.containsKey(pc)){
-            Node node = modifications.get(pc);
+        NodeAction action = pc.dnGetStateManager().isNew(pc) ? NodeAction.CREATE : NodeAction.UPDATE;
+        if( modifications.contains(pc)){
+            Node node = modifications.get(pc, action);
             if( node instanceof Updatable){
                 ((Updatable)node).updateFields();
             }
         } else {
             // postStore called for both new objects and updating objects, so need to determine which is the state of the object
             logger.warn("New Persistable not already processed {}", pc.dnGetObjectId());
-            NodeAction action = pc.dnGetStateManager().isNew(pc) ? NodeAction.CREATE : NodeAction.UPDATE;
-            modifications.put(pc, dataTrailFactory.createNode(pc, action));
+            modifications.add(pc, dataTrailFactory.createNode(pc, action));
         }
 
 
