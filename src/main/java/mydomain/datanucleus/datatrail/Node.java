@@ -1,5 +1,6 @@
 package mydomain.datanucleus.datatrail;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public interface Node {
@@ -21,4 +22,7 @@ public interface Node {
 
     @JsonProperty("prevValue")
     Object getPrev();
+
+    @JsonIgnore
+    NodeAction getAction();
 }

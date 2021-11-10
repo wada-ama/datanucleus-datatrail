@@ -3,11 +3,14 @@ package mydomain.datanucleus.datatrail.nodes;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import mydomain.datanucleus.datatrail.ClassUtils;
 import mydomain.datanucleus.datatrail.Node;
+import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
+
+import java.util.Arrays;
 
 /**
  * Base class to represent a Node in the DataTrail object graph
@@ -80,6 +83,15 @@ abstract public class BaseNode implements Node {
         return nodeDefn == null ? null : nodeDefn.type();
     }
 
+    /**
+     * Returns the action for {@link NodeType#ENTITY} objects.
+     * @return action for {@link NodeType#ENTITY} objects.  Null otherwise
+     */
+    @Override
+    public NodeAction getAction(){
+        NodeDefinition nodeDefn = this.getClass().getAnnotation(NodeDefinition.class);
+        return nodeDefn == null ? null : Arrays.stream(nodeDefn.action()).findFirst().orElse(null);
+    }
 
     @Override
     public String getName() {

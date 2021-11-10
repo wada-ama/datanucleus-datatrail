@@ -1,6 +1,7 @@
 package mydomain.datanucleus.datatrail.nodes.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
@@ -73,17 +74,11 @@ abstract public class BaseEntity extends ReferenceNode {
         fields.stream().filter(node -> node instanceof Updatable).forEach(node -> ((Updatable)node).updateFields());
     }
 
-
-    /**
-     * Returns the action for {@link NodeType#ENTITY} objects.
-     * @return action for {@link NodeType#ENTITY} objects.  Null otherwise
-     */
+    @JsonIgnore(value = false)
+    @Override
     public NodeAction getAction(){
-        NodeDefinition nodeDefn = this.getClass().getAnnotation(NodeDefinition.class);
-        return nodeDefn == null ? null : Arrays.stream(nodeDefn.action()).findFirst().orElse(null);
+        return super.getAction();
     }
-
-
 
     /**
      * Ensures that a {@link TransactionInfo} object is assigned to the transaction.  If it is missing, create one
