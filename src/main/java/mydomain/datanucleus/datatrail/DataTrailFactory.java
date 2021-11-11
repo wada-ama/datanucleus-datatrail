@@ -3,8 +3,6 @@ package mydomain.datanucleus.datatrail;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
-import mydomain.audit.DataTrail;
-import mydomain.datanucleus.datatrail.nodes.BaseNode;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.MetaData;
 import org.datanucleus.state.ObjectProvider;
@@ -22,8 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DataTrailFactory {
     // get a static slf4j logger for the class
     protected static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(DataTrailFactory.class);
-
-    static final private DataTrailFactory instance = new DataTrailFactory();
 
     private Set<NodeFactory> factories = ConcurrentHashMap.newKeySet();
 

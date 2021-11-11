@@ -14,7 +14,7 @@ import java.util.UUID;
  */
 public class TransactionInfo implements Serializable {
 
-    static public String NO_USERNAME = "__NOT_DEFINED__";
+    static final public String NO_USERNAME = "__NOT_DEFINED__";
 
     final protected Instant dateModified;
     final protected String username;

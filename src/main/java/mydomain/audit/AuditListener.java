@@ -66,9 +66,8 @@ public class AuditListener implements CreateLifecycleListener,
 
             IdentityReference key = getReference(pc);
 
-            if(!delegate.containsKey(key)){
-                delegate.put(key, new HashSet<>());
-            }
+            // create a new set if not present
+            delegate.computeIfAbsent(key, o -> new HashSet<>());
 
             // adds the node to the list, but must follow these rules
             // if CREATE + DELETE ==> Nothing
@@ -123,7 +122,7 @@ public class AuditListener implements CreateLifecycleListener,
          */
         public Collection<Node> values(){
             return delegate.values().stream()
-                    .flatMap(nodes -> nodes.stream())
+                    .flatMap(Set::stream)
                     .collect(Collectors.toCollection(HashSet::new));
         }
 
@@ -138,9 +137,6 @@ public class AuditListener implements CreateLifecycleListener,
 
     private Modifications modifications = new Modifications();
 
-
-    public AuditListener() {
-    }
 
     public void postCreate(InstanceLifecycleEvent event) {
         NucleusLogger.GENERAL.info("Audit : create for " +
@@ -204,7 +200,6 @@ public class AuditListener implements CreateLifecycleListener,
 
     public void postStore(InstanceLifecycleEvent event) {
         Persistable pc = (Persistable) event.getSource();
-        PersistenceManager pm = (PersistenceManager) pc.dnGetExecutionContext().getOwner();
 
         if (!(event.getSource() instanceof Persistable)) {
             NucleusLogger.GENERAL.debug("Nothing to do. No persistable object found. : " + event.getSource().getClass().getName());

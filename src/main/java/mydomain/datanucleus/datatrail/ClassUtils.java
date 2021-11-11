@@ -2,6 +2,10 @@ package mydomain.datanucleus.datatrail;
 
 public class ClassUtils {
 
+    /**
+     * private constructor as this is a helper class of static utils
+     */
+    private ClassUtils() {}
 
     /**
      * Helper method to return the Class for a given primitive class.
