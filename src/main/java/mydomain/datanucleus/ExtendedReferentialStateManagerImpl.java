@@ -19,23 +19,21 @@ public class ExtendedReferentialStateManagerImpl extends ReferentialStateManager
         super(ec, cmd);
     }
 
-    public Persistable getSavedImage(){
-        return savedImage;
-    }
-
-//    @Override
-//    public void loadUnloadedFields() {
-//        super.loadUnloadedFields();
-//
-//        updateSavedFields();
-//    }
-
+    /**
+     * Ensure that loaded fields are always pushed into the savedImage
+     * @param fieldNumbers
+     */
     @Override
     protected void loadFieldsFromDatastore(int[] fieldNumbers) {
         super.loadFieldsFromDatastore(fieldNumbers);
         updateSavedFields();
     }
 
+    /**
+     * Ensure that loaded fields from the L2 cache are pushed into the savedImage
+     * @param fieldNumbers
+     * @return
+     */
     @Override
     protected int[] loadFieldsFromLevel2Cache(int[] fieldNumbers) {
         int[] unloadedFields = super.loadFieldsFromLevel2Cache(fieldNumbers);
@@ -47,6 +45,12 @@ public class ExtendedReferentialStateManagerImpl extends ReferentialStateManager
         return unloadedFields;
     }
 
+    /**
+     * Whenever a field is updated, make sure that the old value exists in the saved image first
+     * @param pc
+     * @param fieldNumber
+     * @param value
+     */
     @Override
     protected void updateField(Persistable pc, int fieldNumber, Object value) {
         // check to see if the field has already been loaded and saved in the backup image
@@ -77,18 +81,12 @@ public class ExtendedReferentialStateManagerImpl extends ReferentialStateManager
         savedLoadedFields = loadedFields.clone();
     }
 
-    @Override
-    protected void replaceField(Persistable pc, int fieldNumber, Object value, boolean makeDirty) {
-        super.replaceField(pc, fieldNumber, value, makeDirty);
-    }
 
-    protected void replaceField(Persistable pc, int fieldNumber, Object value){
-        super.replaceField(pc, fieldNumber, value);
-        updateSavedFields();
-    }
-
-
-
+    /**
+     * Retrieve a field from the saved image
+     * @param fieldNumber
+     * @return
+     */
     public Object provideSavedField(int fieldNumber) {
         return provideField(savedImage, fieldNumber);
     }
