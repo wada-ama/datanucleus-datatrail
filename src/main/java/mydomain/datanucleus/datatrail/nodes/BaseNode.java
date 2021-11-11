@@ -113,11 +113,6 @@ abstract public class BaseNode implements Node {
         return prev;
     }
 
-    @JsonIgnore
-    public Node getParent() {
-        return parent;
-    }
-
 
     /**
      * Sets the previous value of this node

@@ -1,13 +1,13 @@
 package mydomain.datanucleus.datatrail.nodes.array;
 
 import mydomain.datanucleus.datatrail.Node;
-import mydomain.datanucleus.datatrail.nodes.ContainerNode;
+import mydomain.datanucleus.datatrail.nodes.AbstractContainerNode;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-abstract public class BaseArray extends ContainerNode {
+abstract public class BaseArray extends AbstractContainerNode {
     // get a static slf4j logger for the class
     protected static final Logger logger = getLogger(BaseArray.class);
 

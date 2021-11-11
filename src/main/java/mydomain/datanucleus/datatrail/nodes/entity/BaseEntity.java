@@ -5,10 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
-import mydomain.datanucleus.datatrail.NodeType;
-import mydomain.datanucleus.datatrail.nodes.ReferenceNode;
+import mydomain.datanucleus.datatrail.nodes.AbstractReferenceNode;
 import mydomain.datanucleus.datatrail.TransactionInfo;
-import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.nodes.Updatable;
 import org.datanucleus.enhancement.Persistable;
@@ -16,14 +14,13 @@ import org.datanucleus.metadata.MetaData;
 
 import javax.jdo.PersistenceManager;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Definition of an Entity that is being Created
  */
-abstract public class BaseEntity extends ReferenceNode {
+abstract public class BaseEntity extends AbstractReferenceNode implements mydomain.datanucleus.datatrail.nodes.EntityNode {
     protected Set<Node> fields = new HashSet<>();
     protected Instant dateModified;
     protected String username;
@@ -46,22 +43,22 @@ abstract public class BaseEntity extends ReferenceNode {
 
     abstract protected void setFields(Persistable pc);
 
-    @JsonProperty
+    @Override
     public Set<Node> getFields() {
         return fields;
     }
 
-    @JsonProperty
+    @Override
     public Instant getDateModified() {
         return txInfo.getDateModified();
     }
 
-    @JsonProperty("user")
+    @Override
     public String getUsername() {
         return txInfo.getUsername();
     }
 
-    @JsonProperty("txId")
+    @Override
     public String getTransactionId() {
         return txInfo.getTxId();
     }
@@ -74,7 +71,6 @@ abstract public class BaseEntity extends ReferenceNode {
         fields.stream().filter(node -> node instanceof Updatable).forEach(node -> ((Updatable)node).updateFields());
     }
 
-    @JsonIgnore(value = false)
     @Override
     public NodeAction getAction(){
         return super.getAction();

@@ -1,12 +1,12 @@
 package mydomain.datanucleus.datatrail.nodes.map;
 
 import mydomain.datanucleus.datatrail.Node;
-import mydomain.datanucleus.datatrail.nodes.ContainerNode;
+import mydomain.datanucleus.datatrail.nodes.AbstractContainerNode;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 import java.util.Map;
 
-abstract public class BaseMap extends ContainerNode {
+abstract public class BaseMap extends AbstractContainerNode {
 
 
     protected BaseMap(java.util.Map value, AbstractMemberMetaData mmd, Node parent) {

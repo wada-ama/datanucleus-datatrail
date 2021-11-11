@@ -1,11 +1,11 @@
 package mydomain.datanucleus.datatrail.nodes.reference;
 
 import mydomain.datanucleus.datatrail.Node;
-import mydomain.datanucleus.datatrail.nodes.ReferenceNode;
+import mydomain.datanucleus.datatrail.nodes.AbstractReferenceNode;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
-abstract public class BaseReference extends ReferenceNode {
+abstract public class BaseReference extends AbstractReferenceNode {
     /**
      * Default constructor.  Should only be called via the DataTrailFactory
      * @param value
