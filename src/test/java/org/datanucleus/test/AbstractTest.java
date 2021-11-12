@@ -22,6 +22,7 @@ import org.hamcrest.Matcher;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInfo;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
@@ -65,8 +66,12 @@ abstract public class AbstractTest {
      * Clear the embedded DB before each test execution to ensure that IDs are reset to 1
      */
     @BeforeEach
-    protected void resetTransaction() {
+    protected void resetTransaction(TestInfo testInfo) {
         pmf = JDOHelper.getPersistenceManagerFactory("MyTest");
+        StringBuffer sb = new StringBuffer();
+        testInfo.getTestClass().ifPresent(aClass -> sb.append(aClass.getName()));
+        testInfo.getTestMethod().ifPresent(method -> sb.append("." ).append(method.getName()).append("()"));
+        CONSOLE.info( "Executing: " + sb.toString());
     }
 
     @AfterEach
