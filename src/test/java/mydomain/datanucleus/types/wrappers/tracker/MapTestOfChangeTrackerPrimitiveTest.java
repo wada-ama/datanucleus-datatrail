@@ -19,7 +19,7 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.isA;
 
-public class MapTestOfChangeTrackerPrimitive extends AbstractTest {
+public class MapTestOfChangeTrackerPrimitiveTest extends AbstractTest {
 
 
     @DisplayName("Adds multiple values to the map.  Only the final value should be tracked.")

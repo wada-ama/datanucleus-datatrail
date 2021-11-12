@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.isA;
 
-public class MapTestOfChangeTrackerPrimitiveRef extends AbstractTest {
+public class MapTestOfChangeTrackerPrimitiveRefTest extends AbstractTest {
 
 
     protected Map<String, String> ids = new HashMap<>();
