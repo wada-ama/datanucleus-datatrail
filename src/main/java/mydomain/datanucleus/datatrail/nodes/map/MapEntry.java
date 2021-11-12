@@ -13,7 +13,6 @@ import java.util.Arrays;
  */
 public class MapEntry extends BaseNode implements Updatable {
     Node key;
-    Node value;
 
     public MapEntry(Node key, Node value) {
         super(null, null);
@@ -29,11 +28,11 @@ public class MapEntry extends BaseNode implements Updatable {
     @JsonProperty("value")
     @Override
     public Node getValue() {
-        return value;
+        return (Node) value;
     }
 
     @Override
     public void updateFields() {
-        Arrays.asList(key, value).stream().filter(node -> node instanceof Updatable).forEach( node -> ((Updatable)node).updateFields());
+        Arrays.asList(key, value).stream().filter(Updatable.class::isInstance).forEach( node -> ((Updatable)node).updateFields());
     }
 }

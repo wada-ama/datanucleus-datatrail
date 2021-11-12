@@ -16,12 +16,6 @@ import java.util.Optional;
 public class PrimitiveFactory extends AbstractNodeFactory {
 
     @Override
-    public boolean supports(NodeAction action, Object value, MetaData md) {
-        // can process any value as a primitive by using the value.toString()
-        return super.supports(action, value, md);
-    }
-
-    @Override
     public Optional<Node> createNode(NodeAction action, Object value, MetaData md, Node parent) {
         assertConfigured();
         if (!supports(action, value, md))

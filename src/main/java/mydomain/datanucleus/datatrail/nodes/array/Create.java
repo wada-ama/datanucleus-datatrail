@@ -6,8 +6,6 @@ import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
-import java.util.Optional;
-
 @NodeDefinition(type=NodeType.ARRAY, action = NodeAction.CREATE)
 public class Create extends BaseArray {
 

@@ -52,9 +52,9 @@ abstract public class AbstractContainerNode extends BaseNode implements Updatabl
 
     @Override
     public void updateFields() {
-        added.stream().filter(node -> node instanceof Updatable).forEach( node -> ((Updatable)node).updateFields());
-        removed.stream().filter(node -> node instanceof Updatable).forEach( node -> ((Updatable)node).updateFields());
-        changed.stream().filter(node -> node instanceof Updatable).forEach( node -> ((Updatable)node).updateFields());
-        contents.stream().filter(node -> node instanceof Updatable).forEach( node -> ((Updatable)node).updateFields());
+        added.stream().filter(Updatable.class::isInstance).forEach( node -> ((Updatable)node).updateFields());
+        removed.stream().filter(Updatable.class::isInstance).forEach( node -> ((Updatable)node).updateFields());
+        changed.stream().filter(Updatable.class::isInstance).forEach( node -> ((Updatable)node).updateFields());
+        contents.stream().filter(Updatable.class::isInstance).forEach( node -> ((Updatable)node).updateFields());
     }
 }

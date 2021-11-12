@@ -27,7 +27,10 @@ import java.util.stream.Collectors;
 /**
  * Default {@link MapChangeTracker}.
  *
+ * Imported from the OpenJPA project (org.apache.openjpa.util.MapChangeTrackerImpl)
+ *
  * @author Abe White
+ * @author Eric Benzacar
  */
 public class MapChangeTrackerImpl
     extends AbstractChangeTracker

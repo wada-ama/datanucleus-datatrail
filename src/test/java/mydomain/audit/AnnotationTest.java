@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.Matchers.is;
 
-public class AnnotationTest {
+class AnnotationTest {
 
     @DataTrail(excludeFromDataTrail = true)
     static public class ParentClass{

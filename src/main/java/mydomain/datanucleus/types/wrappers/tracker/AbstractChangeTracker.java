@@ -29,6 +29,7 @@ import java.util.Set;
 
 /**
  * Base class that provides utilities to change trackers.
+ * Imported from OpenJPA project (org.apache.openjpa.util.AbstractChangeTracker)
  *
  * @author Abe White
  */
@@ -55,11 +56,6 @@ public abstract class AbstractChangeTracker
     private Boolean _identity = null;
     private int _seq = -1;
 
-    /**
-     * Constructor; supply configuration.
-     */
-    public AbstractChangeTracker() {
-    }
 
     /**
      * Whether to automatically stop tracking when the number of changes

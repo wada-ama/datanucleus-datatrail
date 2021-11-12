@@ -26,6 +26,8 @@ import java.util.Collection;
 /**
  * Default {@link mydomain.datanucleus.type.wrappers.tracker.CollectionChangeTracker}.
  *
+ * Imported from the OpenJPA project (org.apache.openjpa.util.CollectionChangeTrackerImpl)
+ *
  * @author Abe White
  */
 public class CollectionChangeTrackerImpl

@@ -5,8 +5,6 @@ public interface ChangeTrackable {
     ChangeTracker getChangeTracker();
 
 
-    // TODO Hack job to inject the add
-
     /**
      *
      * @param changeTracker

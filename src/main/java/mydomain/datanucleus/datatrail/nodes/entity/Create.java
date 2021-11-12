@@ -3,16 +3,13 @@ package mydomain.datanucleus.datatrail.nodes.entity;
 
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
+import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
-import mydomain.datanucleus.datatrail.NodeFactory;
-import org.datanucleus.api.jdo.NucleusJDOHelper;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
 import org.datanucleus.state.ObjectProvider;
-
-import javax.jdo.PersistenceManager;
 
 /**
  * Definition of an Entity that is being Created
@@ -38,8 +35,7 @@ public class Create extends BaseEntity {
         if( pc == null )
             return;
 
-        PersistenceManager pm = (PersistenceManager)pc.dnGetExecutionContext().getOwner();
-        ObjectProvider op = (ObjectProvider)pc.dnGetStateManager();
+        ObjectProvider<Persistable> op = (ObjectProvider)pc.dnGetStateManager();
 
         // need to include all loaded fields
         for(int position : op.getLoadedFieldNumbers()) {

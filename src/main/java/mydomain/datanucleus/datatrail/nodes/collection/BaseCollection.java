@@ -21,6 +21,6 @@ abstract public class BaseCollection extends AbstractContainerNode {
      * Adds all the elements in the collection
      * @param elements
      */
-    abstract protected void addElements( java.util.Collection elements );
+    abstract protected void addElements( java.util.Collection<?> elements );
 
 }

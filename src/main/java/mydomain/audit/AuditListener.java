@@ -12,7 +12,6 @@ import org.datanucleus.util.NucleusLogger;
 import org.slf4j.Logger;
 
 import javax.jdo.JDOHelper;
-import javax.jdo.PersistenceManager;
 import javax.jdo.listener.CreateLifecycleListener;
 import javax.jdo.listener.DeleteLifecycleListener;
 import javax.jdo.listener.InstanceLifecycleEvent;
@@ -152,7 +151,7 @@ public class AuditListener implements CreateLifecycleListener,
         }
 
         // force all fields to be loaded before deletion
-        ObjectProvider op = (ObjectProvider) ((Persistable) event.getPersistentInstance()).dnGetStateManager();
+        ObjectProvider<Persistable> op = (ObjectProvider) ((Persistable) event.getPersistentInstance()).dnGetStateManager();
 
 
         // in Optimistic locking mode, the listener is called 2x.

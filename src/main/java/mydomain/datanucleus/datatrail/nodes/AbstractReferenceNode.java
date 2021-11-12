@@ -1,7 +1,6 @@
 package mydomain.datanucleus.datatrail.nodes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import mydomain.datanucleus.datatrail.ITrailDesc;
 import mydomain.datanucleus.datatrail.Node;
 import org.datanucleus.enhancement.Persistable;
@@ -18,9 +17,9 @@ abstract public class AbstractReferenceNode extends BaseNode implements Updatabl
     protected String version;
     protected String description;
 
-    public AbstractReferenceNode(Persistable source, MetaData mmd, Node parent) {
+    protected AbstractReferenceNode(Persistable source, MetaData mmd, Node parent) {
         super(mmd, parent);
-        this.source = new WeakReference(source);
+        this.source = new WeakReference<Persistable>(source);
         setId(source);
         setVersion(source);
         setDescription(source);
@@ -68,15 +67,6 @@ abstract public class AbstractReferenceNode extends BaseNode implements Updatabl
         setVersion(getSource());
     }
 
-    @Override
-    public Object getValue() {
-        return super.getValue();
-    }
-
-    @Override
-    public Object getPrev() {
-        return super.getPrev();
-    }
 
     @JsonIgnore
     public Persistable getSource() {

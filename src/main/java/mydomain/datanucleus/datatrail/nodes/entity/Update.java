@@ -2,17 +2,15 @@ package mydomain.datanucleus.datatrail.nodes.entity;
 
 
 import mydomain.datanucleus.ExtendedReferentialStateManagerImpl;
-import mydomain.datanucleus.datatrail.nodes.BaseNode;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
-import mydomain.datanucleus.datatrail.NodeType;
-import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import mydomain.datanucleus.datatrail.NodeFactory;
+import mydomain.datanucleus.datatrail.NodeType;
+import mydomain.datanucleus.datatrail.nodes.BaseNode;
+import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
-
-import javax.jdo.PersistenceManager;
 
 /**
  * Definition of an Entity that is being Created
@@ -37,7 +35,6 @@ public class Update extends BaseEntity {
         if (pc == null)
             return;
 
-        PersistenceManager pm = (PersistenceManager) pc.dnGetExecutionContext().getOwner();
         ExtendedReferentialStateManagerImpl op = (ExtendedReferentialStateManagerImpl) pc.dnGetStateManager();
 
         // need to include all dirty fields
@@ -50,7 +47,8 @@ public class Update extends BaseEntity {
             if (mmd.isFieldToBePersisted()) {
                 // create the current node and set it's prev value to the prevField value node
                 getFactory().createNode(NodeAction.UPDATE, field, mmd, this).ifPresent( current -> {
-                    getFactory().createNode(NodeAction.UPDATE, prevField, mmd, this).ifPresent( node -> ((BaseNode)current).setPrev(node));
+                    getFactory().createNode(NodeAction.UPDATE, prevField, mmd, this).ifPresent( ((BaseNode)current)::setPrev );
+//                            .ifPresent( node -> ((BaseNode)current).setPrev(node));
                     fields.add(current);
                 });
             }
