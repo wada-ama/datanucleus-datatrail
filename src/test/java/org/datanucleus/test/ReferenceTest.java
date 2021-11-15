@@ -68,22 +68,19 @@ public class ReferenceTest extends AbstractTest {
 
 
         executeTx(pm -> {
-            Object id = new DatastoreIdImplKodo(CountryCode.class.getName(), 2);
-            CountryCode usa = pm.getObjectById(CountryCode.class, id);
-            pm.deletePersistent(usa);
+            Telephone telephone = pm.newJDOQLTypedQuery(Telephone.class).executeUnique();
+            pm.deletePersistent(telephone);
         });
 
         Collection<Node> entities = audit.getModifications();
 
-        final IsPojo<Node>countryCode = getEntity(NodeAction.DELETE, CountryCode.class, "2")
+        final IsPojo<Node>telephone = getEntity(NodeAction.DELETE, Telephone.class, "1")
                 .withProperty("fields", hasItems(
-                        getField(NodeType.PRIMITIVE, String.class, "country", "USA", null),
-                        getField(NodeType.PRIMITIVE, Integer.class, "code", "1", null)
+                        getField(NodeType.PRIMITIVE, String.class, "number", "514-123-1234", null),
+                        getField(NodeType.REF, CountryCode.class, "countryCode", "1", null)
                 ));
 
-        assertThat(entities, hasItem(countryCode));
-
-        assertThat(entities, containsInAnyOrder(countryCode));
+        assertThat(entities, containsInAnyOrder(telephone));
     }
 
 
