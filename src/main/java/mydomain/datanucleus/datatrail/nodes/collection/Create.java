@@ -9,7 +9,7 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 @NodeDefinition(type=NodeType.COLLECTION, action = NodeAction.CREATE)
 public class Create extends BaseCollection {
 
-    protected Create(Object value, AbstractMemberMetaData mmd, Node parent) {
+    protected Create(final Object value, final AbstractMemberMetaData mmd, final Node parent) {
         super(value, mmd, parent);
     }
 
@@ -18,10 +18,10 @@ public class Create extends BaseCollection {
      * @param elements
      */
     @Override
-    protected void addElements( java.util.Collection elements ){
+    protected void addElements(final java.util.Collection elements ){
         // all new values, so use the raw collection values
-        for(Object element : elements )
-            getFactory().createNode(NodeAction.CREATE, element, null, this).ifPresent(node -> this.added.add(node));
+        for(final Object element : elements )
+            getFactory().createNode(NodeAction.CREATE, element, null, this).ifPresent(node -> added.add(node));
     }
 
 

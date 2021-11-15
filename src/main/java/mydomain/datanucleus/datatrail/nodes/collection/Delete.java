@@ -9,7 +9,7 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 @NodeDefinition(type=NodeType.COLLECTION, action = NodeAction.DELETE)
 public class Delete extends BaseCollection {
 
-    protected Delete(Object value, AbstractMemberMetaData mmd, Node parent) {
+    protected Delete(final Object value, final AbstractMemberMetaData mmd, final Node parent) {
         super(value, mmd, parent);
     }
 
@@ -18,10 +18,10 @@ public class Delete extends BaseCollection {
      * @param elements
      */
     @Override
-    protected void addElements( java.util.Collection elements ){
+    protected void addElements(final java.util.Collection elements ){
         // all new values, so use the raw collection values
-        for(Object element : elements )
-            getFactory().createNode(NodeAction.DELETE, element, null, this).ifPresent(node -> this.removed.add(node));
+        for(final Object element : elements )
+            getFactory().createNode(NodeAction.DELETE, element, null, this).ifPresent(node -> removed.add(node));
     }
 
 }

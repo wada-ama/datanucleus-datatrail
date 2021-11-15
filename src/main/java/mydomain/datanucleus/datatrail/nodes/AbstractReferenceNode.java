@@ -11,15 +11,15 @@ import org.datanucleus.metadata.MetaData;
 import javax.jdo.JDOHelper;
 import java.lang.ref.WeakReference;
 
-abstract public class AbstractReferenceNode extends BaseNode implements Updatable, ReferenceNode {
+public abstract class AbstractReferenceNode extends BaseNode implements Updatable, ReferenceNode {
 
-    final protected WeakReference<Persistable> source;
+    protected final WeakReference<Persistable> source;
     protected String version;
     protected String description;
 
-    protected AbstractReferenceNode(Persistable source, MetaData mmd, Node parent) {
+    protected AbstractReferenceNode(final Persistable source, final MetaData mmd, final Node parent) {
         super(mmd, parent);
-        this.source = new WeakReference<Persistable>(source);
+        this.source = new WeakReference<>(source);
         setId(source);
         setVersion(source);
         setDescription(source);
@@ -32,11 +32,11 @@ abstract public class AbstractReferenceNode extends BaseNode implements Updatabl
      * Supports application-id and datastore identity
      * @param pc
      */
-    protected void setId(Persistable pc){
+    protected void setId(final Persistable pc){
         if( pc == null )
             return;
 
-        Object objectId = pc.dnGetObjectId();
+        final Object objectId = pc.dnGetObjectId();
 
         if( objectId == null ) {
             value = null;
@@ -47,15 +47,15 @@ abstract public class AbstractReferenceNode extends BaseNode implements Updatabl
         }
     }
 
-    protected void setVersion(Persistable pc){
+    protected void setVersion(final Persistable pc){
         if( JDOHelper.getVersion(pc) == null ){
-            this.version = null;
+            version = null;
         } else {
-            this.version = JDOHelper.getVersion(pc).toString();
+            version = JDOHelper.getVersion(pc).toString();
         }
     }
 
-    protected void setDescription(Object field){
+    protected void setDescription(final Object field){
         if( field instanceof ITrailDesc){
             description = ((ITrailDesc)field).minimalTxtDesc();
         }

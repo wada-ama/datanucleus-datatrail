@@ -6,7 +6,7 @@ import org.datanucleus.metadata.MetaData;
 
 import static mydomain.datanucleus.datatrail.nodes.NodeDefinition.Helper.isSupported;
 
-abstract public class AbstractNodeFactory implements NodeFactory {
+public abstract class AbstractNodeFactory implements NodeFactory {
 
     protected DataTrailFactory dataTrailFactory;
 
@@ -21,7 +21,7 @@ abstract public class AbstractNodeFactory implements NodeFactory {
      * @param dataTrailFactory
      */
     @Override
-    public void setDataTrailFactory(DataTrailFactory dataTrailFactory) {
+    public void setDataTrailFactory(final DataTrailFactory dataTrailFactory) {
         if (this.dataTrailFactory != null) {
             throw new IllegalStateException("Cannot change the DataTrailFactory once it has already been set.  Create a new instance instead");
         }
@@ -37,9 +37,9 @@ abstract public class AbstractNodeFactory implements NodeFactory {
      * @param md     the metadata relating to the given object
      * @return true if the value is not read-only and the factory supports this type of object
      */
-    public boolean supports(NodeAction action, Object value, MetaData md) {
+    public boolean supports(final NodeAction action, final Object value, final MetaData md) {
         assertConfigured();
-        NodeDefinition nodeDefn = this.getClass().getAnnotation(NodeDefinition.class);
+        final NodeDefinition nodeDefn = getClass().getAnnotation(NodeDefinition.class);
         return isObjectIncluded(md) && isObjectUpdatable(md) && isSupported(nodeDefn, action);
     }
 
@@ -60,14 +60,14 @@ abstract public class AbstractNodeFactory implements NodeFactory {
      * @param md
      * @return false if the DN Read-Only extension is enabled on either the class object or the field
      */
-    protected boolean isObjectUpdatable(MetaData md) {
+    protected boolean isObjectUpdatable(final MetaData md) {
         // by default, object is updatable, unless there is metadata to specify otherwise
         if (md == null) {
             return true;
         }
 
-        boolean classReadOnly = "true".equals(md.getValueForExtension(MetaData.EXTENSION_CLASS_READ_ONLY));
-        boolean fieldReadOnly = "false".equals(md.getValueForExtension(MetaData.EXTENSION_MEMBER_INSERTABLE)) || "false".equals(md.getValueForExtension(MetaData.EXTENSION_MEMBER_UPDATEABLE));
+        final boolean classReadOnly = "true".equals(md.getValueForExtension(MetaData.EXTENSION_CLASS_READ_ONLY));
+        final boolean fieldReadOnly = "false".equals(md.getValueForExtension(MetaData.EXTENSION_MEMBER_INSERTABLE)) || "false".equals(md.getValueForExtension(MetaData.EXTENSION_MEMBER_UPDATEABLE));
 
         // either the class or the field can be identified as read only
         return !classReadOnly && !fieldReadOnly;
@@ -80,14 +80,14 @@ abstract public class AbstractNodeFactory implements NodeFactory {
      * @param md
      * @return
      */
-    protected boolean isObjectIncluded(MetaData md) {
+    protected boolean isObjectIncluded(final MetaData md) {
         // by default, everything is included
         if (md == null) {
             return true;
         }
 
-        boolean classExcluded = "true".equals(md.getValueForExtension(DataTrailAnnotationHandler.EXTENSION_CLASS_DATATRAIL_EXCLUDE));
-        boolean fieldExcluded = "true".equals(md.getValueForExtension(DataTrailAnnotationHandler.EXTENSION_MEMBER_DATATRAIL_EXCLUDE));
+        final boolean classExcluded = "true".equals(md.getValueForExtension(DataTrailAnnotationHandler.EXTENSION_CLASS_DATATRAIL_EXCLUDE));
+        final boolean fieldExcluded = "true".equals(md.getValueForExtension(DataTrailAnnotationHandler.EXTENSION_MEMBER_DATATRAIL_EXCLUDE));
 
         return !classExcluded && !fieldExcluded;
     }

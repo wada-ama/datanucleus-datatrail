@@ -17,7 +17,7 @@ public class Create extends BaseReference {
      * @param mmd
      * @param parent
      */
-    protected Create(Persistable value, AbstractMemberMetaData mmd, Node parent) {
+    protected Create(final Persistable value, final AbstractMemberMetaData mmd, final Node parent) {
         super(value, mmd, parent);
     }
 }

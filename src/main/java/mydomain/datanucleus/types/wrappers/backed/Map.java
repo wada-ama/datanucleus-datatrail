@@ -8,7 +8,7 @@ import org.datanucleus.state.ObjectProvider;
 
 public class Map<K,V> extends org.datanucleus.store.types.wrappers.backed.Map<K,V> implements ChangeTrackable {
 
-    private MapChangeTrackerImpl changeTracker;
+    private final transient MapChangeTrackerImpl changeTracker;
 
     /**
      * Constructor, using the ObjectProvider of the "owner" and the field name.
@@ -16,15 +16,15 @@ public class Map<K,V> extends org.datanucleus.store.types.wrappers.backed.Map<K,
      * @param op  The owner ObjectProvider
      * @param mmd Metadata for the member
      */
-    public Map(ObjectProvider op, AbstractMemberMetaData mmd) {
+    public Map(final ObjectProvider op, final AbstractMemberMetaData mmd) {
         super(op, mmd);
         changeTracker = new MapChangeTrackerImpl(this, false);
         changeTracker.startTracking();
     }
 
     @Override
-    public V put(K key, V value) {
-        V old = super.put(key, value);
+    public V put(final K key, final V value) {
+        final V old = super.put(key, value);
         if( old == null ){
             // no previous value, so this is a new addition
             changeTracker.added(key, value);
@@ -37,12 +37,12 @@ public class Map<K,V> extends org.datanucleus.store.types.wrappers.backed.Map<K,
     }
 
     @Override
-    public void putAll(java.util.Map m) {
+    public void putAll(final java.util.Map m) {
         m.entrySet().stream().forEach( o  -> {
-            Entry kvEntry = ((Map.Entry)o);
-            if( this.containsKey(kvEntry.getKey())){
+            final Entry kvEntry = ((Map.Entry)o);
+            if( containsKey(kvEntry.getKey())){
                 // map already contains the value, so the value is changing
-                changeTracker.changed(kvEntry.getKey(), this.get(kvEntry.getKey()), kvEntry.getValue());
+                changeTracker.changed(kvEntry.getKey(), get(kvEntry.getKey()), kvEntry.getValue());
             } else {
                 changeTracker.added(kvEntry.getKey(), kvEntry.getValue());
             }
@@ -51,8 +51,8 @@ public class Map<K,V> extends org.datanucleus.store.types.wrappers.backed.Map<K,
     }
 
     @Override
-    public V remove(Object key) {
-        V old = super.remove(key);
+    public V remove(final Object key) {
+        final V old = super.remove(key);
         changeTracker.removed(key, old);
         return old;
     }
@@ -65,12 +65,12 @@ public class Map<K,V> extends org.datanucleus.store.types.wrappers.backed.Map<K,
     }
 
     @Override
-    public void updateEmbeddedKey(K key, int fieldNumber, Object newValue, boolean makeDirty) {
+    public void updateEmbeddedKey(final K key, final int fieldNumber, final Object newValue, final boolean makeDirty) {
         super.updateEmbeddedKey(key, fieldNumber, newValue, makeDirty);
     }
 
     @Override
-    public void updateEmbeddedValue(V value, int fieldNumber, Object newValue, boolean makeDirty) {
+    public void updateEmbeddedValue(final V value, final int fieldNumber, final Object newValue, final boolean makeDirty) {
         super.updateEmbeddedValue(value, fieldNumber, newValue, makeDirty);
     }
 

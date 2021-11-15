@@ -16,7 +16,7 @@ import java.util.Optional;
 public class PrimitiveFactory extends AbstractNodeFactory {
 
     @Override
-    public Optional<Node> createNode(NodeAction action, Object value, MetaData md, Node parent) {
+    public Optional<Node> createNode(final NodeAction action, final Object value, final MetaData md, final Node parent) {
         assertConfigured();
         if (!supports(action, value, md))
             return Optional.empty();

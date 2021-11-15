@@ -6,10 +6,10 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 
 import java.util.Map;
 
-abstract public class BaseMap extends AbstractContainerNode {
+public abstract class BaseMap extends AbstractContainerNode {
 
 
-    protected BaseMap(java.util.Map value, AbstractMemberMetaData mmd, Node parent) {
+    protected BaseMap(final java.util.Map value, final AbstractMemberMetaData mmd, final Node parent) {
         super(mmd, parent);
 
         // value might be null, in which case there is nothing left to do
@@ -24,6 +24,6 @@ abstract public class BaseMap extends AbstractContainerNode {
      * Adds all the elements in the map
      * @param map
      */
-    abstract protected void addElements(Map map);
+    protected abstract void addElements(Map map);
 
 }

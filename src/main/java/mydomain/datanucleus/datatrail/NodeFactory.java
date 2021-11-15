@@ -40,7 +40,7 @@ public interface NodeFactory {
      * Type of node implemented by the class
      */
     default NodeType type() {
-        NodeDefinition nodeDefn = this.getClass().getAnnotation(NodeDefinition.class);
+        final NodeDefinition nodeDefn = getClass().getAnnotation(NodeDefinition.class);
         return nodeDefn == null ? null : nodeDefn.type();
     }
 
@@ -51,7 +51,7 @@ public interface NodeFactory {
      * @return
      */
     default NodeAction[] action() {
-        NodeDefinition nodeDefn = this.getClass().getAnnotation(NodeDefinition.class);
+        final NodeDefinition nodeDefn = getClass().getAnnotation(NodeDefinition.class);
         return nodeDefn == null ? null : nodeDefn.action();
     }
 
@@ -62,7 +62,7 @@ public interface NodeFactory {
      * @return
      */
     default int priority() {
-        NodePriority nodePriority = this.getClass().getAnnotation(NodePriority.class);
+        final NodePriority nodePriority = getClass().getAnnotation(NodePriority.class);
         return nodePriority == null ? 0 : nodePriority.priority();
     }
 

@@ -21,7 +21,7 @@ public interface EntityNode {
     @JsonProperty("txId")
     String getTransactionId();
 
-    @JsonIgnore(value = false)
+    @JsonIgnore(false)
     @JsonProperty("action")
     NodeAction getAction();
 }

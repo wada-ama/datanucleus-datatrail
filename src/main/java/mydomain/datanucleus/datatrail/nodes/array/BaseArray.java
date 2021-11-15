@@ -7,14 +7,14 @@ import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-abstract public class BaseArray extends AbstractContainerNode {
+public abstract class BaseArray extends AbstractContainerNode {
     // get a static slf4j logger for the class
     protected static final Logger logger = getLogger(BaseArray.class);
 
-    protected BaseArray(Object value, AbstractMemberMetaData mmd, Node parent) {
+    protected BaseArray(final Object value, final AbstractMemberMetaData mmd, final Node parent) {
         super(mmd, parent);
 
-        logger.warn("Unable to track changes to objects with arrays. {}.{}", mmd.getClassName(), mmd.getName());
+        BaseArray.logger.warn("Unable to track changes to objects with arrays. {}.{}", mmd.getClassName(), mmd.getName());
 
         // value might be null, in which case there is nothing left to do
         if( value == null ){
@@ -28,6 +28,6 @@ abstract public class BaseArray extends AbstractContainerNode {
      * Adds all the elements in the collection
      * @param elements
      */
-    abstract protected void addElements( Object[] elements );
+    protected abstract void addElements( Object[] elements );
 
 }

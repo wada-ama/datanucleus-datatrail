@@ -18,8 +18,8 @@ import java.util.Arrays;
  *
  * @author Eric Benzacar
  */
-abstract public class BaseNode implements Node {
-    final private Node parent;
+public abstract class BaseNode implements Node {
+    private final Node parent;
     protected NodeType type;
 
     protected String name;
@@ -37,7 +37,7 @@ abstract public class BaseNode implements Node {
      * @param md
      * @param parent
      */
-    protected BaseNode(MetaData md, Node parent) {
+    protected BaseNode(final MetaData md, final Node parent) {
         this.parent = parent;
         this.md = md;
         if( md == null ) {
@@ -47,7 +47,7 @@ abstract public class BaseNode implements Node {
         if(md instanceof AbstractClassMetaData) {
             className = ((AbstractClassMetaData) md).getFullClassName();
         } else if( md instanceof AbstractMemberMetaData){
-            AbstractMemberMetaData mmd = (AbstractMemberMetaData)md;
+            final AbstractMemberMetaData mmd = (AbstractMemberMetaData)md;
             // need to get the wrapped name of the class to avoid primitives
             className = ClassUtils.wrap(mmd.getType()).getTypeName();
             name = mmd.getName();
@@ -59,7 +59,7 @@ abstract public class BaseNode implements Node {
      * Sets the classname if not already set
      * @param value
      */
-    protected void setClassName( Object value, boolean override ){
+    protected void setClassName(final Object value, final boolean override ){
         // if no value, then nothing to do
         if( value == null )
             return;
@@ -79,7 +79,7 @@ abstract public class BaseNode implements Node {
      */
     @Override
     public NodeType getType(){
-        NodeDefinition nodeDefn = this.getClass().getAnnotation(NodeDefinition.class);
+        final NodeDefinition nodeDefn = getClass().getAnnotation(NodeDefinition.class);
         return nodeDefn == null ? null : nodeDefn.type();
     }
 
@@ -89,7 +89,7 @@ abstract public class BaseNode implements Node {
      */
     @Override
     public NodeAction getAction(){
-        NodeDefinition nodeDefn = this.getClass().getAnnotation(NodeDefinition.class);
+        final NodeDefinition nodeDefn = getClass().getAnnotation(NodeDefinition.class);
         return nodeDefn == null ? null : Arrays.stream(nodeDefn.action()).findFirst().orElse(null);
     }
 
@@ -117,7 +117,7 @@ abstract public class BaseNode implements Node {
     /**
      * Sets the previous value of this node
      */
-    public void setPrev(Object value){
+    public void setPrev(final Object value){
         // by default, do nothing
     }
 
@@ -134,6 +134,6 @@ abstract public class BaseNode implements Node {
         }
 
         // return the parent factory if a parent exists
-        return parent != null && parent instanceof BaseNode ? ((BaseNode)parent).getFactory() : null;
+        return parent instanceof BaseNode ? ((BaseNode)parent).getFactory() : null;
     }
 }

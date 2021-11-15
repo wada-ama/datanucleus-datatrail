@@ -16,7 +16,7 @@ public class Delete extends BaseReference {
      * @param mmd
      * @param parent
      */
-    protected Delete(Persistable value, AbstractMemberMetaData mmd, Node parent) {
+    protected Delete(final Persistable value, final AbstractMemberMetaData mmd, final Node parent) {
         super(value, mmd, parent);
     }
 }

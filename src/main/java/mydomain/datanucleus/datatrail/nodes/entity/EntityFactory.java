@@ -16,7 +16,7 @@ import java.util.Optional;
 @NodePriority(priority = NodePriority.HIGHEST_PRECEDENCE)
 public class EntityFactory extends AbstractNodeFactory {
     @Override
-    public boolean supports(NodeAction action, Object value, MetaData md) {
+    public boolean supports(final NodeAction action, final Object value, final MetaData md) {
         // can process any Persitable object that is passed as a class
         return  super.supports(action, value, md)
                 && value instanceof Persistable
@@ -24,7 +24,7 @@ public class EntityFactory extends AbstractNodeFactory {
     }
 
     @Override
-    public Optional<Node> createNode(NodeAction action, Object value, MetaData md, Node parent) {
+    public Optional<Node> createNode(final NodeAction action, final Object value, final MetaData md, final Node parent) {
         assertConfigured();
         Optional<Node> node = Optional.empty();
         if( supports(action, value, md )) {

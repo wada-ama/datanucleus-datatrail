@@ -26,21 +26,21 @@ public class Create extends BaseEntity {
      * @param parent
      * @param factory
      */
-    protected Create(Persistable value, MetaData md, Node parent, NodeFactory factory) {
+    protected Create(final Persistable value, final MetaData md, final Node parent, final NodeFactory factory) {
         super(value, md, parent, factory);
     }
 
     @Override
-    protected void setFields(Persistable pc){
+    protected void setFields(final Persistable pc){
         if( pc == null )
             return;
 
-        ObjectProvider<Persistable> op = (ObjectProvider)pc.dnGetStateManager();
+        final ObjectProvider<Persistable> op = (ObjectProvider)pc.dnGetStateManager();
 
         // need to include all loaded fields
-        for(int position : op.getLoadedFieldNumbers()) {
-            Object field = op.provideField(position);
-            AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
+        for(final int position : op.getLoadedFieldNumbers()) {
+            final Object field = op.provideField(position);
+            final AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
             if( mmd.isFieldToBePersisted()){
                 getFactory().createNode(NodeAction.CREATE, field, mmd, this).ifPresent( node -> fields.add(node));
             }

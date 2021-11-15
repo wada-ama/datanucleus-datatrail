@@ -12,7 +12,7 @@ import java.util.Optional;
 @NodeDefinition(type=NodeType.MAP, action = NodeAction.CREATE)
 public class Create extends BaseMap {
 
-    protected Create(Map value, AbstractMemberMetaData mmd, Node parent) {
+    protected Create(final Map value, final AbstractMemberMetaData mmd, final Node parent) {
         super(value, mmd, parent);
     }
 
@@ -21,15 +21,15 @@ public class Create extends BaseMap {
      * @param map
      */
     @Override
-    protected void addElements( Map map ){
+    protected void addElements(final Map map ){
         // all new values, so use the raw collection values
         map.entrySet().stream().forEach(element -> {
             // only add the entry to the set if a node can be created for both the key and the value
-            Optional<Node> key = getFactory().createNode(NodeAction.CREATE, ((Map.Entry)element).getKey(), null, this);
-            Optional<Node> value = getFactory().createNode(NodeAction.CREATE, ((Map.Entry)element).getValue(), null, this);
+            final Optional<Node> key = getFactory().createNode(NodeAction.CREATE, ((Map.Entry)element).getKey(), null, this);
+            final Optional<Node> value = getFactory().createNode(NodeAction.CREATE, ((Map.Entry)element).getValue(), null, this);
 
             if( key.isPresent() && value.isPresent() ){
-                this.added.add(new MapEntry(key.get(), value.get()));
+                added.add(new MapEntry(key.get(), value.get()));
             }
         });
     }

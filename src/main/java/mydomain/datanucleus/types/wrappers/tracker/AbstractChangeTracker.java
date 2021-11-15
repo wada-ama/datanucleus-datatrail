@@ -39,21 +39,21 @@ public abstract class AbstractChangeTracker
     /**
      * Collection of added items. May be null.
      */
-    protected Collection add = null;
+    protected Collection add;
 
     /**
      * Collection of removed items. May be null.
      */
-    protected Collection rem = null;
+    protected Collection rem;
 
     /**
      * Collection of changed items. May be null.
      */
-    protected Collection change = null;
+    protected Collection change;
 
     private boolean _autoOff = true;
-    private boolean _track = false;
-    private Boolean _identity = null;
+    private boolean _track;
+    private Boolean _identity;
     private int _seq = -1;
 
 
@@ -69,7 +69,7 @@ public abstract class AbstractChangeTracker
      * Whether to automatically stop tracking when the number of changes
      * exceeds the container size. Defaults to true.
      */
-    public void setAutoOff(boolean autoOff) {
+    public void setAutoOff(final boolean autoOff) {
         _autoOff = autoOff;
     }
 
@@ -113,21 +113,21 @@ public abstract class AbstractChangeTracker
     }
 
     public Collection getAdded() {
-        return (add == null) ? Collections.EMPTY_LIST : add;
+        return (add == null) ? Collections.emptyList() : add;
     }
 
     public Collection getRemoved() {
-        return (rem == null) ? Collections.EMPTY_LIST : rem;
+        return (rem == null) ? Collections.emptyList() : rem;
     }
 
     public Collection getChanged() {
-        return (change == null) ? Collections.EMPTY_LIST : change;
+        return (change == null) ? Collections.emptyList() : change;
     }
 
     /**
      * Notify the tracker that the given object was added.
      */
-    protected void added(Object val) {
+    protected void added(final Object val) {
         if (!_track)
             return;
         setIdentity(val);
@@ -142,7 +142,7 @@ public abstract class AbstractChangeTracker
     /**
      * Notify the tracker that the given object was removed.
      */
-    protected void removed(Object val) {
+    protected void removed(final Object val) {
         if (!_track)
             return;
         setIdentity(val);
@@ -157,7 +157,7 @@ public abstract class AbstractChangeTracker
     /**
      * Notify the tracker that the given object was changed.
      */
-    protected void changed(Object val) {
+    protected void changed(final Object val) {
         if (!_track)
             return;
         setIdentity(val);
@@ -173,7 +173,7 @@ public abstract class AbstractChangeTracker
         return _seq;
     }
 
-    public void setNextSequence(int seq) {
+    public void setNextSequence(final int seq) {
         _seq = seq;
     }
 
@@ -193,7 +193,7 @@ public abstract class AbstractChangeTracker
      * PC types in case the user has coded them such that two objects with
      * different identities can compare equals().
      */
-    private void setIdentity(Object val) {
+    private void setIdentity(final Object val) {
         if (val == null || _identity != null)
             return;
 
@@ -202,22 +202,22 @@ public abstract class AbstractChangeTracker
         else
             _identity = Boolean.FALSE;
 
-        add = switchStructure(add, _identity.booleanValue());
-        rem = switchStructure(rem, _identity.booleanValue());
-        change = switchStructure(change, _identity.booleanValue());
+        add = AbstractChangeTracker.switchStructure(add, _identity.booleanValue());
+        rem = AbstractChangeTracker.switchStructure(rem, _identity.booleanValue());
+        change = AbstractChangeTracker.switchStructure(change, _identity.booleanValue());
     }
 
     /**
      * Switch from an identity structure to a standard one, or vice versa.
      */
-    private static Collection switchStructure(Collection cur,
-        boolean identity) {
+    private static Collection switchStructure(final Collection cur,
+                                              final boolean identity) {
         if (cur == null)
             return null;
         if (identity && cur instanceof HashSet) {
             if (cur.isEmpty())
                 return null;
-            Set replace = MapBackedSet.decorate(new IdentityHashMap());
+            final Set replace = MapBackedSet.decorate(new IdentityHashMap());
             replace.addAll(cur);
             return replace;
         }

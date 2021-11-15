@@ -14,7 +14,7 @@ import java.util.Optional;
 public class ArrayFactory extends AbstractNodeFactory {
 
     @Override
-    public boolean supports(NodeAction action, Object value, MetaData md) {
+    public boolean supports(final NodeAction action, final Object value, final MetaData md) {
         // can process any field that is identified as an array
         return super.supports(action, value, md)
                 && md instanceof AbstractMemberMetaData
@@ -22,7 +22,7 @@ public class ArrayFactory extends AbstractNodeFactory {
     }
 
     @Override
-    public Optional<Node> createNode(NodeAction action, Object value, MetaData md, Node parent) {
+    public Optional<Node> createNode(final NodeAction action, final Object value, final MetaData md, final Node parent) {
         assertConfigured();
         if (!supports(action, value, md))
             return Optional.empty();

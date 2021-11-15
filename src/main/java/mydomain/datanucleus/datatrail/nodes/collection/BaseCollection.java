@@ -4,9 +4,9 @@ import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.nodes.AbstractContainerNode;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
-abstract public class BaseCollection extends AbstractContainerNode {
+public abstract class BaseCollection extends AbstractContainerNode {
 
-    protected BaseCollection(Object value, AbstractMemberMetaData mmd, Node parent) {
+    protected BaseCollection(final Object value, final AbstractMemberMetaData mmd, final Node parent) {
         super(mmd, parent);
 
         // value might be null, in which case there is nothing left to do
@@ -21,6 +21,6 @@ abstract public class BaseCollection extends AbstractContainerNode {
      * Adds all the elements in the collection
      * @param elements
      */
-    abstract protected void addElements( java.util.Collection<?> elements );
+    protected abstract void addElements( java.util.Collection<?> elements );
 
 }

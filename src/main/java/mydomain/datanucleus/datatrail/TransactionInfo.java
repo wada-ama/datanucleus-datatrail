@@ -14,20 +14,20 @@ import java.util.UUID;
  */
 public class TransactionInfo implements Serializable {
 
-    static final public String NO_USERNAME = "__NOT_DEFINED__";
+    public static final String NO_USERNAME = "__NOT_DEFINED__";
 
-    final protected Instant dateModified;
-    final protected String username;
-    final protected String txId;
+    protected final Instant dateModified;
+    protected final String username;
+    protected final String txId;
 
-    public TransactionInfo(Instant dateModified) {
-        this(dateModified, NO_USERNAME);
+    public TransactionInfo(final Instant dateModified) {
+        this(dateModified, TransactionInfo.NO_USERNAME);
     }
 
-    public TransactionInfo(Instant dateModified, String username) {
+    public TransactionInfo(final Instant dateModified, final String username) {
         this.dateModified = dateModified;
         this.username = username;
-        this.txId = UUID.randomUUID().toString();
+        txId = UUID.randomUUID().toString();
     }
 
     public Instant getDateModified() {

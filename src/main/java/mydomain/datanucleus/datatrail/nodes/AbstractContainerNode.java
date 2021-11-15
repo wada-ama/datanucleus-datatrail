@@ -7,14 +7,14 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 import java.util.ArrayList;
 import java.util.Collection;
 
-abstract public class AbstractContainerNode extends BaseNode implements Updatable, ContainerNode {
+public abstract class AbstractContainerNode extends BaseNode implements Updatable, ContainerNode {
 
     protected Collection<Node> added = new ArrayList<>();
     protected Collection<Node> removed = new ArrayList<>();
     protected Collection<Node> changed = new ArrayList<>();
     protected Collection<Node> contents = new ArrayList<>();
 
-    protected AbstractContainerNode(AbstractMemberMetaData mmd, Node parent) {
+    protected AbstractContainerNode(final AbstractMemberMetaData mmd, final Node parent) {
         super(mmd, parent);
     }
 

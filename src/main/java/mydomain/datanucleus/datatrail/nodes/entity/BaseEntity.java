@@ -1,13 +1,11 @@
 package mydomain.datanucleus.datatrail.nodes.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
-import mydomain.datanucleus.datatrail.nodes.AbstractReferenceNode;
-import mydomain.datanucleus.datatrail.TransactionInfo;
 import mydomain.datanucleus.datatrail.NodeFactory;
+import mydomain.datanucleus.datatrail.TransactionInfo;
+import mydomain.datanucleus.datatrail.nodes.AbstractReferenceNode;
 import mydomain.datanucleus.datatrail.nodes.Updatable;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.MetaData;
@@ -20,7 +18,7 @@ import java.util.Set;
 /**
  * Definition of an Entity that is being Created
  */
-abstract public class BaseEntity extends AbstractReferenceNode implements mydomain.datanucleus.datatrail.nodes.EntityNode {
+public abstract class BaseEntity extends AbstractReferenceNode implements mydomain.datanucleus.datatrail.nodes.EntityNode {
     protected Set<Node> fields = new HashSet<>();
     protected Instant dateModified;
     protected String username;
@@ -32,7 +30,7 @@ abstract public class BaseEntity extends AbstractReferenceNode implements mydoma
      * @param md
      * @param parent
      */
-    protected BaseEntity(Persistable value, MetaData md, Node parent, NodeFactory factory){
+    protected BaseEntity(final Persistable value, final MetaData md, final Node parent, final NodeFactory factory){
         // an entity is the root node in the tree
         super(value, md,null);
         this.factory = factory;
@@ -41,7 +39,7 @@ abstract public class BaseEntity extends AbstractReferenceNode implements mydoma
     }
 
 
-    abstract protected void setFields(Persistable pc);
+    protected abstract void setFields(Persistable pc);
 
     @Override
     public Set<Node> getFields() {
@@ -68,19 +66,14 @@ abstract public class BaseEntity extends AbstractReferenceNode implements mydoma
     public void updateFields() {
         super.updateFields();
         updateTxDetails();
-        fields.stream().filter(node -> node instanceof Updatable).forEach(node -> ((Updatable)node).updateFields());
-    }
-
-    @Override
-    public NodeAction getAction(){
-        return super.getAction();
+        fields.stream().filter(Updatable.class::isInstance).forEach(node -> ((Updatable)node).updateFields());
     }
 
     /**
      * Ensures that a {@link TransactionInfo} object is assigned to the transaction.  If it is missing, create one
      */
     private void updateTxDetails() {
-        PersistenceManager pm = (PersistenceManager)getSource().dnGetExecutionContext().getOwner();
+        final PersistenceManager pm = (PersistenceManager)getSource().dnGetExecutionContext().getOwner();
         txInfo = (TransactionInfo) pm.getUserObject(TransactionInfo.class.getName());
 
         if( txInfo == null ){

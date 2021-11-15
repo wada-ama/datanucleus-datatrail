@@ -17,18 +17,18 @@ public class Update extends BaseReference {
      * @param mmd
      * @param parent
      */
-    protected Update(Persistable value, AbstractMemberMetaData mmd, Node parent) {
+    protected Update(final Persistable value, final AbstractMemberMetaData mmd, final Node parent) {
         super(value, mmd, parent);
     }
 
     @Override
-    public void setPrev(Object value) {
+    public void setPrev(final Object value) {
         // previous must be of same type
-        if( value != null && value.getClass() != this.getClass()){
-            throw new IllegalArgumentException( "Previous value is not of the same type: " + value.getClass().getName() + " !=" + this.getClass().getName());
+        if( value != null && value.getClass() != getClass()){
+            throw new IllegalArgumentException( "Previous value is not of the same type: " + value.getClass().getName() + " !=" + getClass().getName());
         }
 
-        this.prev = this.getClass().cast(value).getValue();
+        prev = getClass().cast(value).getValue();
     }
 
 }

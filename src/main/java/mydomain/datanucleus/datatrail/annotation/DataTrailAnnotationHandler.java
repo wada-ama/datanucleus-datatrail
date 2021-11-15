@@ -14,14 +14,14 @@ public class DataTrailAnnotationHandler implements ClassAnnotationHandler, Membe
     public static final String EXTENSION_MEMBER_DATATRAIL_EXCLUDE = DataTrail.class.getName() + ".excludeFromDataTrail";
 
     @Override
-    public void processClassAnnotation(AnnotationObject annotation, AbstractClassMetaData cmd, ClassLoaderResolver clr) {
-        Boolean exclude =  (Boolean) annotation.getNameValueMap().getOrDefault("excludeFromDataTrail", false);
-        cmd.addExtension(EXTENSION_CLASS_DATATRAIL_EXCLUDE, exclude.toString());
+    public void processClassAnnotation(final AnnotationObject annotation, final AbstractClassMetaData cmd, final ClassLoaderResolver clr) {
+        final Boolean exclude =  (Boolean) annotation.getNameValueMap().getOrDefault("excludeFromDataTrail", false);
+        cmd.addExtension(DataTrailAnnotationHandler.EXTENSION_CLASS_DATATRAIL_EXCLUDE, exclude.toString());
     }
 
     @Override
-    public void processMemberAnnotation(AnnotationObject annotation, AbstractMemberMetaData mmd, ClassLoaderResolver clr) {
-        Boolean exclude = (Boolean) annotation.getNameValueMap().getOrDefault("excludeFromDataTrail", false);
-        mmd.addExtension(EXTENSION_MEMBER_DATATRAIL_EXCLUDE, exclude.toString());
+    public void processMemberAnnotation(final AnnotationObject annotation, final AbstractMemberMetaData mmd, final ClassLoaderResolver clr) {
+        final Boolean exclude = (Boolean) annotation.getNameValueMap().getOrDefault("excludeFromDataTrail", false);
+        mmd.addExtension(DataTrailAnnotationHandler.EXTENSION_MEMBER_DATATRAIL_EXCLUDE, exclude.toString());
     }
 }

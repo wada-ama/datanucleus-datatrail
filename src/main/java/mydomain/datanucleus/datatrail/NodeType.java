@@ -6,5 +6,5 @@ public enum NodeType {
     MAP,
     COLLECTION,
     ARRAY,
-    PRIMITIVE;
+    PRIMITIVE
 }

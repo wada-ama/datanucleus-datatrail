@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Arrays;
 
-@Target({ElementType.TYPE})
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NodeDefinition {
 
@@ -31,7 +31,7 @@ public @interface NodeDefinition {
          * @param action
          * @return
          */
-        static boolean isSupported(NodeDefinition nodeDefinition, NodeAction action){
+        static boolean isSupported(final NodeDefinition nodeDefinition, final NodeAction action){
             return Arrays.asList( nodeDefinition.action()).contains(action);
         }
     }

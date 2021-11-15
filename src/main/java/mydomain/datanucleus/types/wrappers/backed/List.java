@@ -11,9 +11,9 @@ import java.util.Collection;
 import java.util.function.UnaryOperator;
 
 public class List<E> extends org.datanucleus.store.types.wrappers.backed.List<E> implements ChangeTrackable {
-    private transient CollectionChangeTrackerImpl changeTracker;
+    private final transient CollectionChangeTrackerImpl changeTracker;
 
-    public List(ObjectProvider ownerOP, AbstractMemberMetaData mmd) {
+    public List(final ObjectProvider ownerOP, final AbstractMemberMetaData mmd) {
         super(ownerOP, mmd);
         changeTracker = new CollectionChangeTrackerImpl( this, true, true, false);
         changeTracker.startTracking();
@@ -25,52 +25,52 @@ public class List<E> extends org.datanucleus.store.types.wrappers.backed.List<E>
     }
 
     @Override
-    public void add(int index, E element) {
+    public void add(final int index, final E element) {
         super.add(index, element);
         add(changeTracker, element, true);
     }
 
     @Override
-    public boolean add(E element) {
-        boolean result = super.add(element);
+    public boolean add(final E element) {
+        final boolean result = super.add(element);
         return add( changeTracker, element, result);
     }
 
     @Override
-    public boolean addAll(Collection elements) {
-        boolean result = super.addAll(elements);
+    public boolean addAll(final Collection elements) {
+        final boolean result = super.addAll(elements);
         return add( changeTracker, elements,  result);
     }
 
     @Override
-    public boolean addAll(int index, Collection elements) {
-        boolean result = super.addAll(index, elements);
+    public boolean addAll(final int index, final Collection elements) {
+        final boolean result = super.addAll(index, elements);
         return add( changeTracker, elements, result);
     }
 
     @Override
     public void clear() {
-        java.util.List copy = new ArrayList(this);
+        final java.util.List copy = new ArrayList(this);
         super.clear();
         remove(changeTracker, copy, true);
     }
 
     @Override
-    public boolean remove(Object element, boolean allowCascadeDelete) {
-        boolean result = super.remove(element, allowCascadeDelete);
+    public boolean remove(final Object element, final boolean allowCascadeDelete) {
+        final boolean result = super.remove(element, allowCascadeDelete);
         return remove( changeTracker, element, result);
     }
 
     @Override
-    public E remove(int index) {
-        E element = super.remove(index);
+    public E remove(final int index) {
+        final E element = super.remove(index);
         remove( changeTracker, element, true);
         return element;
     }
 
     @Override
-    public E set(int index, E element, boolean allowDependentField) {
-        E orig = super.set(index, element, allowDependentField);
+    public E set(final int index, final E element, final boolean allowDependentField) {
+        final E orig = super.set(index, element, allowDependentField);
         if( orig != element ) {
             remove(changeTracker, orig, true);
             add(changeTracker, element, true);
@@ -79,8 +79,8 @@ public class List<E> extends org.datanucleus.store.types.wrappers.backed.List<E>
     }
 
     @Override
-    public E set(int index, E element) {
-        E orig = super.set(index, element);
+    public E set(final int index, final E element) {
+        final E orig = super.set(index, element);
         if( orig != element ) {
             remove(changeTracker, orig, true);
             add(changeTracker, element, true);
@@ -89,13 +89,8 @@ public class List<E> extends org.datanucleus.store.types.wrappers.backed.List<E>
     }
 
     @Override
-    public boolean removeAll(Collection elements) {
-        boolean result = super.removeAll(elements);
+    public boolean removeAll(final Collection elements) {
+        final boolean result = super.removeAll(elements);
         return remove( changeTracker, elements, result);
-    }
-
-    @Override
-    public void replaceAll(UnaryOperator<E> operator) {
-        super.replaceAll(operator);
     }
 }

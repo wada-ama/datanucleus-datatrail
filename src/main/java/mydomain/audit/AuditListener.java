@@ -45,9 +45,9 @@ public class AuditListener implements CreateLifecycleListener,
      * Class to store the Modifications to the objects used in the Audit Trail
      */
     private static class Modifications {
-        private Map<Object, Set<Node>> delegate = new ConcurrentHashMap<>();
+        private final Map<Object, Set<Node>> delegate = new ConcurrentHashMap<>();
 
-        private IdentityReference getReference( Object key ){
+        private IdentityReference getReference(final Object key ){
             return new IdentityReference(key);
         }
 
@@ -58,12 +58,12 @@ public class AuditListener implements CreateLifecycleListener,
          * @param value
          * @return
          */
-        public void add(Persistable pc, Node value){
+        public void add(final Persistable pc, final Node value){
             if( value == null ){
                 return;
             }
 
-            IdentityReference key = getReference(pc);
+            final IdentityReference key = getReference(pc);
 
             // create a new set if not present
             delegate.computeIfAbsent(key, o -> new HashSet<>());
@@ -77,7 +77,7 @@ public class AuditListener implements CreateLifecycleListener,
             if( value.getAction() == NodeAction.DELETE ) {
                 // remove any CREATE or UPDATE nodes that are part of the same tx as the DELETE superceeds them
                 delegate.get(key).removeIf(node -> (node.getAction() == NodeAction.UPDATE));
-                boolean createRemoved = delegate.get(key).removeIf(node -> (node.getAction() == NodeAction.CREATE));
+                final boolean createRemoved = delegate.get(key).removeIf(node -> (node.getAction() == NodeAction.CREATE));
 
                 if( createRemoved ){
                     // ignore the DELETE node b/c a CREATED node was found in the same tx, so they cancel each other out
@@ -97,7 +97,7 @@ public class AuditListener implements CreateLifecycleListener,
          * @param action
          * @return Node if present.  null if not
          */
-        public Node get(Persistable pc, NodeAction action){
+        public Node get(final Persistable pc, final NodeAction action){
             return delegate.getOrDefault(getReference(pc), Collections.emptySet()).stream()
                     .filter( node -> node.getAction() == action )
                     .findFirst()
@@ -110,7 +110,7 @@ public class AuditListener implements CreateLifecycleListener,
          * @param pc
          * @return
          */
-        public boolean contains(Persistable pc){
+        public boolean contains(final Persistable pc){
             return delegate.containsKey( getReference(pc));
         }
 
@@ -134,16 +134,16 @@ public class AuditListener implements CreateLifecycleListener,
     }
 
 
-    private Modifications modifications = new Modifications();
+    private final Modifications modifications = new Modifications();
 
 
-    public void postCreate(InstanceLifecycleEvent event) {
+    public void postCreate(final InstanceLifecycleEvent event) {
         NucleusLogger.GENERAL.info("Audit : create for " +
                 ((Persistable) event.getSource()).dnGetObjectId());
     }
 
-    public void preDelete(InstanceLifecycleEvent event) {
-        Persistable pc = (Persistable) event.getSource();
+    public void preDelete(final InstanceLifecycleEvent event) {
+        final Persistable pc = (Persistable) event.getSource();
 
         if (!(event.getSource() instanceof Persistable) || JDOHelper.isDetached(event.getPersistentInstance())) {
             NucleusLogger.GENERAL.debug("Nothing to do. No persistable object found. : " + event.getSource().getClass().getName());
@@ -151,7 +151,7 @@ public class AuditListener implements CreateLifecycleListener,
         }
 
         // force all fields to be loaded before deletion
-        ObjectProvider<Persistable> op = (ObjectProvider) ((Persistable) event.getPersistentInstance()).dnGetStateManager();
+        final ObjectProvider<Persistable> op = (ObjectProvider) ((Persistable) event.getPersistentInstance()).dnGetStateManager();
 
 
         // in Optimistic locking mode, the listener is called 2x.
@@ -170,35 +170,35 @@ public class AuditListener implements CreateLifecycleListener,
 
         // check to see if the entity is already in the modifications map
         if( modifications.contains(pc)){
-            Node node = modifications.get(pc, NodeAction.DELETE);
+            final Node node = modifications.get(pc, NodeAction.DELETE);
             if( node instanceof Updatable){
                 ((Updatable)node).updateFields();
             }
         } else {
             // postStore called for both new objects and updating objects, so need to determine which is the state of the object
-            logger.warn("New Persistable not already processed {}", pc.dnGetObjectId());
+            AuditListener.logger.warn("New Persistable not already processed {}", pc.dnGetObjectId());
             modifications.add(pc, dataTrailFactory.createNode(pc, NodeAction.DELETE));
         }
     }
 
-    public void postDelete(InstanceLifecycleEvent event) {
+    public void postDelete(final InstanceLifecycleEvent event) {
         // TODO handle any pre-delete Instance Callbacks
     }
 
-    public void postLoad(InstanceLifecycleEvent event) {
+    public void postLoad(final InstanceLifecycleEvent event) {
     }
 
-    public void preStore(InstanceLifecycleEvent event) {
-        Persistable pc = (Persistable) event.getSource();
+    public void preStore(final InstanceLifecycleEvent event) {
+        final Persistable pc = (Persistable) event.getSource();
 
         // postStore called for both new objects and updating objects, so need to determine which is the state of the object
-        NodeAction action = pc.dnGetStateManager().isNew(pc) ? NodeAction.CREATE : NodeAction.UPDATE;
+        final NodeAction action = pc.dnGetStateManager().isNew(pc) ? NodeAction.CREATE : NodeAction.UPDATE;
         modifications.add(pc, dataTrailFactory.createNode(pc, action));
 
     }
 
-    public void postStore(InstanceLifecycleEvent event) {
-        Persistable pc = (Persistable) event.getSource();
+    public void postStore(final InstanceLifecycleEvent event) {
+        final Persistable pc = (Persistable) event.getSource();
 
         if (!(event.getSource() instanceof Persistable)) {
             NucleusLogger.GENERAL.debug("Nothing to do. No persistable object found. : " + event.getSource().getClass().getName());
@@ -206,15 +206,15 @@ public class AuditListener implements CreateLifecycleListener,
         }
 
         // check to see if the entity is already in the modifications map
-        NodeAction action = pc.dnGetStateManager().isNew(pc) ? NodeAction.CREATE : NodeAction.UPDATE;
+        final NodeAction action = pc.dnGetStateManager().isNew(pc) ? NodeAction.CREATE : NodeAction.UPDATE;
         if( modifications.contains(pc)){
-            Node node = modifications.get(pc, action);
+            final Node node = modifications.get(pc, action);
             if( node instanceof Updatable){
                 ((Updatable)node).updateFields();
             }
         } else {
             // postStore called for both new objects and updating objects, so need to determine which is the state of the object
-            logger.warn("New Persistable not already processed {}", pc.dnGetObjectId());
+            AuditListener.logger.warn("New Persistable not already processed {}", pc.dnGetObjectId());
             modifications.add(pc, dataTrailFactory.createNode(pc, action));
         }
 
@@ -242,7 +242,7 @@ public class AuditListener implements CreateLifecycleListener,
 
     public void transactionCommitted() {
         NucleusLogger.GENERAL.info("Audit : TXN COMMITTED");
-        logger.info(modifications.toString());
+        AuditListener.logger.info(modifications.toString());
 
         // generate JSON blob
 
@@ -254,13 +254,13 @@ public class AuditListener implements CreateLifecycleListener,
     public void transactionRolledBack() {
     }
 
-    public void transactionSetSavepoint(String name) {
+    public void transactionSetSavepoint(final String name) {
     }
 
-    public void transactionReleaseSavepoint(String name) {
+    public void transactionReleaseSavepoint(final String name) {
     }
 
-    public void transactionRollbackToSavepoint(String name) {
+    public void transactionRollbackToSavepoint(final String name) {
     }
 
     public Collection<Node> getModifications() {

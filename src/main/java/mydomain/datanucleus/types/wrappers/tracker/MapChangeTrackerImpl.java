@@ -43,44 +43,44 @@ public class MapChangeTrackerImpl
     /**
      * Constructor; supply delegate map.
      */
-    public MapChangeTrackerImpl(Map map, boolean autoOff) {
+    public MapChangeTrackerImpl(final Map map, final boolean autoOff) {
         _map = map;
-        this.setAutoOff(autoOff);
+        setAutoOff(autoOff);
     }
 
     public boolean getTrackKeys() {
         return _keys;
     }
 
-    public void setTrackKeys(boolean keys) {
+    public void setTrackKeys(final boolean keys) {
         _keys = keys;
     }
 
-    public void added(Object key, Object val) {
+    public void added(final Object key, final Object val) {
         if (_keys)
-            super.added(key);
+            added(key);
         else
-            super.added(val);
+            added(val);
 
         _prevValues.put(key, val);
     }
 
-    public void removed(Object key, Object val) {
+    public void removed(final Object key, final Object val) {
         if (_keys)
-            super.removed(key);
+            removed(key);
         else
-            super.removed(val);
+            removed(val);
 
         _prevValues.putIfAbsent(key, val);
 
     }
 
-    public void changed(Object key, Object oldVal, Object newVal) {
+    public void changed(final Object key, final Object oldVal, final Object newVal) {
         if (_keys)
-            super.changed(key);
+            changed(key);
         else {
-            super.removed(oldVal);
-            super.added(newVal);
+            removed(oldVal);
+            added(newVal);
         }
 
         // if this is a new addition, so there is no original value that should be retained
@@ -93,7 +93,7 @@ public class MapChangeTrackerImpl
     }
 
 
-    protected void add(Object obj) {
+    protected void add(final Object obj) {
         // if the key was previously removed and now added back, mark
         // it as a change; otherwise it's a new addition
         if (rem != null && rem.remove(obj)) {
@@ -113,7 +113,7 @@ public class MapChangeTrackerImpl
         }
     }
 
-    protected void remove(Object obj) {
+    protected void remove(final Object obj) {
         // no longer a change, if it was before
         if (change != null)
             change.remove(obj);
@@ -133,7 +133,7 @@ public class MapChangeTrackerImpl
         }
     }
 
-    protected void change(Object key) {
+    protected void change(final Object key) {
         // if the key is already changed or the key is newly added, nothing
         // to do
         if ((change != null && change.contains(key))

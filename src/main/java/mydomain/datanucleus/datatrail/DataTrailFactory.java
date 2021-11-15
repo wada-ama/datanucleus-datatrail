@@ -21,7 +21,7 @@ public class DataTrailFactory {
     // get a static slf4j logger for the class
     protected static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(DataTrailFactory.class);
 
-    private Set<NodeFactory> factories = ConcurrentHashMap.newKeySet();
+    private final Set<NodeFactory> factories = ConcurrentHashMap.newKeySet();
 
     /**
      * Protected constructor
@@ -38,9 +38,9 @@ public class DataTrailFactory {
      *
      * @param classPackageToScan package of class to scan for any implementations
      */
-    public void registerNodeFactories(Class<?> classPackageToScan) {
+    public void registerNodeFactories(final Class<?> classPackageToScan) {
         synchronized (this) {
-            try (ScanResult scanResult = new ClassGraph()
+            try (final ScanResult scanResult = new ClassGraph()
                     .enableAnnotationInfo()
                     .acceptPackages(classPackageToScan.getPackage().getName())
                     .scan()) {
@@ -59,7 +59,7 @@ public class DataTrailFactory {
      * META-INF/services/mydomain.datanucleus.datatrail.NodeFactory files found within the classpath
      */
     public void registerNodeFactories() {
-        ServiceLoader<NodeFactory> serviceLoader = ServiceLoader.load(NodeFactory.class);
+        final ServiceLoader<NodeFactory> serviceLoader = ServiceLoader.load(NodeFactory.class);
         serviceLoader.forEach(nodeFactory -> registerFactory((Class<NodeFactory>) nodeFactory.getClass()));
     }
 
@@ -69,13 +69,13 @@ public class DataTrailFactory {
      *
      * @param factory
      */
-    public void registerFactory(Class<NodeFactory> factory) {
+    public void registerFactory(final Class<NodeFactory> factory) {
         synchronized (this) {
             try {
-                NodeFactory instance = factory.newInstance();
+                final NodeFactory instance = factory.newInstance();
                 instance.setDataTrailFactory(this);
                 factories.add(instance);
-            } catch (InstantiationException | IllegalAccessException e) {
+            } catch (final InstantiationException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -89,8 +89,8 @@ public class DataTrailFactory {
      *
      * @return
      */
-    static public DataTrailFactory getDataTrailFactory() {
-        DataTrailFactory factory = new DataTrailFactory();
+    public static DataTrailFactory getDataTrailFactory() {
+        final DataTrailFactory factory = new DataTrailFactory();
         factory.registerNodeFactories();
         return factory;
     }
@@ -103,8 +103,8 @@ public class DataTrailFactory {
      *
      * @param classPackageToScan package of class to scan for any implementations
      */
-    static public DataTrailFactory getDataTrailFactory(Class<?> classPackageToScan) {
-        DataTrailFactory factory = new DataTrailFactory();
+    public static DataTrailFactory getDataTrailFactory(final Class<?> classPackageToScan) {
+        final DataTrailFactory factory = new DataTrailFactory();
         factory.registerNodeFactories(classPackageToScan);
         return factory;
     }
@@ -116,13 +116,13 @@ public class DataTrailFactory {
      * @param action
      * @return
      */
-    public Node createNode(Object value, NodeAction action) {
+    public Node createNode(final Object value, final NodeAction action) {
         // make sure it is a persistable object
         if (!(value instanceof Persistable)) {
             return null;
         }
 
-        MetaData md = ((ObjectProvider) ((Persistable) value).dnGetStateManager()).getClassMetaData();
+        final MetaData md = ((ObjectProvider) ((Persistable) value).dnGetStateManager()).getClassMetaData();
 
 
         return createNode(value, action, md, null).orElse(null);
@@ -138,14 +138,14 @@ public class DataTrailFactory {
      * @return
      * @throws RuntimeException if unable to create the node
      */
-    public Optional<Node> createNode(Object value, NodeAction action, MetaData md, Node parent) {
+    public Optional<Node> createNode(final Object value, final NodeAction action, final MetaData md, final Node parent) {
 
         // find the factory for this type of value and use it to create the node
         return factories.stream().filter(nodeFactory -> nodeFactory.supports(action, value, md))
                 .sorted(Comparator.comparingLong(NodeFactory::priority).reversed())
                 .findFirst()
                 .map( nodeFactory -> nodeFactory.createNode(action, value, md, parent ).orElseGet(() -> {
-                    logger.debug( "Unable to find a node factory to support {}/{}", value.getClass().getCanonicalName(), action);
+                    DataTrailFactory.logger.debug( "Unable to find a node factory to support {}/{}", value.getClass().getCanonicalName(), action);
                     return null;
                 }));
     }

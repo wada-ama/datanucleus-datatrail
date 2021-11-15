@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class MapEntry extends BaseNode implements Updatable {
     Node key;
 
-    public MapEntry(Node key, Node value) {
+    public MapEntry(final Node key, final Node value) {
         super(null, null);
         this.key = key;
         this.value = value;

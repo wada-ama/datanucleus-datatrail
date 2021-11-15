@@ -26,21 +26,21 @@ public class Delete extends BaseEntity {
      * @param parent
      * @param factory
      */
-    protected Delete(Persistable value, MetaData md, Node parent, NodeFactory factory) {
+    protected Delete(final Persistable value, final MetaData md, final Node parent, final NodeFactory factory) {
         super(value, md, parent, factory);
     }
 
     @Override
-    protected void setFields(Persistable pc){
+    protected void setFields(final Persistable pc){
         if( pc == null )
             return;
 
-        ExtendedReferentialStateManagerImpl op = (ExtendedReferentialStateManagerImpl)pc.dnGetStateManager();
+        final ExtendedReferentialStateManagerImpl op = (ExtendedReferentialStateManagerImpl)pc.dnGetStateManager();
 
         // need to include all loaded fields
-        for(int position : op.getLoadedFieldNumbers()) {
-            Object field = op.provideSavedField(position);
-            AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
+        for(final int position : op.getLoadedFieldNumbers()) {
+            final Object field = op.provideSavedField(position);
+            final AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
             if( mmd.isFieldToBePersisted()){
                 getFactory().createNode(NodeAction.DELETE, field, mmd, this).ifPresent(node -> fields.add(node));
             }

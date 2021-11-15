@@ -13,7 +13,7 @@ public class ClassUtils {
      * @param clazz
      * @return
      */
-    static public Class<?> wrap(Class<?> clazz) {
+    public static Class<?> wrap(final Class<?> clazz) {
         if( clazz == null )
             return null;
 
@@ -49,7 +49,7 @@ public class ClassUtils {
      * @param object
      * @return the Class of the object.  Null if object is null
      */
-    static public Class getClass(Object object){
-        return object == null ? null : wrap(object.getClass());
+    public static Class<?> getClass(final Object object){
+        return object == null ? null : ClassUtils.wrap(object.getClass());
     }
 }

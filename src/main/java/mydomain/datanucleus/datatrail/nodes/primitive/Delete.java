@@ -18,7 +18,7 @@ public class Delete extends BasePrimitive {
      * @param mmd
      * @param parent
      */
-    protected Delete(Object value, AbstractMemberMetaData mmd, Node parent) {
+    protected Delete(final Object value, final AbstractMemberMetaData mmd, final Node parent) {
         super(value, mmd, parent);
     }
 }

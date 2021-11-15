@@ -26,29 +26,28 @@ public class Update extends BaseEntity {
      * @param parent
      * @param factory
      */
-    protected Update(Persistable value, MetaData md, Node parent, NodeFactory factory) {
+    protected Update(final Persistable value, final MetaData md, final Node parent, final NodeFactory factory) {
         super(value, md, parent, factory);
     }
 
     @Override
-    protected void setFields(Persistable pc) {
+    protected void setFields(final Persistable pc) {
         if (pc == null)
             return;
 
-        ExtendedReferentialStateManagerImpl op = (ExtendedReferentialStateManagerImpl) pc.dnGetStateManager();
+        final ExtendedReferentialStateManagerImpl op = (ExtendedReferentialStateManagerImpl) pc.dnGetStateManager();
 
         // need to include all dirty fields
-        int[] absoluteFieldPositions = op.getDirtyFieldNumbers() != null ? op.getDirtyFieldNumbers() : new int[]{};
-        for (int position : absoluteFieldPositions) {
-            Object field = op.provideField(position);
-            Object prevField = op.provideSavedField(position);
-            AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
+        final int[] absoluteFieldPositions = op.getDirtyFieldNumbers() != null ? op.getDirtyFieldNumbers() : new int[]{};
+        for (final int position : absoluteFieldPositions) {
+            final Object field = op.provideField(position);
+            final Object prevField = op.provideSavedField(position);
+            final AbstractMemberMetaData mmd = op.getClassMetaData().getMetaDataForManagedMemberAtAbsolutePosition(position);
 
             if (mmd.isFieldToBePersisted()) {
                 // create the current node and set it's prev value to the prevField value node
                 getFactory().createNode(NodeAction.UPDATE, field, mmd, this).ifPresent( current -> {
                     getFactory().createNode(NodeAction.UPDATE, prevField, mmd, this).ifPresent( ((BaseNode)current)::setPrev );
-//                            .ifPresent( node -> ((BaseNode)current).setPrev(node));
                     fields.add(current);
                 });
             }

@@ -9,7 +9,7 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 @NodeDefinition(type=NodeType.ARRAY, action = NodeAction.UPDATE)
 public class Update extends BaseArray {
 
-    protected Update(Object value, AbstractMemberMetaData mmd, Node parent) {
+    protected Update(final Object value, final AbstractMemberMetaData mmd, final Node parent) {
         super(value, mmd, parent);
     }
 
@@ -18,9 +18,9 @@ public class Update extends BaseArray {
      * @param elements
      */
     @Override
-    protected void addElements( Object[] elements ){
+    protected void addElements(final Object[] elements ){
         // all new values, so use the raw collection values
-        for(Object element : elements )
-            getFactory().createNode(NodeAction.UPDATE, element, null, this).ifPresent(node -> this.contents.add(node));
+        for(final Object element : elements )
+            getFactory().createNode(NodeAction.UPDATE, element, null, this).ifPresent(node -> contents.add(node));
     }
 }

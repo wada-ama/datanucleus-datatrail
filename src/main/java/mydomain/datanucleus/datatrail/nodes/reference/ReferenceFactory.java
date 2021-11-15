@@ -15,7 +15,7 @@ import java.util.Optional;
 public class ReferenceFactory extends AbstractNodeFactory {
 
     @Override
-    public boolean supports(NodeAction action, Object value, MetaData md) {
+    public boolean supports(final NodeAction action, final Object value, final MetaData md) {
         // either the is persistent, or the field is supposed to be persistable (ex: if the value is null)
         return super.supports(action, value, md) &&
                 (value instanceof Persistable ||
@@ -24,12 +24,12 @@ public class ReferenceFactory extends AbstractNodeFactory {
     }
 
     @Override
-    public Optional<Node> createNode(NodeAction action, Object value, MetaData md, Node parent) {
+    public Optional<Node> createNode(final NodeAction action, final Object value, final MetaData md, final Node parent) {
         assertConfigured();
         if (!supports(action, value, md))
             return Optional.empty();
 
-        Persistable pc = (Persistable) value;
+        final Persistable pc = (Persistable) value;
 
         switch (action) {
             case CREATE:

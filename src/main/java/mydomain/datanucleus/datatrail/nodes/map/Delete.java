@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @NodeDefinition(type=NodeType.MAP, action = NodeAction.DELETE)
 public class Delete extends BaseMap {
-    protected Delete(Map value, AbstractMemberMetaData mmd, Node parent) {
+    protected Delete(final Map value, final AbstractMemberMetaData mmd, final Node parent) {
         super(value, mmd, parent);
     }
 
@@ -20,14 +20,14 @@ public class Delete extends BaseMap {
      * @param map
      */
     @Override
-    protected void addElements( Map map ){
+    protected void addElements(final Map map ){
         // all new values, so use the raw collection values
         map.entrySet().stream().forEach(element -> {
-            Optional<Node> key = getFactory().createNode(NodeAction.DELETE, ((Map.Entry)element).getKey(), null, this);
-            Optional<Node> value = getFactory().createNode(NodeAction.DELETE, ((Map.Entry)element).getValue(), null, this);
+            final Optional<Node> key = getFactory().createNode(NodeAction.DELETE, ((Map.Entry)element).getKey(), null, this);
+            final Optional<Node> value = getFactory().createNode(NodeAction.DELETE, ((Map.Entry)element).getValue(), null, this);
 
             if( key.isPresent() && value.isPresent() ){
-                this.removed.add(new MapEntry(key.get(), value.get()));
+                removed.add(new MapEntry(key.get(), value.get()));
             }
         });
     }

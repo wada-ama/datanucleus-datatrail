@@ -45,12 +45,12 @@ public class CollectionChangeTrackerImpl
      * @param dups true if the collection allows duplicates, false otherwise
      * @param order true if the collection is ordered, false otherwise
      */
-    public CollectionChangeTrackerImpl(Collection coll, boolean dups,
-                                       boolean order, boolean autoOff) {
+    public CollectionChangeTrackerImpl(final Collection coll, final boolean dups,
+                                       final boolean order, final boolean autoOff) {
         _coll = coll;
         _dups = dups;
         _order = order;
-        this.setAutoOff(autoOff);
+        setAutoOff(autoOff);
     }
 
     /**
@@ -67,21 +67,24 @@ public class CollectionChangeTrackerImpl
         return _order;
     } 
 
-    public void added(Object elem) {
+    @Override
+    public void added(final Object elem) {
         super.added(elem);
     }
 
-    public void removed(Object elem) {
+    @Override
+    public void removed(final Object elem) {
         super.removed(elem);
     }
 
+    @Override
     protected int initialSequence() {
         if (_order)
             return _coll.size();
         return super.initialSequence();
     }
 
-    protected void add(Object elem) {
+    protected void add(final Object elem) {
         if (rem == null || !rem.remove(elem)) {
             // after a point it's inefficient to keep tracking
             if (getAutoOff()
@@ -105,7 +108,7 @@ public class CollectionChangeTrackerImpl
         }
     }
 
-    protected void remove(Object elem) {
+    protected void remove(final Object elem) {
         // if the collection contains multiple copies of the elem, we can't
         // use change tracking because some back-ends can't just delete a
         // single copy of a elem
@@ -124,7 +127,7 @@ public class CollectionChangeTrackerImpl
         }
     }
 
-    protected void change(Object elem) {
+    protected void change(final Object elem) {
         throw new NucleusException("Cannot change an element of a collection; only add or remove");
     }
 }

@@ -12,7 +12,7 @@ public interface ChangeTrackable {
      * @param added
      * @return
      */
-    default boolean add(CollectionChangeTrackerImpl changeTracker, Object element, boolean added){
+    default boolean add(final CollectionChangeTrackerImpl changeTracker, final Object element, final boolean added){
         if( added ){
             if( element instanceof Iterable){
                 ((Iterable)element).forEach(o -> add( changeTracker, o, added));
@@ -32,7 +32,7 @@ public interface ChangeTrackable {
      * @param removed
      * @return
      */
-    default boolean remove(CollectionChangeTrackerImpl changeTracker,  Object element, boolean removed){
+    default boolean remove(final CollectionChangeTrackerImpl changeTracker, final Object element, final boolean removed){
         if( removed ){
             if( element instanceof Iterable){
                 ((Iterable)element).forEach(o -> remove( changeTracker, o, removed));

@@ -15,7 +15,7 @@ import java.util.Optional;
 public class MapFactory extends AbstractNodeFactory {
 
     @Override
-    public boolean supports(NodeAction action, Object value, MetaData md) {
+    public boolean supports(final NodeAction action, final Object value, final MetaData md) {
         // can process any value as a primitive by using the value.toString()
         return super.supports(action, value, md) &&
                 ( value instanceof Map ||
@@ -23,7 +23,7 @@ public class MapFactory extends AbstractNodeFactory {
     }
 
     @Override
-    public Optional<Node> createNode(NodeAction action, Object value, MetaData md, Node parent) {
+    public Optional<Node> createNode(final NodeAction action, final Object value, final MetaData md, final Node parent) {
         assertConfigured();
         if (!supports(action, value, md))
             return Optional.empty();
