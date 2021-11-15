@@ -133,7 +133,8 @@ public class MapTestOfChangeTrackerPrimitiveTest extends AbstractTest {
                 .withProperty("fields", hasItem(
                         getContainerField(NodeType.MAP, "primitiveMap")
                                 .withProperty("changed", hasItems(
-                                        getMapElement(NodeType.PRIMITIVE, String.class, "key", NodeType.PRIMITIVE, String.class, "lastValue", "initialValue")
+                                        getMapElement(NodeType.PRIMITIVE, String.class, "key", NodeType.PRIMITIVE, String.class, "lastValue",
+                                                getField(NodeType.PRIMITIVE, String.class, null, "initialValue", null ))
                                 ))
                 ));
 

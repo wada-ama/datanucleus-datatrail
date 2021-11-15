@@ -5,7 +5,7 @@ import mydomain.datanucleus.datatrail.Node;
 
 import java.util.Collection;
 
-public interface ContainerNode {
+public interface ContainerNode extends Node{
     @JsonProperty("added")
     Collection<Node> getAdded();
 

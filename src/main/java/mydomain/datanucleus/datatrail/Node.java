@@ -20,7 +20,7 @@ public interface Node {
     @JsonProperty("value")
     Object getValue();
 
-    @JsonProperty("prevValue")
+    @JsonProperty("prev")
     Object getPrev();
 
     @JsonIgnore

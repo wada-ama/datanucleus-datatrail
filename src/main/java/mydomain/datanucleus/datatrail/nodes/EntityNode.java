@@ -8,7 +8,7 @@ import mydomain.datanucleus.datatrail.NodeAction;
 import java.time.Instant;
 import java.util.Set;
 
-public interface EntityNode {
+public interface EntityNode extends ReferenceNode{
     @JsonProperty
     Set<Node> getFields();
 

@@ -169,7 +169,8 @@ public class MapTestOfChangeTrackerPrimitiveRefTest extends AbstractTest {
                 .withProperty("fields", hasItem(
                         getContainerField(NodeType.MAP, "primitiveRefMap")
                                 .withProperty("changed", hasItems(
-                                        getMapElement(NodeType.PRIMITIVE, String.class, "key", NodeType.REF, Street.class, ids.get("Younge"), ids.get("Victoria"))
+                                        getMapElement(NodeType.PRIMITIVE, String.class, "key", NodeType.REF, Street.class, ids.get("Younge"),
+                                                getField(NodeType.REF, Street.class, null,ids.get("Victoria"), null))
                                 ))
                 ));
 

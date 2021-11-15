@@ -4,6 +4,8 @@ import com.spotify.hamcrest.pojo.IsPojo;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
+import mydomain.datanucleus.datatrail.nodes.BaseNode;
+import mydomain.datanucleus.datatrail.nodes.EntityNode;
 import org.datanucleus.test.model.CountryCode;
 import org.datanucleus.test.model.QTelephone;
 import org.datanucleus.test.model.Telephone;
@@ -18,6 +20,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 
 public class ReferenceTest extends AbstractTest {
@@ -109,7 +113,7 @@ public class ReferenceTest extends AbstractTest {
 
         final IsPojo<Node>telephone = getEntity(NodeAction.UPDATE, Telephone.class, "1")
                 .withProperty( "fields", hasItems(
-                        getField(NodeType.REF, CountryCode.class, "countryCode", "2", "1")
+                        getField(NodeType.REF, CountryCode.class, "countryCode", "2", getField(NodeType.REF, CountryCode.class, "countryCode", "1", null ))
                 ));
 
         assertThat(entities, containsInAnyOrder(telephone));
@@ -139,7 +143,8 @@ public class ReferenceTest extends AbstractTest {
 
         final IsPojo<Node>telephone = getEntity(NodeAction.UPDATE, Telephone.class, "1")
                 .withProperty( "fields", hasItems(
-                        getField(NodeType.REF, CountryCode.class, "countryCode", null, "1")
+                        getField(NodeType.REF, CountryCode.class, "countryCode", null,
+                                getField(NodeType.REF, CountryCode.class, "countryCode", "1", null))
                 ));
 
         assertThat(entities, containsInAnyOrder(telephone));

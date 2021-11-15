@@ -1,13 +1,11 @@
 package mydomain.datanucleus.datatrail.nodes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import mydomain.datanucleus.datatrail.Node;
 
-public interface ReferenceNode {
+public interface ReferenceNode extends Node {
     @JsonProperty("id")
     Object getValue();
-
-    @JsonProperty("prev")
-    Object getPrev();
 
     @JsonProperty("version")
     String getVersion();

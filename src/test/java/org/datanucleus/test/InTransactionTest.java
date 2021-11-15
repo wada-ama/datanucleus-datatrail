@@ -60,7 +60,7 @@ public class InTransactionTest extends AbstractTest{
         executeTx(pm -> {
             CountryCode cc = pm.newJDOQLTypedQuery(CountryCode.class).filter(QCountryCode.candidate().country.eq("Canada")).executeUnique();
             assertThat(cc, is(nullValue()));
-        });
+        }, false);
 
     }
 

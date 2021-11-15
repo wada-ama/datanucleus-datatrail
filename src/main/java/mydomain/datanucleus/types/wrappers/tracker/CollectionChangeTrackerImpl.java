@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Default {@link mydomain.datanucleus.type.wrappers.tracker.CollectionChangeTracker}.
+ * Default {@link CollectionChangeTracker}.
  *
  * Imported from the OpenJPA project (org.apache.openjpa.util.CollectionChangeTrackerImpl)
  *

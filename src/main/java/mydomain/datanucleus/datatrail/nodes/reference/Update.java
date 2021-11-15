@@ -28,7 +28,7 @@ public class Update extends BaseReference {
             throw new IllegalArgumentException( "Previous value is not of the same type: " + value.getClass().getName() + " !=" + getClass().getName());
         }
 
-        prev = getClass().cast(value).getValue();
+        prev = value;
     }
 
 }

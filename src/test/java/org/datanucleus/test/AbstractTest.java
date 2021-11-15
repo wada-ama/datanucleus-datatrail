@@ -34,6 +34,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Stack;
 
 import static com.spotify.hamcrest.pojo.IsPojo.pojo;
 import static org.hamcrest.Matchers.any;
@@ -57,6 +58,8 @@ abstract public class AbstractTest {
     PersistenceManagerFactory pmf;
     protected AuditListener audit = new AuditListener();
 
+    protected Stack<String> logEntries = new Stack<>();
+
     @BeforeAll
     public static void enableH2Webserver(){
         CONSOLE.info(H2Server.getInstance());
@@ -68,6 +71,7 @@ abstract public class AbstractTest {
     @BeforeEach
     protected void resetTransaction(TestInfo testInfo) {
         pmf = JDOHelper.getPersistenceManagerFactory("MyTest");
+        logEntries.clear();
         StringBuffer sb = new StringBuffer();
         testInfo.getTestClass().ifPresent(aClass -> sb.append(aClass.getName()));
         testInfo.getTestMethod().ifPresent(method -> sb.append("." ).append(method.getName()).append("()"));
@@ -78,7 +82,7 @@ abstract public class AbstractTest {
     protected void endTransaction() throws IOException {
         pmf.close();
         // check that the datatrail log is correct
-        CONSOLE.debug(getJson(audit.getModifications()));
+        logEntries.stream().forEach(CONSOLE::debug);
 
     }
 
@@ -110,9 +114,10 @@ abstract public class AbstractTest {
             pm.close();
         }
         pmf.getDataStoreCache().evictAll();
+        logEntries.push(getJson(audit.getModifications()));
     }
 
-    protected String getJson(Collection<Node> entities) throws IOException {
+    protected String getJson(Collection<Node> entities) {
         ObjectMapper mapper = new ObjectMapper();
         JavaTimeModule module = new JavaTimeModule();
         mapper.registerModule(module);
@@ -122,8 +127,13 @@ abstract public class AbstractTest {
         mapper.configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
 
         StringWriter sw = new StringWriter();
-        for (Node entity : entities)
-            mapper.writeValue(sw, entity);
+        for (Node entity : entities) {
+            try {
+                mapper.writeValue(sw, entity);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return sw.toString();
     }
 
@@ -172,7 +182,7 @@ abstract public class AbstractTest {
     }
 
 
-    protected IsPojo<MapEntry>getMapElement(NodeType keyType, Class<?> keyClazz, String keyValue, NodeType valueType, Class<?> valueClazz, String valueValue, String prevValue) {
+    protected IsPojo<MapEntry>getMapElement(NodeType keyType, Class<?> keyClazz, String keyValue, NodeType valueType, Class<?> valueClazz, String valueValue, IsPojo<Node> prevValue) {
 
         IsPojo<Node> key = pojo(Node.class)
                 .withProperty("value", is(keyValue))
@@ -188,7 +198,7 @@ abstract public class AbstractTest {
         IsPojo<Node> value = pojo(Node.class)
                 .withProperty("value", getValueMatcher(valueValue))
                 .withProperty("type", hasToString(valueType.toString()))
-                .withProperty("prev", getValueMatcher(prevValue))
+                .withProperty("prev", prevValue == null ? nullValue() : is(prevValue))
                 .withProperty("className", is(valueClazz.getName()));
         ;
         if( ITrailDesc.class.isAssignableFrom(valueClazz)) {
@@ -205,12 +215,12 @@ abstract public class AbstractTest {
 
 
 
-    protected IsPojo<Node> getField(NodeType type, Class<?> clazz, String name, String value, String prevValue) {
+    protected IsPojo<Node> getField(NodeType type, Class<?> clazz, String name, String value, IsPojo<Node> prevValue) {
         IsPojo<Node> field = pojo(Node.class)
                 .withProperty("name", is(name))
                 .withProperty("value", getValueMatcher(value))
                 .withProperty("type", hasToString(type.toString()))
-                .withProperty("prev", getValueMatcher(prevValue))
+                .withProperty("prev", prevValue == null ? nullValue() : is(prevValue))
                 .withProperty("className", is(clazz.getName()));
         ;
 

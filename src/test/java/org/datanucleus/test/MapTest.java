@@ -180,7 +180,8 @@ public class MapTest extends AbstractTest {
                                         getMapElement(NodeType.PRIMITIVE, String.class, "french", NodeType.PRIMITIVE, String.class, "A+", null)
                                 ))
                                 .withProperty("changed", hasItems(
-                                        getMapElement(NodeType.PRIMITIVE, String.class, "english", NodeType.PRIMITIVE, String.class, "B", "A")
+                                        getMapElement(NodeType.PRIMITIVE, String.class, "english", NodeType.PRIMITIVE, String.class, "B",
+                                                getField(NodeType.PRIMITIVE, String.class, null, "A", null))
                                 ))
                 ));
 
@@ -231,7 +232,8 @@ public class MapTest extends AbstractTest {
                 .withProperty("fields", hasItems(
                         getContainerField(NodeType.MAP, "telephoneNbs")
                                 .withProperty("changed", hasItems(
-                                        getMapElement(NodeType.PRIMITIVE, TelephoneType.class, TelephoneType.MOBILE.toString(), NodeType.REF, Telephone.class, ANY, ids.get(TelephoneType.MOBILE))
+                                        getMapElement(NodeType.PRIMITIVE, TelephoneType.class, TelephoneType.MOBILE.toString(), NodeType.REF, Telephone.class, ANY,
+                                                getField(NodeType.REF, Telephone.class, null, ids.get(TelephoneType.MOBILE), null ))
                                 ))
                 ));
 
@@ -334,15 +336,16 @@ public class MapTest extends AbstractTest {
                                 .withProperty("changed", hasItems(
                                         // create a mapElement for each street
                                         // Montreal is considered as changed even though it is the same value
-                                        getMapElement(NodeType.REF, Street.class, getId(ids.get("Victoria")), NodeType.REF, CountryCode.class, getId(ids.get("Montreal")), getId(ids.get("Montreal"))),
-                                        getMapElement(NodeType.REF, Street.class, getId(ids.get("Younge")), NodeType.REF, CountryCode.class, getId(ids.get("Toronto")), getId(ids.get("Montreal"))),
-                                        getMapElement(NodeType.REF, Street.class, getId(ids.get("Hastings")), NodeType.REF, CountryCode.class, getId(ids.get("Vancouver")), getId(ids.get("Montreal")))
+                                        getMapElement(NodeType.REF, Street.class, getId(ids.get("Victoria")), NodeType.REF, CountryCode.class, getId(ids.get("Montreal")),
+                                                getField(NodeType.REF, CountryCode.class, null, getId(ids.get("Montreal")), null)),
+                                        getMapElement(NodeType.REF, Street.class, getId(ids.get("Younge")), NodeType.REF, CountryCode.class, getId(ids.get("Toronto")),
+                                                getField(NodeType.REF, CountryCode.class, null, getId(ids.get("Montreal")), null)),
+                                        getMapElement(NodeType.REF, Street.class, getId(ids.get("Hastings")), NodeType.REF, CountryCode.class, getId(ids.get("Vancouver")),
+                                                getField(NodeType.REF, CountryCode.class, null, getId(ids.get("Montreal")), null))
                                 ))
                 ));
 
         assertThat("All streets mapped to their proper area codes", audit.getModifications(), contains(mapClass));
-
-
 
         // delete an item from the map
         executeTx(pm -> {
@@ -390,7 +393,8 @@ public class MapTest extends AbstractTest {
                 .withProperty("fields", hasItem(
                         getContainerField(NodeType.MAP, "streetMap")
                                 .withProperty("changed", hasItems(
-                                        getMapElement(NodeType.REF, Street.class, ids.get("Victoria"), NodeType.REF, CountryCode.class, ids.get("Montreal"), ids.get("Montreal"))
+                                        getMapElement(NodeType.REF, Street.class, ids.get("Victoria"), NodeType.REF, CountryCode.class, ids.get("Montreal"),
+                                                getField(NodeType.REF, CountryCode.class, null, ids.get("Montreal"), null))
                                 ))
                 ))
                 ;

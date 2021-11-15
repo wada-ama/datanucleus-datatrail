@@ -44,7 +44,8 @@ public class DateTest extends AbstractTest{
 
         telephone = getEntity(NodeAction.UPDATE, Telephone.class, ANY)
                     .withProperty("fields", Matchers.hasItem(
-                        getField(NodeType.PRIMITIVE, Date.class, "created", Date.from(testModified).toString(), Date.from(testStart).toString())
+                        getField(NodeType.PRIMITIVE, Date.class, "created", Date.from(testModified).toString(),
+                            getField(NodeType.PRIMITIVE, Date.class, "created", Date.from(testStart).toString(), null))
                 ));
 
         assertThat( filterEntity(audit.getModifications(), Telephone.class, NodeAction.UPDATE).get(), is(telephone));
