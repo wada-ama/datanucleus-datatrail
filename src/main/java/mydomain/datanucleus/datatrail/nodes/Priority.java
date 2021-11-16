@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface NodePriority {
+public @interface Priority {
     /**
      * Useful constant for the highest precedence value.
      * @see java.lang.Integer#MAX_VALUE

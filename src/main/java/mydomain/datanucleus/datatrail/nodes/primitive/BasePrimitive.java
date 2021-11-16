@@ -15,8 +15,7 @@ public abstract class BasePrimitive extends BaseNode {
     protected BasePrimitive(final Object value, final AbstractMemberMetaData mmd, final Node parent, final NodeFactory factory){
         // an entity is the root node in the tree
         super(mmd, parent, factory);
-        this.value = value == null ? null : value.toString();
+        this.value = ((PrimitiveFactory)getFactory()).getAsString(value);
         setClassName(value, false);
     }
-
 }
