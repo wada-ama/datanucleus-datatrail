@@ -2,13 +2,14 @@ package mydomain.datanucleus.datatrail.nodes.primitive;
 
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
+import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
-import mydomain.datanucleus.datatrail.nodes.NodePriority;
+import mydomain.datanucleus.datatrail.nodes.Priority;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 @NodeDefinition(type=NodeType.PRIMITIVE, action = NodeAction.CREATE)
-@NodePriority(priority = NodePriority.LOWEST_PRECEDENCE)
+@Priority(priority = Priority.LOWEST_PRECEDENCE)
 public class Create extends BasePrimitive{
 
     /**
@@ -18,7 +19,7 @@ public class Create extends BasePrimitive{
      * @param mmd
      * @param parent
      */
-    protected Create(final Object value, final AbstractMemberMetaData mmd, final Node parent) {
-        super(value, mmd, parent);
+    protected Create(final Object value, final AbstractMemberMetaData mmd, final Node parent, final NodeFactory factory) {
+        super(value, mmd, parent, factory);
     }
 }

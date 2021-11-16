@@ -26,15 +26,15 @@ public class MapFactory extends AbstractNodeFactory {
     public Optional<Node> createNode(final NodeAction action, final Object value, final MetaData md, final Node parent) {
         assertConfigured();
         if (!supports(action, value, md))
-            return Optional.empty();
+            return dataTrailFactory.createNode(value, action, md, parent );
 
         switch(action){
             case CREATE:
-                return Optional.of(new Create( (Map) value, (AbstractMemberMetaData) md, parent));
+                return Optional.of(new Create( (Map) value, (AbstractMemberMetaData) md, parent, this));
             case DELETE:
-                return Optional.of(new Delete( (Map) value, (AbstractMemberMetaData) md, parent));
+                return Optional.of(new Delete( (Map) value, (AbstractMemberMetaData) md, parent, this));
             case UPDATE:
-                return Optional.of(new Update( (Map) value, (AbstractMemberMetaData) md, parent));
+                return Optional.of(new Update( (Map) value, (AbstractMemberMetaData) md, parent, this));
             default:
                 return Optional.empty();
         }

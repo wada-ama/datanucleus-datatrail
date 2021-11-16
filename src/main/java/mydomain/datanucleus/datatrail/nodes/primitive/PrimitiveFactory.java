@@ -3,6 +3,7 @@ package mydomain.datanucleus.datatrail.nodes.primitive;
 import mydomain.datanucleus.datatrail.AbstractNodeFactory;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
+import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import mydomain.datanucleus.datatrail.nodes.NodePriority;
@@ -19,7 +20,7 @@ public class PrimitiveFactory extends AbstractNodeFactory {
     public Optional<Node> createNode(final NodeAction action, final Object value, final MetaData md, final Node parent) {
         assertConfigured();
         if (!supports(action, value, md))
-            return Optional.empty();
+            return dataTrailFactory.createNode(value, action, md, parent );
 
         switch(action){
             case CREATE:

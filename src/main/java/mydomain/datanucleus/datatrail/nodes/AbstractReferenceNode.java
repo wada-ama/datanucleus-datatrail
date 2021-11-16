@@ -3,6 +3,7 @@ package mydomain.datanucleus.datatrail.nodes;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import mydomain.datanucleus.datatrail.ITrailDesc;
 import mydomain.datanucleus.datatrail.Node;
+import mydomain.datanucleus.datatrail.NodeFactory;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.identity.DatastoreId;
 import org.datanucleus.identity.IdentityUtils;
@@ -17,8 +18,8 @@ public abstract class AbstractReferenceNode extends BaseNode implements Updatabl
     protected String version;
     protected String description;
 
-    protected AbstractReferenceNode(final Persistable source, final MetaData mmd, final Node parent) {
-        super(mmd, parent);
+    protected AbstractReferenceNode(final Persistable source, final MetaData mmd, final Node parent, final NodeFactory factory) {
+        super(mmd, parent, factory);
         this.source = new WeakReference<>(source);
         setId(source);
         setVersion(source);

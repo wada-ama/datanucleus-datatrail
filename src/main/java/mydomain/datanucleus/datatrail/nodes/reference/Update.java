@@ -2,6 +2,7 @@ package mydomain.datanucleus.datatrail.nodes.reference;
 
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
+import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.enhancement.Persistable;
@@ -17,8 +18,8 @@ public class Update extends BaseReference {
      * @param mmd
      * @param parent
      */
-    protected Update(final Persistable value, final AbstractMemberMetaData mmd, final Node parent) {
-        super(value, mmd, parent);
+    protected Update(final Persistable value, final AbstractMemberMetaData mmd, final Node parent, final NodeFactory factory) {
+        super(value, mmd, parent, factory);
     }
 
     @Override

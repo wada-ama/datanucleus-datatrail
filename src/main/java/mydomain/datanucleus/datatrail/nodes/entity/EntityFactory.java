@@ -5,7 +5,7 @@ import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
-import mydomain.datanucleus.datatrail.nodes.NodePriority;
+import mydomain.datanucleus.datatrail.nodes.Priority;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.MetaData;
@@ -13,7 +13,7 @@ import org.datanucleus.metadata.MetaData;
 import java.util.Optional;
 
 @NodeDefinition(type = NodeType.ENTITY, action = {NodeAction.CREATE, NodeAction.UPDATE, NodeAction.DELETE})
-@NodePriority(priority = NodePriority.HIGHEST_PRECEDENCE)
+@Priority(priority = Priority.HIGHEST_PRECEDENCE)
 public class EntityFactory extends AbstractNodeFactory {
     @Override
     public boolean supports(final NodeAction action, final Object value, final MetaData md) {

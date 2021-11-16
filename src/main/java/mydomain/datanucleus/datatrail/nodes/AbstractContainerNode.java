@@ -2,6 +2,7 @@ package mydomain.datanucleus.datatrail.nodes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import mydomain.datanucleus.datatrail.Node;
+import mydomain.datanucleus.datatrail.NodeFactory;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 import java.util.ArrayList;
@@ -14,8 +15,8 @@ public abstract class AbstractContainerNode extends BaseNode implements Updatabl
     protected Collection<Node> changed = new ArrayList<>();
     protected Collection<Node> contents = new ArrayList<>();
 
-    protected AbstractContainerNode(final AbstractMemberMetaData mmd, final Node parent) {
-        super(mmd, parent);
+    protected AbstractContainerNode(final AbstractMemberMetaData mmd, final Node parent, final NodeFactory factory) {
+        super(mmd, parent, factory);
     }
 
     @JsonIgnore

@@ -27,17 +27,17 @@ public class ReferenceFactory extends AbstractNodeFactory {
     public Optional<Node> createNode(final NodeAction action, final Object value, final MetaData md, final Node parent) {
         assertConfigured();
         if (!supports(action, value, md))
-            return Optional.empty();
+            return dataTrailFactory.createNode(value, action, md, parent );
 
         final Persistable pc = (Persistable) value;
 
         switch (action) {
             case CREATE:
-                return Optional.of(new Create(pc, (AbstractMemberMetaData) md, parent));
+                return Optional.of(new Create(pc, (AbstractMemberMetaData) md, parent, this));
             case DELETE:
-                return Optional.of(new Delete(pc, (AbstractMemberMetaData) md, parent));
+                return Optional.of(new Delete(pc, (AbstractMemberMetaData) md, parent, this));
             case UPDATE:
-                return Optional.of(new Update(pc, (AbstractMemberMetaData) md, parent));
+                return Optional.of(new Update(pc, (AbstractMemberMetaData) md, parent, this));
             default:
                 return Optional.empty();
         }

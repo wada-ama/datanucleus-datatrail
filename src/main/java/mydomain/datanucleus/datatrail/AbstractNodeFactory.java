@@ -2,7 +2,12 @@ package mydomain.datanucleus.datatrail;
 
 import mydomain.datanucleus.datatrail.annotation.DataTrailAnnotationHandler;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
+import mydomain.datanucleus.datatrail.nodes.StringConverter;
 import org.datanucleus.metadata.MetaData;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static mydomain.datanucleus.datatrail.nodes.NodeDefinition.Helper.isSupported;
 

@@ -37,9 +37,10 @@ public abstract class BaseNode implements Node {
      * @param md
      * @param parent
      */
-    protected BaseNode(final MetaData md, final Node parent) {
+    protected BaseNode(final MetaData md, final Node parent, final NodeFactory factory) {
         this.parent = parent;
         this.md = md;
+        this.factory = factory;
         if( md == null ) {
             return;
         }
@@ -123,7 +124,7 @@ public abstract class BaseNode implements Node {
 
 
     /**
-     * Recursive function to find a node in the tree with the data trail factory defined
+     * Recursive function to find a node in the tree with the a factory defined
      * @return
      */
     @JsonIgnore

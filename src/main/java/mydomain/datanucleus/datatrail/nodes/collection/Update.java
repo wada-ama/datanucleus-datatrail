@@ -2,6 +2,7 @@ package mydomain.datanucleus.datatrail.nodes.collection;
 
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
+import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import mydomain.datanucleus.types.wrappers.tracker.ChangeTrackable;
@@ -12,8 +13,8 @@ import java.util.stream.Collectors;
 
 @NodeDefinition(type=NodeType.COLLECTION, action = NodeAction.UPDATE)
 public class Update extends BaseCollection {
-    protected Update(final Object value, final AbstractMemberMetaData mmd, final Node parent) {
-        super(value, mmd, parent);
+    protected Update(final Object value, final AbstractMemberMetaData mmd, final Node parent, final NodeFactory factory) {
+        super(value, mmd, parent, factory);
     }
 
     /**

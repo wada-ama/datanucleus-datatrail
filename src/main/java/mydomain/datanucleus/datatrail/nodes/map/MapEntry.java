@@ -15,7 +15,7 @@ public class MapEntry extends BaseNode implements Updatable {
     Node key;
 
     public MapEntry(final Node key, final Node value) {
-        super(null, null);
+        super(null, null, null);
         this.key = key;
         this.value = value;
     }

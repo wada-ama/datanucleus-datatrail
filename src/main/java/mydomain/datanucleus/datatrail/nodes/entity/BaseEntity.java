@@ -32,7 +32,7 @@ public abstract class BaseEntity extends AbstractReferenceNode implements mydoma
      */
     protected BaseEntity(final Persistable value, final MetaData md, final Node parent, final NodeFactory factory){
         // an entity is the root node in the tree
-        super(value, md,null);
+        super(value, md,null, factory);
         this.factory = factory;
         setFields(value);
         updateTxDetails();

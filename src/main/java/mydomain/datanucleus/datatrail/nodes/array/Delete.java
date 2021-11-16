@@ -2,6 +2,7 @@ package mydomain.datanucleus.datatrail.nodes.array;
 
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
+import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
@@ -9,8 +10,8 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 @NodeDefinition(type=NodeType.ARRAY, action = NodeAction.DELETE)
 public class Delete extends BaseArray {
 
-    protected Delete(final Object value, final AbstractMemberMetaData mmd, final Node parent) {
-        super(value, mmd, parent);
+    protected Delete(final Object value, final AbstractMemberMetaData mmd, final Node parent, final NodeFactory factory) {
+        super(value, mmd, parent, factory);
     }
 
     /**

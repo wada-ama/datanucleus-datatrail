@@ -1,7 +1,7 @@
 package mydomain.datanucleus.datatrail;
 
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
-import mydomain.datanucleus.datatrail.nodes.NodePriority;
+import mydomain.datanucleus.datatrail.nodes.Priority;
 import org.datanucleus.metadata.MetaData;
 
 import java.util.Optional;
@@ -62,7 +62,7 @@ public interface NodeFactory {
      * @return
      */
     default int priority() {
-        final NodePriority nodePriority = getClass().getAnnotation(NodePriority.class);
+        final Priority nodePriority = getClass().getAnnotation(Priority.class);
         return nodePriority == null ? 0 : nodePriority.priority();
     }
 

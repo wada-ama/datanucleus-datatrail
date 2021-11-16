@@ -2,6 +2,7 @@ package mydomain.datanucleus.datatrail.nodes.map;
 
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
+import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.NodeType;
 import mydomain.datanucleus.datatrail.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
@@ -12,8 +13,8 @@ import java.util.Optional;
 @NodeDefinition(type=NodeType.MAP, action = NodeAction.CREATE)
 public class Create extends BaseMap {
 
-    protected Create(final Map value, final AbstractMemberMetaData mmd, final Node parent) {
-        super(value, mmd, parent);
+    protected Create(final Map value, final AbstractMemberMetaData mmd, final Node parent, final NodeFactory factory) {
+        super(value, mmd, parent, factory);
     }
 
     /**

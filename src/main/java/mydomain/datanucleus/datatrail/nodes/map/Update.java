@@ -1,5 +1,6 @@
 package mydomain.datanucleus.datatrail.nodes.map;
 
+import mydomain.datanucleus.datatrail.NodeFactory;
 import mydomain.datanucleus.datatrail.nodes.BaseNode;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
@@ -15,8 +16,8 @@ import java.util.stream.Collectors;
 @NodeDefinition(type=NodeType.MAP, action = NodeAction.UPDATE)
 public class Update extends BaseMap {
 
-    protected Update(final Map value, final AbstractMemberMetaData mmd, final Node parent) {
-        super(value, mmd, parent);
+    protected Update(final Map value, final AbstractMemberMetaData mmd, final Node parent, final NodeFactory factory) {
+        super(value, mmd, parent, factory);
     }
 
     /**
