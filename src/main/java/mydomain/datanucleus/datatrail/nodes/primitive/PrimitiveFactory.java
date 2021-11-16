@@ -12,6 +12,7 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
@@ -22,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Priority(priority = Priority.LOWEST_PRECEDENCE)
 public class PrimitiveFactory extends AbstractNodeFactory {
 
-    private Set<StringConverter> stringConverters = ConcurrentHashMap.newKeySet();
+    final private Set<StringConverter> stringConverters;
     private Map<Class<?>, StringConverter> stringConvertersCache = new ConcurrentHashMap<>();
 
     /**
@@ -30,9 +31,21 @@ public class PrimitiveFactory extends AbstractNodeFactory {
      */
     public PrimitiveFactory() {
         // load any string converters from the classpath
+        stringConverters = loadStringConverters();
+    }
+
+    /**
+     * Uses the ServiceLoader pattern to load {@link StringConverter} defined classes
+     * @return
+     */
+    final protected Set<StringConverter> loadStringConverters(){
+        // load any string converters from the classpath via the SerivceLoader
+        final Set<StringConverter> stringConverters = new HashSet<>();
         ServiceLoader<StringConverter> serviceLoader = ServiceLoader.load(StringConverter.class);
         serviceLoader.forEach( stringConverters::add);
+        return stringConverters;
     }
+
 
     @Override
     public Optional<Node> createNode(final NodeAction action, final Object value, final MetaData md, final Node parent) {
@@ -59,10 +72,13 @@ public class PrimitiveFactory extends AbstractNodeFactory {
      * @return
      */
     private Optional<StringConverter> getConverter(Object value){
-        final Class<?> clazz = value == null ? void.class : value.getClass();
+        // use the void.class as the key in the set for the special case of a null object
+        final Class<?> clazz = value == null ? null : value.getClass();
         StringConverter converter;
         try {
-            converter = stringConvertersCache.computeIfAbsent(clazz, aClass -> stringConverters.stream()
+            // use the Void class to represent a null class since null is not a valid key value
+            Class<?> key = clazz == null ? Void.class : clazz;
+            converter = stringConvertersCache.computeIfAbsent(key, aClass -> stringConverters.stream()
                     .sorted(Comparator.comparingLong(StringConverter::priority).reversed())
                     .filter(stringConverter -> stringConverter.supports(clazz))
                     .findFirst()

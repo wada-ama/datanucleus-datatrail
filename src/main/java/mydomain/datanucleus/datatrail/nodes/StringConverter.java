@@ -3,12 +3,13 @@ package mydomain.datanucleus.datatrail.nodes;
 /**
  * Identifies a converter for converting a given Class to a String
  * Each converter can specify a {@link Priority} if multiple converters are found for the same class
+ *
  */
 public interface StringConverter {
 
     /**
      * Identifies if the converter can convert the given class
-     * @param clazz
+     * @param clazz the class to be converted.  A null value is represented by a {@code null} clazz value
      * @return
      */
     boolean supports(Class<?> clazz);

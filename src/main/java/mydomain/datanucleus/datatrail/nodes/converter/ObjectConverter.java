@@ -10,7 +10,7 @@ import mydomain.datanucleus.datatrail.nodes.StringConverter;
 public class ObjectConverter implements StringConverter {
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz instanceof Object;
+        return Object.class.isAssignableFrom(clazz);
     }
 
     @Override
