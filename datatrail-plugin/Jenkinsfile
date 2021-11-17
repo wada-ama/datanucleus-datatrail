@@ -10,94 +10,73 @@ import java.util.regex.Matcher
  * initialize the pipeline
  */
 
+MAVEN_VERSION = "Maven 3.x"
+PROJECT_FOLDER = "datatrail-plugin/"
+
 pipeline {
   agent any
     options {
         timeout(time: 1, unit: 'HOURS')
     }
-     environment {
-        JENKINS_HOME = "/var/lib/jenkins"
-        SONAR_URL = "https://sonarqube.wada-ama.org"
-        POM_ARTIFACTID = readMavenPom().getParent().getArtifactId()
-        POM_VERSION = readMavenPom().getParent().getVersion()
-        POM_GROUPID = readMavenPom().getParent().getGroupId()
-        JIRA_SITE = 'wada-ama.atlassian.net'
-        ARTIFACT_ID = "paperless-api"
-        GIT_PROJECT = "ADAMS"
-        GIT_REPOSITORY = "datatrail-plugins"
-        BUILD_NUMBER = VersionNumber([
-            versionNumberString : '${BUILD_DATE_FORMATTED,"yyDDD"}${BUILDS_TODAY,XX}',
-            projectStartDate : '1969-12-31',
-            worstResultForIncrement: 'NOT_BUILT'
-          ])
-    }
+         environment {
+            JENKINS_HOME = "/var/lib/jenkins"
+            SONAR_URL = "https://sonarqube.wada-ama.org"
+            JIRA_SITE = 'wada-ama.atlassian.net'
+            GIT_PROJECT = "ADAMS"
+            GIT_REPOSITORY = "datatrail-plugins"
+            BUILD_NUMBER = VersionNumber([
+                versionNumberString : '${BUILD_DATE_FORMATTED,"yyDDD"}${BUILDS_TODAY,XX}',
+                projectStartDate : '1969-12-31',
+                worstResultForIncrement: 'NOT_BUILT'
+              ])
+
+            POM_ARTIFACTID = getPomValue(PROJECT_FOLDER, Pom.ARTIFACT_ID)
+            POM_VERSION = getPomValue(PROJECT_FOLDER, Pom.VERSION)
+            POM_GROUPID = getPomValue(PROJECT_FOLDER, Pom.GROUP_ID)
+            DATATRAIL_VERSION = getPomValue(PROJECT_FOLDER, Pom.VERSION)
+            BUILD_VERSION = "$DATATRAIL_VERSION-$BUILD_NUMBER"
+         }
+
 
 
     stages {
-
-         stage('Version') {
-            when { 
-                not { buildingTag() } 
-            }
+        stage("Env Variables") {
             steps {
-                script{
-                    if (env.BRANCH_NAME || env.CHANGE_BRANCH) {
-                        env.SOURCE_NAME = (env.CHANGE_BRANCH) ? env.CHANGE_BRANCH : env.BRANCH_NAME
-
-                        if(SOURCE_NAME.startsWith("release/") || SOURCE_NAME.startsWith("master")){
-                            env.REPOSITORY = 'ADAMS-Releases'
-                        } else {
-                            env.REPOSITORY = 'ADAMS-Snapshots'
-                        }
-                        
-                        env.SOURCE_URL = ""
-                        Pattern pattern = Pattern.compile("PAPERLESS-[0-9]*", Pattern.CASE_INSENSITIVE);
-                        Matcher matcher = pattern.matcher(SOURCE_NAME);
-                        if(matcher.find()){
-                            env.SOURCE_NAME = matcher.group();
-                            env.SOURCE_URL = "https://wada-ama.atlassian.net/browse/$SOURCE_NAME"
-                        }
-                    }
-                    env.COMMIT_ID = sh (script: "git rev-parse HEAD", , returnStdout:true).trim()
-                    env.DATATRAIL_VERSION = sh (script: "/var/lib/jenkins/tools/hudson.tasks.Maven_MavenInstallation/maven_3.3.9/bin/mvn help:evaluate -Dexpression=project.version -q -DforceStdout", , returnStdout:true).trim()
-                    env.RELEASE_BUILD_NUMBER = env.BUILD_NUMBER
-                    env.BASE_VERSION = (env.REPOSITORY == 'ADAMS-Releases') ? "${env.DATATRAIL_VERSION}" : "${env.DATATRAIL_VERSION}"
-                    env.VERSION_BUILD = "$BASE_VERSION-$RELEASE_BUILD_NUMBER"
-                }
-            }
-         }
-         stage('Version (from Tag)') {
-            when { 
-                buildingTag()
-            }
-            steps {
-                script{
-                    env.DATATRAIL_VERSION = sh (script: "/var/lib/jenkins/tools/hudson.tasks.Maven_MavenInstallation/maven_3.3.9/bin/mvn help:evaluate -Dexpression=project.version -q -DforceStdout", , returnStdout:true).trim()
-                    env.BASE_VERSION = gitTagMessage(TAG_NAME, 'BASE_VERSION')
-                    env.RELEASE_BUILD_NUMBER = gitTagMessage(TAG_NAME,'RELEASE_BUILD_NUMBER')
-                    env.VERSION_BUILD = "$BASE_VERSION-$RELEASE_BUILD_NUMBER"
-                    if(env.REPOSITORY == 'ADAMS-Snapshots'){
-                        env.NEXUS_VERSION  = gitTagMessage(TAG_NAME, 'NEXUS_VERSION')
-                    }
-                    env.NEXUS_FILE_PATH = gitTagMessage(TAG_NAME,'NEXUS_FILE_PATH')
-                    env.SOURCE_NAME = TAG_NAME //since now we are building from a Tag
-                    env.SOURCE_URL = "https://bitbucket.wada-ama.org/projects/ADAMS/repos/datanucelus-plugins/browse?at=refs/tags/$SOURCE_NAME"
-                }
+                sh "printenv"
             }
         }
+
          stage('Maven build, test and ship to Nexus') {
             when { 
                 not { buildingTag() } 
             }
             steps {
-                dir("datatrail-plugin"){
+                dir(PROJECT_FOLDER){
                     configFileProvider([configFile(fileId: 'fa4c4c5b-29b3-46f1-8cd8-5b83b07f491c', targetLocation: '.mvn/jvm.config')]) {
                         configFileProvider([configFile(fileId: '59d605db-7b8a-47c3-b220-6af4dc4facf0', variable: 'MAVEN_SETTINGS_XML')]) {
                             withCredentials([usernameColonPassword(credentialsId: 'nexus-server', variable: 'NEXUSCREDS')]) {
                                 withCredentials([string(credentialsId: 'sonar-scan', variable: 'TOKEN')]) {
                                     wrap([$class: 'BuildUser']) {
-                                        sh 'pwd'
-                                        sh '/var/lib/jenkins/tools/hudson.tasks.Maven_MavenInstallation/maven_3.3.9/bin/mvn -s $MAVEN_SETTINGS_XML -Dwada.scm.tag=builds/${DATATRAIL_VERSION}-${RELEASE_BUILD_NUMBER} -Dsonar.login=${TOKEN} -Dsonar.host.url=${SONAR_URL} -Dsonar.branch.name=${BRANCH_NAME} -DdeployAtEnd=true -Dwada.scm.commitId=${COMMIT_ID} -Dwada.build.timestamp=${BUILD_TIMESTAMP} -Dwada.build.user="${BUILD_USER_EMAIL}" -Dbuild.jobName=${JOB_NAME} -Dmaven.test.skip=false -Dsonar.projectKey=Datanucleus.DataTrail -Dwada.build.number=${RELEASE_BUILD_NUMBER} -Dwada.scm.branch=${BRANCH_NAME}  clean deploy sonar:sonar -Dfile.encoding=UTF-8'
+                                        withMaven(
+                                            maven: MAVEN_VERSION,
+                                        ){
+                                            sh  """mvn \
+                                                -Dwada.scm.tag=builds/${BUILD_VERSION} \
+                                                -Dsonar.login=${TOKEN} \
+                                                -Dsonar.host.url=${SONAR_URL} \
+                                                -Dsonar.branch.name=${GIT_BRANCH} \
+                                                -Dsonar.projectKey=Datanucleus.DataTrail \
+                                                -DdeployAtEnd=true \
+                                                -Dwada.scm.commitId=${GIT_COMMIT} \
+                                                -Dwada.build.timestamp=${BUILD_TIMESTAMP} \
+                                                -Dwada.build.user="${BUILD_USER_EMAIL}" \
+                                                -Dbuild.jobName="${JOB_NAME}" \
+                                                -Dmaven.test.skip=false \
+                                                -Dsonar.projectKey=Datanucleus.DataTrail \
+                                                -Dwada.build.number=${BUILD_NUMBER} \
+                                                -Dwada.scm.branch=${GIT_BRANCH}  \
+                                                clean deploy sonar:sonar """
+                                        }
                                     }
                                  }
                             }
@@ -122,9 +101,8 @@ pipeline {
             }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'bitbucket-server', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                    sh "git tag builds/$VERSION_BUILD -m 'BASE_VERSION:$BASE_VERSION,RELEASE_BUILD_NUMBER:$RELEASE_BUILD_NUMBER,NEXUS_VERSION:$NEXUS_VERSION,SOURCE_NAME:$SOURCE_NAME'"
-                    //echo "git tag builds/$VERSION_BUILD"
-                    sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@bitbucket.wada-ama.org/scm/adams-ng/paperless-api.git builds/$VERSION_BUILD"
+                    sh "git tag builds/$BUILD_VERSION"
+                    sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@bitbucket.wada-ama.org/scm/adams-ng/paperless-api.git builds/$BUILD_VERSION"
                 }                
             }
         } 
@@ -151,4 +129,32 @@ String gitTagMessage(name, key) {
         }
     }
     return null
+}
+
+enum Pom {
+    VERSION ("project.version"),
+    ARTIFACT_ID ("project.artifactId"),
+    GROUP_ID ("project.groupId")
+
+    private String fieldname
+
+    Pom(String fieldname){
+        this.fieldname = fieldname
+    }
+
+    String getFieldname(){
+        fieldname
+    }
+}
+
+String getPomValue( folder, Pom field){
+            withMaven(
+                 maven: MAVEN_VERSION,
+                 traceability: 'false'
+            ){
+                dir(folder){
+                 version = sh ( script: "mvn help:evaluate -Dexpression=${field.fieldname} -q -DforceStdout", returnStdout: true).trim()
+                }
+            }
+    return version
 }
