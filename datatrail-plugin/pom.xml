@@ -9,6 +9,12 @@
     <name>DataNucleus JDO Datatrail Plugin</name>
     <description>DataNucleus JDO Datatrail Plugin for a persistence application</description>
 
+    <parent>
+        <artifactId>wada-root-pom</artifactId>
+        <groupId>org.wada</groupId>
+        <version>1.1.2</version>
+    </parent>
+
     <properties>
         <javax_jdo.ver>3.2.0-m13</javax_jdo.ver>
         <dn.core.min.ver>5.1.99</dn.core.min.ver>
