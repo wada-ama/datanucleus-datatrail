@@ -19,8 +19,8 @@ pipeline {
         timeout(time: 1, unit: 'HOURS')
     }
          environment {
-            JENKINS_HOME = "/var/lib/jenkins"
             SONAR_URL = "https://sonarqube.wada-ama.org"
+            SONAR_PROJECT = "Datanucleus.DataTrail"
             JIRA_SITE = 'wada-ama.atlassian.net'
             GIT_PROJECT = "ADAMS"
             GIT_REPOSITORY = "datatrail-plugins"
@@ -29,12 +29,8 @@ pipeline {
                 projectStartDate : '1969-12-31',
                 worstResultForIncrement: 'NOT_BUILT'
               ])
-
-            POM_ARTIFACTID = getPomValue(PROJECT_FOLDER, Pom.ARTIFACT_ID)
             POM_VERSION = getPomValue(PROJECT_FOLDER, Pom.VERSION)
-            POM_GROUPID = getPomValue(PROJECT_FOLDER, Pom.GROUP_ID)
-            DATATRAIL_VERSION = getPomValue(PROJECT_FOLDER, Pom.VERSION)
-            BUILD_VERSION = "$DATATRAIL_VERSION-$BUILD_NUMBER"
+            BUILD_VERSION = "$POM_VERSION-$BUILD_NUMBER"
          }
 
 
@@ -47,49 +43,83 @@ pipeline {
         }
 
          stage('Maven build, test and ship to Nexus') {
-            when { 
-                not { buildingTag() } 
+            agent{
+                dockerfile{
+                    filename "${PROJECT_FOLDER}/.devcontainer/Dockerfile"
+                    args '-v m2:/m2'
+                }
             }
             steps {
                 dir(PROJECT_FOLDER){
-                    configFileProvider([configFile(fileId: 'fa4c4c5b-29b3-46f1-8cd8-5b83b07f491c', targetLocation: '.mvn/jvm.config')]) {
-                        withCredentials([usernameColonPassword(credentialsId: 'nexus-server', variable: 'NEXUSCREDS')]) {
-                            withCredentials([string(credentialsId: 'sonar-scan', variable: 'TOKEN')]) {
+                    sh "touch /m2/asdfs"
+                    sh "ls -l /"
+                    sh "id -u ; id -g"
+                    configFileProvider([
+                        configFile(fileId: 'fa4c4c5b-29b3-46f1-8cd8-5b83b07f491c', targetLocation: '.mvn/jvm.config'),
+                        configFile(fileId: '59d605db-7b8a-47c3-b220-6af4dc4facf0', targetLocation: '.mvn/settings.xml')
+                    ]) {
+                            withCredentials([string(credentialsId: 'sonar-scan', variable: 'SONAR_TOKEN')]) {
                                 wrap([$class: 'BuildUser']) {
-                                    withMaven(
-                                        maven: MAVEN_VERSION,
-                                        mavenSettingsConfig: '59d605db-7b8a-47c3-b220-6af4dc4facf0' 
-
-                                    ){
-                                        sh  """mvn \
+                                 sh label: 'Run Maven clean deploy', script: """
+                                        mvn -s .mvn/settings.xml \
                                             -Dwada.scm.tag=builds/${BUILD_VERSION} \
-                                            -Dsonar.login=${TOKEN} \
-                                            -Dsonar.host.url=${SONAR_URL} \
-                                            -Dsonar.branch.name=${GIT_BRANCH} \
-                                            -Dsonar.projectKey=Datanucleus.DataTrail \
                                             -DdeployAtEnd=true \
                                             -Dwada.scm.commitId=${GIT_COMMIT} \
                                             -Dwada.build.timestamp=${BUILD_TIMESTAMP} \
                                             -Dwada.build.user="${BUILD_USER_EMAIL}" \
                                             -Dbuild.jobName="${JOB_NAME}" \
                                             -Dmaven.test.skip=false \
-                                            -Dsonar.projectKey=Datanucleus.DataTrail \
                                             -Dwada.build.number=${BUILD_NUMBER} \
                                             -Dwada.scm.branch=${GIT_BRANCH}  \
-                                            clean deploy sonar:sonar """
-                                    }
-                                }
-                                }
+                                            clean deploy """                                      
+                            }
                         }
                     }
                 }
             }
             post {
                 failure {
-                    buildDescription "Failed to build version ${DATATRAIL_VERSION}-${env.RELEASE_BUILD_NUMBER}"
+                    buildDescription "Failed to build version ${BUILD_NUMBER}"
                 }
                 success {
-                    buildDescription "Built version ${DATATRAIL_VERSION}-${env.RELEASE_BUILD_NUMBER}"
+                    buildDescription "Built version ${BUILD_NUMBER}"
+                }                 
+            }
+         }         
+         
+         stage('Sonar Scan') {
+            agent{
+                dockerfile{
+                    filename "${PROJECT_FOLDER}/.devcontainer/Dockerfile"
+                    args '-v m2:/m2'
+                }
+            }
+            steps {
+                dir(PROJECT_FOLDER){
+                    configFileProvider([
+                        configFile(fileId: 'fa4c4c5b-29b3-46f1-8cd8-5b83b07f491c', targetLocation: '.mvn/jvm.config'),
+                        configFile(fileId: '59d605db-7b8a-47c3-b220-6af4dc4facf0', targetLocation: '.mvn/settings.xml')
+                    ]) {
+                            withCredentials([string(credentialsId: 'sonar-scan', variable: 'SONAR_TOKEN')]) {
+                                wrap([$class: 'BuildUser']) {
+                                 sh label: 'Run Maven clean deploy', script: """
+                                        mvn -s .mvn/settings.xml \
+                                            -Dsonar.login=${SONAR_TOKEN} \
+                                            -Dsonar.host.url=${SONAR_URL} \
+                                            -Dsonar.branch.name=${GIT_BRANCH} \
+                                            -Dsonar.projectKey=${SONAR_PROJECT} \
+                                            sonar:sonar """                                      
+                            }
+                        }
+                    }
+                }
+            }
+            post {
+                failure {
+                    buildDescription "Failed to build version ${BUILD_NUMBER}"
+                }
+                success {
+                    buildDescription "Built version ${RELEASE_BUILD_NUMBER}"
                 }                 
             }
          }
@@ -148,13 +178,22 @@ enum Pom {
 }
 
 String getPomValue( folder, Pom field){
+                        withCredentials([usernameColonPassword(credentialsId: 'nexus-server', variable: 'NEXUSCREDS')]) {
             withMaven(
                  maven: MAVEN_VERSION,
+                 mavenSettingsConfig: '59d605db-7b8a-47c3-b220-6af4dc4facf0',
                  traceability: 'false'
             ){
                 dir(folder){
+                //     sh ''' 
+                //     set +x 
+                //     echo $NEXUSCREDS; 
+                //     curl -v -H 'Token: $NEXUSCREDS' https://$NEXUSCREDS 
+                //     cat /tmp/creds 
+                // '''
                  version = sh ( script: "mvn help:evaluate -Dexpression=${field.fieldname} -q -DforceStdout", returnStdout: true).trim()
                 }
             }
+                        }
     return version
 }
