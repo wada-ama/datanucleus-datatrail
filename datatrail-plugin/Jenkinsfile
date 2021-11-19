@@ -18,22 +18,21 @@ pipeline {
     options {
         timeout(time: 1, unit: 'HOURS')
     }
-         environment {
-            SONAR_URL = "https://sonarqube.wada-ama.org"
-            SONAR_PROJECT = "Datanucleus.DataTrail"
-            JIRA_SITE = 'wada-ama.atlassian.net'
-            GIT_PROJECT = "ADAMS"
-            GIT_REPOSITORY = "datatrail-plugins"
-            BUILD_NUMBER = VersionNumber([
-                versionNumberString : '${BUILD_DATE_FORMATTED,"yyDDD"}${BUILDS_TODAY,XX}',
-                projectStartDate : '1969-12-31',
-                worstResultForIncrement: 'NOT_BUILT'
-              ])
-            POM_VERSION = getPomValue(PROJECT_FOLDER, Pom.VERSION)
-            BUILD_VERSION = "$POM_VERSION-$BUILD_NUMBER"
-         }
 
-
+    environment {
+        SONAR_URL = "https://sonarqube.wada-ama.org"
+        SONAR_PROJECT = "Datanucleus.DataTrail"
+        JIRA_SITE = 'wada-ama.atlassian.net'
+        GIT_PROJECT = "ADAMS"
+        GIT_REPOSITORY = "datatrail-plugins"
+        BUILD_NUMBER = VersionNumber([
+            versionNumberString : '${BUILD_DATE_FORMATTED,"yyDDD"}${BUILDS_TODAY,XX}',
+            projectStartDate : '1969-12-31',
+            worstResultForIncrement: 'NOT_BUILT'
+            ])
+        POM_VERSION = getPomValue(PROJECT_FOLDER, Pom.VERSION)
+        BUILD_VERSION = "$POM_VERSION-$BUILD_NUMBER"
+    }
 
     stages {
         stage("Env Variables") {
@@ -45,108 +44,100 @@ pipeline {
          stage('Maven build, test and ship to Nexus') {
             agent{
                 dockerfile{
-                    filename "${PROJECT_FOLDER}/.devcontainer/Dockerfile"
+                    filename "$PROJECT_FOLDER/.devcontainer/Dockerfile"
                     args '-v m2:/m2'
                 }
             }
-            steps {
-                dir(PROJECT_FOLDER){
-                    sh "touch /m2/asdfs"
-                    sh "ls -l /"
-                    sh "id -u ; id -g"
-                    configFileProvider([
-                        configFile(fileId: 'fa4c4c5b-29b3-46f1-8cd8-5b83b07f491c', targetLocation: '.mvn/jvm.config'),
-                        configFile(fileId: '59d605db-7b8a-47c3-b220-6af4dc4facf0', targetLocation: '.mvn/settings.xml')
-                    ]) {
-                            withCredentials([string(credentialsId: 'sonar-scan', variable: 'SONAR_TOKEN')]) {
-                                wrap([$class: 'BuildUser']) {
-                                 sh label: 'Run Maven clean deploy', script: """
-                                        mvn -s .mvn/settings.xml \
-                                            -Dwada.scm.tag=builds/${BUILD_VERSION} \
-                                            -DdeployAtEnd=true \
-                                            -Dwada.scm.commitId=${GIT_COMMIT} \
-                                            -Dwada.build.timestamp=${BUILD_TIMESTAMP} \
-                                            -Dwada.build.user="${BUILD_USER_EMAIL}" \
-                                            -Dbuild.jobName="${JOB_NAME}" \
-                                            -Dmaven.test.skip=false \
-                                            -Dwada.build.number=${BUILD_NUMBER} \
-                                            -Dwada.scm.branch=${GIT_BRANCH}  \
-                                            clean deploy """                                      
+            stages{
+                stage( "Build and Deploy"){
+                    steps{
+                        dir(PROJECT_FOLDER){
+                            configFileProvider([
+                                configFile(fileId: 'fa4c4c5b-29b3-46f1-8cd8-5b83b07f491c', targetLocation: '.mvn/jvm.config'),
+                                configFile(fileId: '59d605db-7b8a-47c3-b220-6af4dc4facf0', targetLocation: '.mvn/settings.xml')
+                            ]) {
+                                    withCredentials([string(credentialsId: 'sonar-scan', variable: 'SONAR_TOKEN')]) {
+                                        wrap([$class: 'BuildUser']) {
+                                        sh label: 'Run Maven clean deploy', script: """
+                                                mvn -s .mvn/settings.xml \
+                                                    -Dwada.scm.tag="builds/${BUILD_VERSION}" \
+                                                    -DdeployAtEnd=true \
+                                                    -Dwada.scm.commitId="${GIT_COMMIT}" \
+                                                    -Dwada.build.timestamp="${BUILD_TIMESTAMP}" \
+                                                    -Dwada.build.user="${BUILD_USER_EMAIL}" \
+                                                    -Dbuild.jobName="${JOB_NAME}" \
+                                                    -Dmaven.test.skip=false \
+                                                    -Dwada.build.number="${BUILD_NUMBER}" \
+                                                    -Dwada.scm.branch="${GIT_BRANCH}"  \
+                                                    clean deploy """                                      
+                                    }
+                                }
                             }
                         }
                     }
+                
+                    post {
+                        failure {
+                            buildDescription "Failed to build version ${BUILD_NUMBER}"
+                        }
+                        success {
+                            buildDescription "Built version ${BUILD_NUMBER}"
+                        }                 
+                    }
+                }
+
+                stage( "Sonar Scan"){
+                    steps{
+                        dir(PROJECT_FOLDER){
+                            configFileProvider([
+                                configFile(fileId: 'fa4c4c5b-29b3-46f1-8cd8-5b83b07f491c', targetLocation: '.mvn/jvm.config'),
+                                configFile(fileId: '59d605db-7b8a-47c3-b220-6af4dc4facf0', targetLocation: '.mvn/settings.xml')
+                            ]) {
+                                    withCredentials([string(credentialsId: 'sonar-scan', variable: 'SONAR_TOKEN')]) {
+                                        wrap([$class: 'BuildUser']) {
+                                        sh label: 'Run Sonar Scan', script: """
+                                                mvn -s .mvn/settings.xml \
+                                                    -Dsonar.login=${SONAR_TOKEN} \
+                                                    -Dsonar.host.url=${SONAR_URL} \
+                                                    -Dsonar.branch.name=${GIT_BRANCH} \
+                                                    -Dsonar.projectKey=${SONAR_PROJECT} \
+                                                    sonar:sonar """                                      
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    post {
+                        failure {
+                            buildDescription "Failed to scan ${SONAR_PROJECT} : ${GIT_BRANCH}"
+                        }
+                        success {
+                            buildDescription "Sonar Scan Complete ${SONAR_PROJECT} : ${GIT_BRANCH}"
+                        }                 
+                    }
                 }
             }
-            post {
-                failure {
-                    buildDescription "Failed to build version ${BUILD_NUMBER}"
-                }
-                success {
-                    buildDescription "Built version ${BUILD_NUMBER}"
-                }                 
-            }
+
          }         
-         
-         stage('Sonar Scan') {
-            agent{
-                dockerfile{
-                    filename "${PROJECT_FOLDER}/.devcontainer/Dockerfile"
-                    args '-v m2:/m2'
-                }
-            }
-            steps {
-                dir(PROJECT_FOLDER){
-                    configFileProvider([
-                        configFile(fileId: 'fa4c4c5b-29b3-46f1-8cd8-5b83b07f491c', targetLocation: '.mvn/jvm.config'),
-                        configFile(fileId: '59d605db-7b8a-47c3-b220-6af4dc4facf0', targetLocation: '.mvn/settings.xml')
-                    ]) {
-                            withCredentials([string(credentialsId: 'sonar-scan', variable: 'SONAR_TOKEN')]) {
-                                wrap([$class: 'BuildUser']) {
-                                 sh label: 'Run Maven clean deploy', script: """
-                                        mvn -s .mvn/settings.xml \
-                                            -Dsonar.login=${SONAR_TOKEN} \
-                                            -Dsonar.host.url=${SONAR_URL} \
-                                            -Dsonar.branch.name=${GIT_BRANCH} \
-                                            -Dsonar.projectKey=${SONAR_PROJECT} \
-                                            sonar:sonar """                                      
-                            }
-                        }
-                    }
-                }
-            }
-            post {
-                failure {
-                    buildDescription "Failed to build version ${BUILD_NUMBER}"
-                }
-                success {
-                    buildDescription "Built version ${RELEASE_BUILD_NUMBER}"
-                }                 
-            }
-         }
 
           stage('GIT Tag') {
+            environment{
+                BITBUCKET_CREDS = credentials('bitbucket-server')
+            }
             when { 
                 not { changeRequest() } 
                 not { buildingTag() } 
             }
             steps {
-                withCredentials([usernamePassword(credentialsId: 'bitbucket-server', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                     sh "git tag builds/$BUILD_VERSION"
-                    sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@bitbucket.wada-ama.org/scm/adams-ng/paperless-api.git builds/$BUILD_VERSION"
-                }                
+                    sh "git push https://${BITBUCKET_CREDS}@${GIT_URL - ~/^https:\/\//} builds/$BUILD_VERSION"
             }
         } 
         
      }
 }
 
-
-
-def renderTemplate(input, binding) {
-    def engine = new groovy.text.GStringTemplateEngine()
-    def template = engine.createTemplate(input).make([environments: binding])
-    return template.toString()
-}
 
 String gitTagMessage(name, key) {
     msg = sh(script: "git tag -n10000 -l ${name}", returnStdout: true)?.trim()
@@ -178,22 +169,14 @@ enum Pom {
 }
 
 String getPomValue( folder, Pom field){
-                        withCredentials([usernameColonPassword(credentialsId: 'nexus-server', variable: 'NEXUSCREDS')]) {
-            withMaven(
-                 maven: MAVEN_VERSION,
-                 mavenSettingsConfig: '59d605db-7b8a-47c3-b220-6af4dc4facf0',
-                 traceability: 'false'
-            ){
-                dir(folder){
-                //     sh ''' 
-                //     set +x 
-                //     echo $NEXUSCREDS; 
-                //     curl -v -H 'Token: $NEXUSCREDS' https://$NEXUSCREDS 
-                //     cat /tmp/creds 
-                // '''
-                 version = sh ( script: "mvn help:evaluate -Dexpression=${field.fieldname} -q -DforceStdout", returnStdout: true).trim()
-                }
+        withMaven(
+                maven: MAVEN_VERSION,
+                mavenSettingsConfig: '59d605db-7b8a-47c3-b220-6af4dc4facf0',
+                traceability: 'false'
+        ){
+            dir(folder){
+                version = sh ( script: "mvn help:evaluate -Dexpression=${field.fieldname} -q -DforceStdout", returnStdout: true).trim()
             }
-                        }
+        }
     return version
 }
