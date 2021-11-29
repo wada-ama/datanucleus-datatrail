@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.spotify.hamcrest.pojo.IsPojo;
 import h2.H2Server;
-import mydomain.audit.AuditListener;
+import mydomain.audit.TransactionListener;
 import mydomain.datanucleus.datatrail.Node;
 import mydomain.datanucleus.datatrail.NodeAction;
 import mydomain.datanucleus.datatrail.NodeType;
@@ -28,9 +28,11 @@ import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Transaction;
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
@@ -56,8 +58,27 @@ abstract public class AbstractTest {
     }
 
     PersistenceManagerFactory pmf;
-    protected AuditListener audit = new AuditListener();
 
+
+    // internal class to avoid refactoring of all existing tests
+    public class DataTrailDetails {
+        Collection<Node> entities = new ArrayList<>();
+
+        public void setModifications(Collection<Node> entities){
+            this.entities = entities;
+        }
+
+        public Collection<Node> getModifications(){
+            return entities;
+        }
+
+        public void clear(){
+            entities.clear();
+        }
+    }
+
+    
+    protected DataTrailDetails audit = new DataTrailDetails();
     protected Stack<String> logEntries = new Stack<>();
 
     @BeforeAll
@@ -72,6 +93,7 @@ abstract public class AbstractTest {
     protected void resetTransaction(TestInfo testInfo) {
         pmf = JDOHelper.getPersistenceManagerFactory("MyTest");
         logEntries.clear();
+        audit.clear();
         StringBuffer sb = new StringBuffer();
         testInfo.getTestClass().ifPresent(aClass -> sb.append(aClass.getName()));
         testInfo.getTestMethod().ifPresent(method -> sb.append("." ).append(method.getName()).append("()"));
@@ -95,10 +117,14 @@ abstract public class AbstractTest {
 
         // Create of object
         PersistenceManager pm = pmf.getPersistenceManager();
+
         Transaction tx = pm.currentTransaction();
         if( attachListener) {
-            pm.addInstanceLifecycleListener(audit, null);
-            ((JDOTransaction) tx).registerEventListener(audit);
+            TransactionListener txListener = new TransactionListener(entities ->{
+                logEntries.push(getJson(entities));
+                audit.setModifications(entities);
+            });
+            txListener.attachListener(pm, null);
         }
         try {
             tx.begin();
@@ -114,7 +140,6 @@ abstract public class AbstractTest {
             pm.close();
         }
         pmf.getDataStoreCache().evictAll();
-        logEntries.push(getJson(audit.getModifications()));
     }
 
     protected String getJson(Collection<Node> entities) {

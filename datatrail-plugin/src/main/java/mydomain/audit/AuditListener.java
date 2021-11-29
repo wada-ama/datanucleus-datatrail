@@ -12,6 +12,7 @@ import org.datanucleus.util.NucleusLogger;
 import org.slf4j.Logger;
 
 import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManager;
 import javax.jdo.listener.CreateLifecycleListener;
 import javax.jdo.listener.DeleteLifecycleListener;
 import javax.jdo.listener.InstanceLifecycleEvent;
@@ -32,8 +33,8 @@ import static org.slf4j.LoggerFactory.getLogger;
  * <p>
  * This implementation simply logs the audit events.
  */
-public class AuditListener implements CreateLifecycleListener,
-        DeleteLifecycleListener, LoadLifecycleListener, StoreLifecycleListener, TransactionEventListener {
+class AuditListener implements CreateLifecycleListener,
+        DeleteLifecycleListener, LoadLifecycleListener, StoreLifecycleListener {
 
     // get a static slf4j logger for the class
     protected static final Logger logger = getLogger(AuditListener.class);
@@ -221,49 +222,16 @@ public class AuditListener implements CreateLifecycleListener,
 
     }
 
-    public void transactionStarted() {
-        NucleusLogger.GENERAL.info("Audit : TXN START");
-        // ensures that the audit trail is clear for this transaction
-        modifications.clear();
-    }
-
-    public void transactionEnded() {
-    }
-
-    public void transactionPreFlush() {
-    }
-
-    public void transactionFlushed() {
-    }
-
-    public void transactionPreCommit() {
-        NucleusLogger.GENERAL.info("Audit : TXN PRE-COMMIT");
-    }
-
-    public void transactionCommitted() {
-        NucleusLogger.GENERAL.info("Audit : TXN COMMITTED");
-        AuditListener.logger.info(modifications.toString());
-
-        // generate JSON blob
-
-    }
-
-    public void transactionPreRollBack() {
-    }
-
-    public void transactionRolledBack() {
-    }
-
-    public void transactionSetSavepoint(final String name) {
-    }
-
-    public void transactionReleaseSavepoint(final String name) {
-    }
-
-    public void transactionRollbackToSavepoint(final String name) {
-    }
-
+    /**
+     * Returns a collection of audit {@link Node} objects that have been recoded by this listener
+     * @return
+     */
     public Collection<Node> getModifications() {
         return modifications.values();
     }
+
+    /**
+     * Clears any modifications that have been recorded by this listener
+     */
+    public void clearModifications(){ modifications.clear();}
 }
