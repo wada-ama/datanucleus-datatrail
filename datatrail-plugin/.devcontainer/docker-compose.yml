@@ -1,13 +1,23 @@
 version: "3.7"
 
 services:
-  plugin:
+  build:
     build: .
     volumes:
       - ..:/workspace
       - ${M2_ROOT}/settings.xml:/usr/share/maven/conf/settings.xml:ro
       - m2:/m2:rw
     image: wada/datanucleus-devcontainer
+    command: "mvn verify"
+
+  scan:
+    build: .
+    volumes:
+      - ..:/workspace
+      - ${M2_ROOT}/settings.xml:/usr/share/maven/conf/settings.xml:ro
+      - m2:/m2:rw
+    image: wada/datanucleus-devcontainer
+    command: "mvn sonar:sonar"
 
 volumes:
   m2:
