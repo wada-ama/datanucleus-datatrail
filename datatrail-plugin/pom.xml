@@ -18,7 +18,7 @@
     <properties>
         <javax_jdo.ver>3.2.0-m13</javax_jdo.ver>
         <dn.core.min.ver>5.1.99</dn.core.min.ver>
-        <dn.core.max.ver>5.2.8</dn.core.max.ver>
+        <dn.core.max.ver>5.2.99</dn.core.max.ver>
         <dn.api_jdo.min.ver>5.1.99</dn.api_jdo.min.ver>
         <dn.api_jdo.max.ver>5.99.0</dn.api_jdo.max.ver>
         <dn.datastore.min.ver>5.1.99</dn.datastore.min.ver>
@@ -37,28 +37,20 @@
             <groupId>org.datanucleus</groupId>
             <artifactId>javax.jdo</artifactId>
             <version>${javax_jdo.ver}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-core</artifactId>
             <version>[${dn.core.min.ver}, ${dn.core.max.ver}]</version>
-        </dependency>
-        <dependency>
-            <groupId>org.datanucleus</groupId>
-            <artifactId>datanucleus-jdo-query</artifactId>
-            <version>[5.0, ${dn.core.max.ver}]</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-api-jdo</artifactId>
             <version>[${dn.api_jdo.min.ver}, ${dn.api_jdo.max.ver}]</version>
-        </dependency>
-        <!-- Change to the datanucleus-{datastore} plugin required -->
-        <dependency>
-            <groupId>org.datanucleus</groupId>
-            <artifactId>datanucleus-rdbms</artifactId>
-            <version>[${dn.datastore.min.ver}, ${dn.datastore.max.ver}]</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Change to the datastore driver required for your datastore -->
@@ -67,21 +59,6 @@
             <artifactId>javax.transaction-api</artifactId> 
             <version>1.3</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.8</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.10.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.10.0</version>
         </dependency>
 
         <dependency>
@@ -101,17 +78,43 @@
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
             <version>3.2.2</version>
-            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.10.0</version>
         </dependency>
 
         <dependency>
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>
             <version>4.8.128</version>
-            <scope>compile</scope>
             <optional>true</optional>
         </dependency>
 
+
+
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.8</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.10.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.10.0</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -140,6 +143,19 @@
             <groupId>com.spotify</groupId>
             <artifactId>hamcrest-pojo</artifactId>
             <version>1.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Change to the datanucleus-{datastore} plugin required -->
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-rdbms</artifactId>
+            <version>[${dn.datastore.min.ver}, ${dn.datastore.max.ver}]</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-jdo-query</artifactId>
+            <version>[5.0, ${dn.core.max.ver}]</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -196,6 +212,12 @@
                     <target>1.8</target>
             </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>3.0.0-M1</version>
+            </plugin>
+
 
             <plugin>
                 <groupId>org.datanucleus</groupId>
