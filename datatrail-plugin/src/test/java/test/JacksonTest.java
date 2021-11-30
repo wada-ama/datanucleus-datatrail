@@ -30,9 +30,8 @@ public class JacksonTest {
 
 
         StringWriter sw = new StringWriter();
-//        for (Entity entity : entities)
             mapper.writeValue(sw, contents);
-        System.out.println( sw.toString());
+        System.out.println( sw);
     }
 
 }

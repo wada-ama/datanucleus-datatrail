@@ -5,7 +5,7 @@ import org.datanucleus.datatrail.Node;
 import org.datanucleus.datatrail.impl.nodes.BaseNode;
 import org.datanucleus.datatrail.impl.nodes.Updatable;
 
-import java.util.Arrays;
+import java.util.stream.Stream;
 
 /**
  * Class to represent the key/value information found in the map.  Must not implement a Map.MapEntry as Jackson will automatically serialize those
@@ -33,6 +33,6 @@ public class MapEntry extends BaseNode implements Updatable {
 
     @Override
     public void updateFields() {
-        Arrays.asList(key, value).stream().filter(Updatable.class::isInstance).forEach( node -> ((Updatable)node).updateFields());
+        Stream.of(key, value).filter(Updatable.class::isInstance).forEach(node -> ((Updatable)node).updateFields());
     }
 }

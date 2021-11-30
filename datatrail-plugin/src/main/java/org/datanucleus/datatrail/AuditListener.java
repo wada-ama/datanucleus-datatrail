@@ -54,7 +54,6 @@ class AuditListener implements CreateLifecycleListener,
          * the current transaction
          * @param pc
          * @param value
-         * @return
          */
         public void add(final Persistable pc, final Node value){
             if( value == null ){
@@ -173,8 +172,7 @@ class AuditListener implements CreateLifecycleListener,
                 ((Updatable)node).updateFields();
             }
         } else {
-            // postStore called for both new objects and updating objects, so need to determine which is the state of the object
-            AuditListener.logger.warn("New Persistable not already processed {}", pc.dnGetObjectId());
+            // not already processed, so add it
             modifications.add(pc, dataTrailFactory.createNode(pc, NodeAction.DELETE));
         }
     }
@@ -189,7 +187,7 @@ class AuditListener implements CreateLifecycleListener,
     public void preStore(final InstanceLifecycleEvent event) {
         final Persistable pc = (Persistable) event.getSource();
 
-        // postStore called for both new objects and updating objects, so need to determine which is the state of the object
+        // preStore called for both new objects and updating objects, so need to determine which is the state of the object
         final NodeAction action = pc.dnGetStateManager().isNew(pc) ? NodeAction.CREATE : NodeAction.UPDATE;
         modifications.add(pc, dataTrailFactory.createNode(pc, action));
 
@@ -211,7 +209,7 @@ class AuditListener implements CreateLifecycleListener,
                 ((Updatable)node).updateFields();
             }
         } else {
-            // postStore called for both new objects and updating objects, so need to determine which is the state of the object
+            // preStore should have originally been callsed for the object, so add warning message in log
             AuditListener.logger.warn("New Persistable not already processed {}", pc.dnGetObjectId());
             modifications.add(pc, dataTrailFactory.createNode(pc, action));
         }

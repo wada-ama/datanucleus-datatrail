@@ -19,7 +19,7 @@ import static org.hamcrest.Matchers.hasItem;
 
 public class PrimitiveTest extends AbstractTest {
     @Test
-    public void createPrimitive() throws IOException {
+    public void createPrimitive() {
         executeTx((pm) -> {
             Street street = new Street("Regina");
             pm.makePersistent(street);
@@ -40,7 +40,7 @@ public class PrimitiveTest extends AbstractTest {
 
 
     @Test
-    public void deletePrimitive() throws IOException {
+    public void deletePrimitive() {
         executeTx((pm) -> {
             Street street = new Street("Regina");
             pm.makePersistent(street);
@@ -70,7 +70,7 @@ public class PrimitiveTest extends AbstractTest {
 
     @DisplayName("Update multiple times in a transaction shows last value only")
     @Test
-    public void updatePrimitive() throws IOException {
+    public void updatePrimitive() {
         executeTx((pm) -> {
             Street street = new Street("Regina");
             pm.makePersistent(street);

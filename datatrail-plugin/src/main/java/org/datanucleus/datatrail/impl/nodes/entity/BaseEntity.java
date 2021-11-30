@@ -20,8 +20,6 @@ import java.util.Set;
  */
 public abstract class BaseEntity extends AbstractReferenceNode implements EntityNode {
     protected Set<Node> fields = new HashSet<>();
-    protected Instant dateModified;
-    protected String username;
     protected TransactionInfo txInfo;
 
     /**

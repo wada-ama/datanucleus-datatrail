@@ -99,10 +99,10 @@ abstract public class AbstractTest {
     }
 
     @AfterEach
-    protected void endTransaction() throws IOException {
+    protected void endTransaction() {
         pmf.close();
         // check that the datatrail log is correct
-        logEntries.stream().forEach(CONSOLE::debug);
+        logEntries.forEach(CONSOLE::debug);
 
     }
 
@@ -168,8 +168,8 @@ abstract public class AbstractTest {
                 .withProperty("version", any(String.class))
                 .withProperty("dateModified", any(Instant.class))
                 .withProperty("username",  anything())
-                .withProperty("transactionId", anything())
-                ;
+                .withProperty("transactionId", anything());
+
 
         if( ITrailDesc.class.isAssignableFrom(clazz)) {
             entity = entity.withProperty("description", anything());
@@ -194,7 +194,6 @@ abstract public class AbstractTest {
                 .withProperty("type", hasToString(type.toString()))
                 .withProperty("prev", nullValue())
                 .withProperty("className", is(clazz.getName()));
-        ;
 
         if( ITrailDesc.class.isAssignableFrom(clazz)) {
             field = field.withProperty("description", anything());
@@ -223,7 +222,7 @@ abstract public class AbstractTest {
                 .withProperty("type", hasToString(valueType.toString()))
                 .withProperty("prev", prevValue == null ? nullValue() : is(prevValue))
                 .withProperty("className", is(valueClazz.getName()));
-        ;
+
         if( ITrailDesc.class.isAssignableFrom(valueClazz)) {
             value = value.withProperty("description", anything());
         }

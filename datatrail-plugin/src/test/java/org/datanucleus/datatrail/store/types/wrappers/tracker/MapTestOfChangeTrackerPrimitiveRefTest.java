@@ -52,10 +52,9 @@ public class MapTestOfChangeTrackerPrimitiveRefTest extends AbstractTest {
         executeTx(pm -> {
             Street victoria = pm.newJDOQLTypedQuery(Street.class).filter(QStreet.candidate().name.eq("Victoria")).executeUnique();
             Street younge = pm.newJDOQLTypedQuery(Street.class).filter(QStreet.candidate().name.eq("Younge")).executeUnique();
-            Street hastings = pm.newJDOQLTypedQuery(Street.class).filter(QStreet.candidate().name.eq("Hastings")).executeUnique();
 
             PrimitiveMapClass sut = new PrimitiveMapClass();
-            // make persistent and flush in order to trigger the changeTracket
+            // make persistent and flush in order to trigger the changeTracker
             pm.makePersistent(sut);
             pm.flush();
 
@@ -94,11 +93,9 @@ public class MapTestOfChangeTrackerPrimitiveRefTest extends AbstractTest {
 
         executeTx(pm -> {
             Street victoria = pm.newJDOQLTypedQuery(Street.class).filter(QStreet.candidate().name.eq("Victoria")).executeUnique();
-            Street younge = pm.newJDOQLTypedQuery(Street.class).filter(QStreet.candidate().name.eq("Younge")).executeUnique();
-            Street hastings = pm.newJDOQLTypedQuery(Street.class).filter(QStreet.candidate().name.eq("Hastings")).executeUnique();
 
             PrimitiveMapClass sut = new PrimitiveMapClass();
-            // make persistent and flush in order to trigger the changeTracket
+            // make persistent and flush in order to trigger the changeTracker
             pm.makePersistent(sut);
             pm.flush();
 
@@ -135,7 +132,7 @@ public class MapTestOfChangeTrackerPrimitiveRefTest extends AbstractTest {
             Street victoria = pm.newJDOQLTypedQuery(Street.class).filter(QStreet.candidate().name.eq("Victoria")).executeUnique();
 
             PrimitiveMapClass sut = new PrimitiveMapClass();
-            // make persistent and flush in order to trigger the changeTracket
+            // make persistent and flush in order to trigger the changeTracker
             sut.getPrimitiveRefMap().put("key", victoria);
             pm.makePersistent(sut);
         }, false);
@@ -144,7 +141,6 @@ public class MapTestOfChangeTrackerPrimitiveRefTest extends AbstractTest {
         executeTx(pm -> {
             Street victoria = pm.newJDOQLTypedQuery(Street.class).filter(QStreet.candidate().name.eq("Victoria")).executeUnique();
             Street younge = pm.newJDOQLTypedQuery(Street.class).filter(QStreet.candidate().name.eq("Younge")).executeUnique();
-            Street hastings = pm.newJDOQLTypedQuery(Street.class).filter(QStreet.candidate().name.eq("Hastings")).executeUnique();
 
             PrimitiveMapClass sut = pm.newJDOQLTypedQuery(PrimitiveMapClass.class).executeUnique();
             Map<String, Street> map = sut.getPrimitiveRefMap();

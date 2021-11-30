@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static org.datanucleus.datatrail.impl.NodeAction.CREATE;
 import static org.datanucleus.datatrail.impl.NodeAction.DELETE;
@@ -43,7 +44,7 @@ public class MapTest extends AbstractTest {
 
 
     @Test
-    public void createMap() throws IOException {
+    public void createMap() {
         executeTx(pm -> {
 
             CountryCode cc = new CountryCode("canada", 1);
@@ -89,7 +90,7 @@ public class MapTest extends AbstractTest {
 
     @DisplayName("Deletes an Entity containing a Map object.")
     @Test
-    public void deleteMap() throws IOException {
+    public void deleteMap() {
         Map<TelephoneType, String> ids = new HashMap<>();
 
         executeTx(pm -> {
@@ -140,9 +141,7 @@ public class MapTest extends AbstractTest {
 
     @DisplayName("Updates the Key/Value pairs of a Map<Prim,Prim> map")
     @Test
-    public void updateMapPrim() throws IOException {
-        Map<TelephoneType, String> ids = new HashMap<>();
-
+    public void updateMapPrim() {
         executeTx(pm -> {
             CountryCode cc = new CountryCode("canada", 1);
 
@@ -153,9 +152,6 @@ public class MapTest extends AbstractTest {
             student.addMark("french", "A+");
 
             pm.makePersistent(student);
-
-            ids.put(TelephoneType.HOME, getId((Persistable) student.getTelephoneNbs().get(TelephoneType.HOME)));
-            ids.put(TelephoneType.MOBILE, getId((Persistable) student.getTelephoneNbs().get(TelephoneType.MOBILE)));
         }, false);
 
 
@@ -193,7 +189,7 @@ public class MapTest extends AbstractTest {
 
     @DisplayName("Updates the Key/Value pairs of a Map<Prim,Ref> map")
     @Test
-    public void updateMapRef() throws IOException {
+    public void updateMapRef() {
         Map<TelephoneType, String> ids = new HashMap<>();
 
         executeTx(pm -> {
@@ -315,11 +311,11 @@ public class MapTest extends AbstractTest {
             MapClass sut = pm.newJDOQLTypedQuery(MapClass.class).executeUnique();
 
             // updates all entries in the maps as per the `streetCodes` list
-            Arrays.asList(
+            Stream.of(
                     new SimpleEntry<>("Victoria", "Montreal"),
                     new SimpleEntry<>("Younge", "Toronto"),
                     new SimpleEntry<>("Hastings", "Vancouver")
-            ).stream().forEach(entry -> {
+            ).forEach(entry -> {
                 Street street = pm.newJDOQLTypedQuery(Street.class).filter(QStreet.candidate().name.eq(entry.getKey())).executeUnique();
                 CountryCode countryCode = pm.newJDOQLTypedQuery(CountryCode.class).filter(QCountryCode.candidate().country.eq(entry.getValue())).executeUnique();
                 sut.getStreetMap().put(street, countryCode);

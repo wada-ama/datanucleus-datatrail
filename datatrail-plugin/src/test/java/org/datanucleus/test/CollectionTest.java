@@ -278,7 +278,7 @@ public class CollectionTest extends AbstractTest {
                 }, false);
 
 
-        executeTx(pm -> {;
+        executeTx(pm -> {
             School school = pm.newJDOQLTypedQuery(School.class).filter(QSchool.candidate().name.eq("WADA")).executeUnique();
             List<Address> addresses = school.getAddresses();
 

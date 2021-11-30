@@ -28,7 +28,7 @@ public class MapTestOfChangeTrackerPrimitiveTest extends AbstractTest {
 
         executeTx( pm -> {
             PrimitiveMapClass sut = new PrimitiveMapClass();
-            // make persistent and flush in order to trigger the changeTracket
+            // make persistent and flush in order to trigger the changeTracker
             pm.makePersistent(sut);
             pm.flush();
 
@@ -67,7 +67,7 @@ public class MapTestOfChangeTrackerPrimitiveTest extends AbstractTest {
 
         executeTx( pm -> {
             PrimitiveMapClass sut = new PrimitiveMapClass();
-            // make persistent and flush in order to trigger the changeTracket
+            // make persistent and flush in order to trigger the changeTracker
             pm.makePersistent(sut);
             pm.flush();
 
@@ -103,7 +103,7 @@ public class MapTestOfChangeTrackerPrimitiveTest extends AbstractTest {
 
         executeTx( pm -> {
             PrimitiveMapClass sut = new PrimitiveMapClass();
-            // make persistent and flush in order to trigger the changeTracket
+            // make persistent and flush in order to trigger the changeTracker
             sut.getPrimitiveMap().put("key", "initialValue");
             pm.makePersistent(sut);
             }, false);

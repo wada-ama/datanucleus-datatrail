@@ -26,7 +26,7 @@ public class ReferenceTest extends AbstractTest {
 
     @DisplayName("Create reference object using parent object commit only.  Expect to see both objects in DT")
     @Test
-    public void createReference() throws IOException {
+    public void createReference() {
         executeTx(pm -> {
             CountryCode canada = new CountryCode("Canada", 1);
             Telephone telephone = new Telephone("514-123-1234", canada);
@@ -58,7 +58,7 @@ public class ReferenceTest extends AbstractTest {
 
 
     @Test
-    public void deleteReference() throws IOException {
+    public void deleteReference() {
         executeTx(pm -> {
             CountryCode canada = new CountryCode("Canada", 1);
             Telephone telephone = new Telephone("514-123-1234", canada);
@@ -87,7 +87,7 @@ public class ReferenceTest extends AbstractTest {
 
 
     @Test
-    public void updateReference() throws IOException {
+    public void updateReference() {
         executeTx(pm -> {
             CountryCode canada = new CountryCode("Canada", 1);
             Telephone telephone = new Telephone("514-123-1234", canada);

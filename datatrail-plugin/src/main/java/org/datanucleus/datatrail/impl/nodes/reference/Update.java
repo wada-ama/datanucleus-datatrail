@@ -24,11 +24,6 @@ public class Update extends BaseReference {
 
     @Override
     public void setPrev(final Object value) {
-        // previous must be of same type
-        if( value != null && value.getClass() != getClass()){
-            throw new IllegalArgumentException( "Previous value is not of the same type: " + value.getClass().getName() + " !=" + getClass().getName());
-        }
-
         prev = value;
     }
 

@@ -144,8 +144,7 @@ public class DataTrailFactory {
 
         // find the factory for this type of value and use it to create the node
         return factories.stream().filter(nodeFactory -> nodeFactory.supports(action, value, md))
-                .sorted(Comparator.comparingLong(NodeFactory::priority).reversed())
-                .findFirst()
+                .max(Comparator.comparingLong(NodeFactory::priority))
                 .map( nodeFactory -> nodeFactory.createNode(action, value, md, parent ).orElseGet(() -> {
                     DataTrailFactory.logger.debug( "Unable to find a node factory to support {}/{}", value.getClass().getCanonicalName(), action);
                     return null;
