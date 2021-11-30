@@ -1,0 +1,2 @@
+org.datanucleus.datatrail.impl.nodes.converter.NullConverter
+org.datanucleus.datatrail.impl.nodes.converter.ObjectConverter

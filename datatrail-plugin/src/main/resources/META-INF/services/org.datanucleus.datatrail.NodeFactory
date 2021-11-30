@@ -1,0 +1,6 @@
+org.datanucleus.datatrail.impl.nodes.array.ArrayFactory
+org.datanucleus.datatrail.impl.nodes.collection.CollectionFactory
+org.datanucleus.datatrail.impl.nodes.entity.EntityFactory
+org.datanucleus.datatrail.impl.nodes.map.MapFactory
+org.datanucleus.datatrail.impl.nodes.primitive.PrimitiveFactory
+org.datanucleus.datatrail.impl.nodes.reference.ReferenceFactory

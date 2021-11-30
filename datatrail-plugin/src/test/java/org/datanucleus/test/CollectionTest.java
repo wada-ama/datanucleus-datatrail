@@ -1,8 +1,8 @@
 package org.datanucleus.test;
 
 import com.spotify.hamcrest.pojo.IsPojo;
-import mydomain.datanucleus.datatrail.Node;
-import mydomain.datanucleus.datatrail.NodeType;
+import org.datanucleus.datatrail.Node;
+import org.datanucleus.datatrail.impl.NodeType;
 import org.datanucleus.test.model.Address;
 import org.datanucleus.test.model.CountryCode;
 import org.datanucleus.test.model.QCountryCode;
@@ -26,9 +26,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static mydomain.datanucleus.datatrail.NodeAction.CREATE;
-import static mydomain.datanucleus.datatrail.NodeAction.DELETE;
-import static mydomain.datanucleus.datatrail.NodeAction.UPDATE;
+import static org.datanucleus.datatrail.impl.NodeAction.CREATE;
+import static org.datanucleus.datatrail.impl.NodeAction.DELETE;
+import static org.datanucleus.datatrail.impl.NodeAction.UPDATE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;

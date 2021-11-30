@@ -1,10 +1,9 @@
 package org.datanucleus.test;
 
 import com.spotify.hamcrest.pojo.IsPojo;
-import mydomain.datanucleus.datatrail.Node;
-import mydomain.datanucleus.datatrail.NodeAction;
-import mydomain.datanucleus.datatrail.NodeType;
-import org.hamcrest.Matchers;
+import org.datanucleus.datatrail.Node;
+import org.datanucleus.datatrail.impl.NodeAction;
+import org.datanucleus.datatrail.impl.NodeType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

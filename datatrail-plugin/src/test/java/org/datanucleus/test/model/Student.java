@@ -1,6 +1,6 @@
 package org.datanucleus.test.model;
 
-import mydomain.datanucleus.datatrail.ITrailDesc;
+import org.datanucleus.datatrail.ITrailDesc;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Discriminator;

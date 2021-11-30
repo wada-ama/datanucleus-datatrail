@@ -1,8 +1,8 @@
 package org.datanucleus.test;
 
 import com.spotify.hamcrest.pojo.IsPojo;
-import mydomain.datanucleus.datatrail.Node;
-import mydomain.datanucleus.datatrail.NodeType;
+import org.datanucleus.datatrail.Node;
+import org.datanucleus.datatrail.impl.NodeType;
 import org.datanucleus.test.model.CountryCode;
 import org.datanucleus.test.model.QCountryCode;
 import org.datanucleus.test.model.QStreet;
@@ -13,7 +13,6 @@ import org.datanucleus.test.model.Telephone;
 import org.datanucleus.test.model.TelephoneType;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.test.model.MapClass;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
@@ -27,9 +26,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static mydomain.datanucleus.datatrail.NodeAction.CREATE;
-import static mydomain.datanucleus.datatrail.NodeAction.DELETE;
-import static mydomain.datanucleus.datatrail.NodeAction.UPDATE;
+import static org.datanucleus.datatrail.impl.NodeAction.CREATE;
+import static org.datanucleus.datatrail.impl.NodeAction.DELETE;
+import static org.datanucleus.datatrail.impl.NodeAction.UPDATE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
