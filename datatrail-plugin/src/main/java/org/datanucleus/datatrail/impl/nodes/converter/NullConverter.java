@@ -17,4 +17,15 @@ public class NullConverter implements StringConverter {
     public String getAsString(Object value) {
         return null;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof NullConverter;
+    }
+
+    @Override
+    public int hashCode() {
+        return NullConverter.class.hashCode();
+    }
+
 }

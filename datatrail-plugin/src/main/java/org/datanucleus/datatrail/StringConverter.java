@@ -5,6 +5,10 @@ import org.datanucleus.datatrail.impl.nodes.Priority;
 /**
  * Identifies a converter for converting a given Class to a String
  * Each converter can specify a {@link Priority} if multiple converters are found for the same class
+ * Converters should be stateless and considered as "Singletons" within the context of the DataTrail.  They must be designed to be thread safe.
+ *
+ * As "Singletons", they should all implement a unique hashcode & equals methods to ensure that multiple instances of the same converter are considered
+ * as the same object
  *
  */
 public interface StringConverter {

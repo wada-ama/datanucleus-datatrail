@@ -7,16 +7,22 @@ import org.datanucleus.datatrail.impl.NodeType;
 import org.datanucleus.datatrail.impl.nodes.NodeDefinition;
 import org.datanucleus.datatrail.impl.nodes.Priority;
 import org.datanucleus.datatrail.StringConverter;
+import org.datanucleus.datatrail.impl.nodes.converter.NullConverter;
+import org.datanucleus.datatrail.impl.nodes.converter.ObjectConverter;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 @NodeDefinition(type = NodeType.PRIMITIVE, action = {NodeAction.CREATE, NodeAction.UPDATE, NodeAction.DELETE})
 @Priority(priority = Priority.LOWEST_PRECEDENCE)
@@ -40,6 +46,11 @@ public class PrimitiveFactory extends AbstractNodeFactory {
     final protected Set<StringConverter> loadStringConverters(){
         // load any string converters from the classpath via the SerivceLoader
         final Set<StringConverter> stringConverters = new HashSet<>();
+
+        // ensure that there are always the two default converters
+        stringConverters.addAll(Arrays.asList(new ObjectConverter(), new NullConverter()));
+
+        // load any converters supplied by the Service Loader
         ServiceLoader<StringConverter> serviceLoader = ServiceLoader.load(StringConverter.class);
         serviceLoader.forEach( stringConverters::add);
         return stringConverters;

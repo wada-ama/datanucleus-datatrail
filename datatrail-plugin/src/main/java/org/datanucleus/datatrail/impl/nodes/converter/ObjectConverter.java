@@ -17,4 +17,14 @@ public class ObjectConverter implements StringConverter {
     public String getAsString(Object value) {
         return value == null ? null : value.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof ObjectConverter;
+    }
+
+    @Override
+    public int hashCode() {
+        return ObjectConverter.class.hashCode();
+    }
 }

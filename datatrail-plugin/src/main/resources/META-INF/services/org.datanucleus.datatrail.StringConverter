@@ -1,2 +1,2 @@
-org.datanucleus.datatrail.impl.nodes.converter.NullConverter
-org.datanucleus.datatrail.impl.nodes.converter.ObjectConverter
+# Any org.datanucleus.datatrail.StringConverter implementations should be listed in a file with name org.datanucleus.datatrail.StringConverter
+# located in the classpath in the META-INF/services folder to be automatically detected and loaded by the Datatrail library
