@@ -11,7 +11,7 @@ import org.datanucleus.datatrail.Node;
 import org.datanucleus.datatrail.impl.NodeAction;
 import org.datanucleus.datatrail.impl.NodeType;
 import org.datanucleus.datatrail.impl.nodes.NodeDefinition;
-import org.datanucleus.datatrail.impl.nodes.map.MapEntry;
+import org.datanucleus.datatrail.impl.nodes.map.MapEntryImpl;
 import org.datanucleus.datatrail.ITrailDesc;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.identity.DatastoreId;
@@ -204,7 +204,7 @@ abstract public class AbstractTest {
     }
 
 
-    protected IsPojo<MapEntry>getMapElement(NodeType keyType, Class<?> keyClazz, String keyValue, NodeType valueType, Class<?> valueClazz, String valueValue, IsPojo<Node> prevValue) {
+    protected IsPojo<MapEntryImpl>getMapElement(NodeType keyType, Class<?> keyClazz, String keyValue, NodeType valueType, Class<?> valueClazz, String valueValue, IsPojo<Node> prevValue) {
 
         IsPojo<Node> key = pojo(Node.class)
                 .withProperty("value", is(keyValue))
@@ -227,7 +227,7 @@ abstract public class AbstractTest {
             value = value.withProperty("description", anything());
         }
 
-        IsPojo<MapEntry> mapEntry = pojo(MapEntry.class)
+        IsPojo<MapEntryImpl> mapEntry = pojo(MapEntryImpl.class)
                 .withProperty("key", is(key))
                 .withProperty("value", is(value));
 

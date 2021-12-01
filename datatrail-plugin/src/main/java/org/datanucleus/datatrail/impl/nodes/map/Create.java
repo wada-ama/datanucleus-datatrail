@@ -30,7 +30,7 @@ public class Create extends BaseMap {
             final Optional<Node> value = getFactory().createNode(NodeAction.CREATE, ((Map.Entry)element).getValue(), null, this);
 
             if( key.isPresent() && value.isPresent() ){
-                added.add(new MapEntry(key.get(), value.get()));
+                added.add(new MapEntryImpl(key.get(), value.get()));
             }
         });
     }

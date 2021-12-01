@@ -28,7 +28,7 @@ public class Delete extends BaseMap {
             final Optional<Node> value = getFactory().createNode(NodeAction.DELETE, ((Map.Entry)element).getValue(), null, this);
 
             if( key.isPresent() && value.isPresent() ){
-                removed.add(new MapEntry(key.get(), value.get()));
+                removed.add(new MapEntryImpl(key.get(), value.get()));
             }
         });
     }

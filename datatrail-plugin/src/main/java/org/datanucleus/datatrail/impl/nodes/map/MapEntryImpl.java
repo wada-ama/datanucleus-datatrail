@@ -3,29 +3,29 @@ package org.datanucleus.datatrail.impl.nodes.map;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.datanucleus.datatrail.Node;
 import org.datanucleus.datatrail.impl.nodes.BaseNode;
+import org.datanucleus.datatrail.impl.nodes.MapEntry;
 import org.datanucleus.datatrail.impl.nodes.Updatable;
 
 import java.util.stream.Stream;
 
 /**
- * Class to represent the key/value information found in the map.  Must not implement a Map.MapEntry as Jackson will automatically serialize those
+ * Class to represent the key/value information found in the map.  Must not implement a Map.MapEntryImpl as Jackson will automatically serialize those
  * differently
  */
-public class MapEntry extends BaseNode implements Updatable {
+public class MapEntryImpl extends BaseNode implements Updatable, MapEntry {
     Node key;
 
-    public MapEntry(final Node key, final Node value) {
+    public MapEntryImpl(final Node key, final Node value) {
         super(null, null, null);
         this.key = key;
         this.value = value;
     }
 
-    @JsonProperty("key")
+    @Override
     public Node getKey() {
         return key;
     }
 
-    @JsonProperty("value")
     @Override
     public Node getValue() {
         return (Node) value;

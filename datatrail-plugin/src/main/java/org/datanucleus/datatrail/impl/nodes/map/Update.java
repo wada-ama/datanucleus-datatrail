@@ -36,7 +36,7 @@ public class Update extends BaseMap {
                 final BaseNode value = (BaseNode)getFactory().createNode(NodeAction.UPDATE, map.get(keyValue.getKey()), null, this).get();
                 value.setPrev(getFactory().createNode(NodeAction.UPDATE, keyValue.getValue(), null, this).get());
 
-                return new MapEntry(key,value);
+                return new MapEntryImpl(key,value);
             }).collect(Collectors.toSet());
 
             added = (java.util.Collection<Node>) changeTracker.getAdded().stream().map(o -> {
@@ -44,7 +44,7 @@ public class Update extends BaseMap {
                 final Node key = getFactory().createNode(NodeAction.UPDATE, keyValue.getKey(), null, this).get();
                 final Node value = getFactory().createNode(NodeAction.UPDATE, keyValue.getValue(), null, this).get();
 
-                return new MapEntry(key,value);
+                return new MapEntryImpl(key,value);
             }).collect(Collectors.toSet());
 
             removed = (java.util.Collection<Node>) changeTracker.getRemoved().stream().map(o -> {
@@ -52,7 +52,7 @@ public class Update extends BaseMap {
                 final Node key = getFactory().createNode(NodeAction.UPDATE, keyValue.getKey(), null, this).get();
                 final Node value = getFactory().createNode(NodeAction.UPDATE, keyValue.getValue(), null, this).get();
 
-                return new MapEntry(key,value);
+                return new MapEntryImpl(key,value);
             }).collect(Collectors.toSet());
         } else {
 
@@ -62,7 +62,7 @@ public class Update extends BaseMap {
                 final Node key = getFactory().createNode(NodeAction.UPDATE, keyValue.getKey(), null, this).get();
                 final Node value = getFactory().createNode(NodeAction.UPDATE, keyValue.getValue(), null, this).get();
 
-                return new MapEntry(key,value);
+                return new MapEntryImpl(key,value);
             }).collect(Collectors.toSet());
         }
 
