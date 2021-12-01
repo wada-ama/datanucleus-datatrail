@@ -1,5 +1,6 @@
-package org.datanucleus.datatrail.impl.nodes;
+package org.datanucleus.test.jackson.mixin;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.datanucleus.datatrail.Node;
 
 
@@ -9,7 +10,9 @@ import org.datanucleus.datatrail.Node;
  */
 
 public interface MapEntry extends Node{
+    @JsonProperty("key")
     Node getKey();
 
+    @JsonProperty("value")
     Node getValue();
 }

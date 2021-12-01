@@ -1,6 +1,5 @@
 package org.datanucleus.datatrail.impl.nodes.map;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.datanucleus.datatrail.Node;
 import org.datanucleus.datatrail.impl.nodes.BaseNode;
 import org.datanucleus.datatrail.impl.nodes.MapEntry;

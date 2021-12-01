@@ -1,6 +1,5 @@
 package org.datanucleus.datatrail.impl.nodes;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.datanucleus.datatrail.ITrailDesc;
 import org.datanucleus.datatrail.Node;
 import org.datanucleus.datatrail.NodeFactory;
@@ -69,7 +68,6 @@ public abstract class AbstractReferenceNode extends BaseNode implements Updatabl
     }
 
 
-    @JsonIgnore
     public Persistable getSource() {
         return source.get();
     }

@@ -1,6 +1,7 @@
 package org.datanucleus.test;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -10,7 +11,11 @@ import org.datanucleus.datatrail.TransactionListener;
 import org.datanucleus.datatrail.Node;
 import org.datanucleus.datatrail.impl.NodeAction;
 import org.datanucleus.datatrail.impl.NodeType;
+import org.datanucleus.datatrail.impl.nodes.ContainerNode;
+import org.datanucleus.datatrail.impl.nodes.EntityNode;
+import org.datanucleus.datatrail.impl.nodes.MapEntry;
 import org.datanucleus.datatrail.impl.nodes.NodeDefinition;
+import org.datanucleus.datatrail.impl.nodes.ReferenceNode;
 import org.datanucleus.datatrail.impl.nodes.map.MapEntryImpl;
 import org.datanucleus.datatrail.ITrailDesc;
 import org.datanucleus.enhancement.Persistable;
@@ -148,6 +153,15 @@ abstract public class AbstractTest {
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
+        mapper.disable(MapperFeature.AUTO_DETECT_GETTERS,
+                MapperFeature.AUTO_DETECT_IS_GETTERS,
+                MapperFeature.AUTO_DETECT_CREATORS,
+                MapperFeature.AUTO_DETECT_FIELDS);
+        mapper.addMixIn(Node.class, org.datanucleus.test.jackson.mixin.Node.class);
+        mapper.addMixIn(EntityNode.class, org.datanucleus.test.jackson.mixin.EntityNode.class);
+        mapper.addMixIn(MapEntry.class, org.datanucleus.test.jackson.mixin.MapEntry.class);
+        mapper.addMixIn(ContainerNode.class, org.datanucleus.test.jackson.mixin.ContainerNode.class);
+        mapper.addMixIn(ReferenceNode.class, org.datanucleus.test.jackson.mixin.ReferenceNode.class);
 
         StringWriter sw = new StringWriter();
         for (Node entity : entities) {

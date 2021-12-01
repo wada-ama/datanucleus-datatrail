@@ -1,6 +1,5 @@
 package org.datanucleus.datatrail.impl.nodes;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.datanucleus.datatrail.Node;
 import org.datanucleus.datatrail.NodeFactory;
 import org.datanucleus.metadata.AbstractMemberMetaData;
@@ -19,7 +18,6 @@ public abstract class AbstractContainerNode extends BaseNode implements Updatabl
         super(mmd, parent, factory);
     }
 
-    @JsonIgnore
     @Override
     public String getValue() {
         return null;
@@ -45,7 +43,6 @@ public abstract class AbstractContainerNode extends BaseNode implements Updatabl
         return contents;
     }
 
-    @JsonIgnore
     @Override
     public String getClassName() {
         return super.getClassName();

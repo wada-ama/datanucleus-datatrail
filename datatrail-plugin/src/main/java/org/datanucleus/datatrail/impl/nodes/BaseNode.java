@@ -1,10 +1,9 @@
 package org.datanucleus.datatrail.impl.nodes;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.datanucleus.datatrail.impl.ClassUtils;
 import org.datanucleus.datatrail.Node;
-import org.datanucleus.datatrail.impl.NodeAction;
 import org.datanucleus.datatrail.NodeFactory;
+import org.datanucleus.datatrail.impl.ClassUtils;
+import org.datanucleus.datatrail.impl.NodeAction;
 import org.datanucleus.datatrail.impl.NodeType;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.AbstractMemberMetaData;
@@ -127,7 +126,6 @@ public abstract class BaseNode implements Node {
      * Recursive function to find a node in the tree with the a factory defined
      * @return
      */
-    @JsonIgnore
     protected NodeFactory getFactory(){
         // if a factory is defined, return it
         if( factory != null ){
