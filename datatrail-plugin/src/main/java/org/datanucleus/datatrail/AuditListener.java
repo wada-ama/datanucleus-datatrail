@@ -30,13 +30,12 @@ import static org.slf4j.LoggerFactory.getLogger;
  * <p>
  * This implementation simply logs the audit events.
  */
-class AuditListener implements CreateLifecycleListener,
-        DeleteLifecycleListener, LoadLifecycleListener, StoreLifecycleListener {
+class AuditListener implements DeleteLifecycleListener, StoreLifecycleListener {
 
     // get a static slf4j logger for the class
     protected static final Logger logger = getLogger(AuditListener.class);
 
-    protected DataTrailFactory dataTrailFactory = DataTrailFactory.getDataTrailFactory();
+    protected static final DataTrailFactory dataTrailFactory = DataTrailFactory.getDataTrailFactory();
 
 
     /**
@@ -134,11 +133,6 @@ class AuditListener implements CreateLifecycleListener,
     private final Modifications modifications = new Modifications();
 
 
-    public void postCreate(final InstanceLifecycleEvent event) {
-        NucleusLogger.GENERAL.info("Audit : create for " +
-                ((Persistable) event.getSource()).dnGetObjectId());
-    }
-
     public void preDelete(final InstanceLifecycleEvent event) {
         final Persistable pc = (Persistable) event.getSource();
 
@@ -178,11 +172,9 @@ class AuditListener implements CreateLifecycleListener,
     }
 
     public void postDelete(final InstanceLifecycleEvent event) {
-        // TODO handle any pre-delete Instance Callbacks
+        // TODO handle any postDelete Instance Callbacks
     }
 
-    public void postLoad(final InstanceLifecycleEvent event) {
-    }
 
     public void preStore(final InstanceLifecycleEvent event) {
         final Persistable pc = (Persistable) event.getSource();
