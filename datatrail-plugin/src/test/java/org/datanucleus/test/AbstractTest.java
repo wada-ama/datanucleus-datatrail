@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.spotify.hamcrest.pojo.IsPojo;
 import h2.H2Server;
+import org.datanucleus.datatrail.DataTrailDescription;
 import org.datanucleus.datatrail.TransactionListener;
 import org.datanucleus.datatrail.Node;
 import org.datanucleus.datatrail.impl.NodeAction;
@@ -17,7 +18,6 @@ import org.datanucleus.datatrail.impl.nodes.MapEntry;
 import org.datanucleus.datatrail.impl.nodes.NodeDefinition;
 import org.datanucleus.datatrail.impl.nodes.ReferenceNode;
 import org.datanucleus.datatrail.impl.nodes.map.MapEntryImpl;
-import org.datanucleus.datatrail.ITrailDesc;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.identity.DatastoreId;
 import org.datanucleus.identity.IdentityUtils;
@@ -185,7 +185,7 @@ abstract public class AbstractTest {
                 .withProperty("transactionId", anything());
 
 
-        if( ITrailDesc.class.isAssignableFrom(clazz)) {
+        if( DataTrailDescription.class.isAssignableFrom(clazz)) {
             entity = entity.withProperty("description", anything());
         }
 
@@ -209,7 +209,7 @@ abstract public class AbstractTest {
                 .withProperty("prev", nullValue())
                 .withProperty("className", is(clazz.getName()));
 
-        if( ITrailDesc.class.isAssignableFrom(clazz)) {
+        if( DataTrailDescription.class.isAssignableFrom(clazz)) {
             field = field.withProperty("description", anything());
         }
 
@@ -226,7 +226,7 @@ abstract public class AbstractTest {
                 .withProperty("prev", nullValue())
                 .withProperty("className", is(keyClazz.getName()))
                 ;
-        if( ITrailDesc.class.isAssignableFrom(keyClazz)) {
+        if( DataTrailDescription.class.isAssignableFrom(keyClazz)) {
             key = key.withProperty("description", anything());
         }
 
@@ -237,7 +237,7 @@ abstract public class AbstractTest {
                 .withProperty("prev", prevValue == null ? nullValue() : is(prevValue))
                 .withProperty("className", is(valueClazz.getName()));
 
-        if( ITrailDesc.class.isAssignableFrom(valueClazz)) {
+        if( DataTrailDescription.class.isAssignableFrom(valueClazz)) {
             value = value.withProperty("description", anything());
         }
 
@@ -260,7 +260,7 @@ abstract public class AbstractTest {
                 .withProperty("className", is(clazz.getName()));
         ;
 
-        if( ITrailDesc.class.isAssignableFrom(clazz)) {
+        if( DataTrailDescription.class.isAssignableFrom(clazz)) {
             field = field.withProperty("description", anything());
         }
 

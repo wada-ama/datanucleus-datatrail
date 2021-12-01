@@ -1,6 +1,6 @@
 package org.datanucleus.test.model;
 
-import org.datanucleus.datatrail.ITrailDesc;
+import org.datanucleus.datatrail.DataTrailDescription;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Version;
@@ -9,7 +9,7 @@ import java.util.Date;
 
 @PersistenceCapable(detachable="true")
 @Version(strategy= VersionStrategy.VERSION_NUMBER, column="VERSN")
-public class Telephone implements ITrailDesc
+public class Telephone implements DataTrailDescription
 {
     String number;
     CountryCode countryCode;
@@ -35,7 +35,7 @@ public class Telephone implements ITrailDesc
     }
 
     @Override
-    public String minimalTxtDesc() {
+    public String getDataTrailDescription() {
         return number;
     }
 

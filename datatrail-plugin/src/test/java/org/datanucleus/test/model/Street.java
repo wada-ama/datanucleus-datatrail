@@ -1,6 +1,6 @@
 package org.datanucleus.test.model;
 
-import org.datanucleus.datatrail.ITrailDesc;
+import org.datanucleus.datatrail.DataTrailDescription;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.annotations.PersistenceCapable;
@@ -10,7 +10,7 @@ import java.util.Objects;
 
 @PersistenceCapable(detachable = "true")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSN")
-public class Street implements ITrailDesc {
+public class Street implements DataTrailDescription {
     String name;
 
     public Street(String name) {
@@ -26,7 +26,7 @@ public class Street implements ITrailDesc {
     }
 
     @Override
-    public String minimalTxtDesc() {
+    public String getDataTrailDescription() {
         return name;
     }
 

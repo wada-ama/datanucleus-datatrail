@@ -2,10 +2,10 @@ package org.datanucleus.test;
 
 import com.spotify.hamcrest.pojo.IsPojo;
 import org.datanucleus.datatrail.Node;
+import org.datanucleus.datatrail.DataTrailDescription;
 import org.datanucleus.datatrail.impl.NodeAction;
 import org.datanucleus.datatrail.impl.NodeType;
 import org.datanucleus.datatrail.impl.TransactionInfo;
-import org.datanucleus.datatrail.ITrailDesc;
 import org.datanucleus.test.model.Street;
 import org.junit.jupiter.api.Test;
 
@@ -113,7 +113,7 @@ public class TransactionInfoTest extends AbstractTest{
                     .withProperty("version", any(String.class))
                     ;
 
-            if( ITrailDesc.class.isAssignableFrom(clazz)) {
+            if( DataTrailDescription.class.isAssignableFrom(clazz)) {
                 entity = entity.withProperty("description", anything());
             }
 

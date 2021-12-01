@@ -1,6 +1,6 @@
 package org.datanucleus.datatrail.impl.nodes;
 
-import org.datanucleus.datatrail.ITrailDesc;
+import org.datanucleus.datatrail.DataTrailDescription;
 import org.datanucleus.datatrail.Node;
 import org.datanucleus.datatrail.NodeFactory;
 import org.datanucleus.enhancement.Persistable;
@@ -56,8 +56,8 @@ public abstract class AbstractReferenceNode extends BaseNode implements Updatabl
     }
 
     protected void setDescription(final Object field){
-        if( field instanceof ITrailDesc){
-            description = ((ITrailDesc)field).minimalTxtDesc();
+        if( field instanceof DataTrailDescription){
+            description = ((DataTrailDescription)field).getDataTrailDescription();
         }
     }
 

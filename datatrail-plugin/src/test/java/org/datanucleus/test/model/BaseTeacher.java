@@ -1,7 +1,7 @@
 package org.datanucleus.test.model;
 
 import org.datanucleus.datatrail.DataTrail;
-import org.datanucleus.datatrail.ITrailDesc;
+import org.datanucleus.datatrail.DataTrailDescription;
 
 import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
@@ -13,7 +13,7 @@ import javax.jdo.annotations.VersionStrategy;
 @Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME, column="TYP", indexed="true")
 @Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSN")
 @DataTrail(excludeFromDataTrail = true)
-public class BaseTeacher implements ITrailDesc
+public class BaseTeacher implements DataTrailDescription
 {
     String name;
 
@@ -32,7 +32,7 @@ public class BaseTeacher implements ITrailDesc
     }
 
     @Override
-    public String minimalTxtDesc() {
+    public String getDataTrailDescription() {
         return name;
     }
 }

@@ -1,6 +1,6 @@
 package org.datanucleus.test.model;
 
-import org.datanucleus.datatrail.ITrailDesc;
+import org.datanucleus.datatrail.DataTrailDescription;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Discriminator;
@@ -17,7 +17,7 @@ import java.util.Map;
 @PersistenceCapable(detachable="true")
 @Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME, column="TYP", indexed="true")
 @Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSN")
-public class Student implements ITrailDesc
+public class Student implements DataTrailDescription
 {
     String name;
 
@@ -72,7 +72,7 @@ public class Student implements ITrailDesc
     }
 
     @Override
-    public String minimalTxtDesc() {
+    public String getDataTrailDescription() {
         return name;
     }
 }
