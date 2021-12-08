@@ -65,16 +65,6 @@ public class Map<K,V> extends org.datanucleus.store.types.wrappers.backed.Map<K,
     }
 
     @Override
-    public void updateEmbeddedKey(final K key, final int fieldNumber, final Object newValue, final boolean makeDirty) {
-        super.updateEmbeddedKey(key, fieldNumber, newValue, makeDirty);
-    }
-
-    @Override
-    public void updateEmbeddedValue(final V value, final int fieldNumber, final Object newValue, final boolean makeDirty) {
-        super.updateEmbeddedValue(value, fieldNumber, newValue, makeDirty);
-    }
-
-    @Override
     public ChangeTracker getChangeTracker() {
         return changeTracker;
     }

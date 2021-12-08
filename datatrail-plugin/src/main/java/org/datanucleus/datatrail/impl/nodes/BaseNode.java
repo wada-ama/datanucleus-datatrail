@@ -135,4 +135,13 @@ public abstract class BaseNode implements Node {
         // return the parent factory if a parent exists
         return parent instanceof BaseNode ? ((BaseNode)parent).getFactory() : null;
     }
+
+    @Override
+    public String toString() {
+        StringBuffer stringBuffer = new StringBuffer(super.toString());
+        if( className != null){
+            stringBuffer.append("[" + className + "]");
+        }
+        return stringBuffer.toString();
+    }
 }

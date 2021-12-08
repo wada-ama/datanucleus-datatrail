@@ -6,14 +6,13 @@ import org.datanucleus.datatrail.store.types.wrappers.tracker.CollectionChangeTr
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.state.ObjectProvider;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class List<E> extends org.datanucleus.store.types.wrappers.backed.List<E> implements ChangeTrackable {
+public class ArrayList<E> extends org.datanucleus.store.types.wrappers.backed.ArrayList<E> implements ChangeTrackable {
     private final transient CollectionChangeTrackerImpl changeTracker;
 
-    public List(final ObjectProvider ownerOP, final AbstractMemberMetaData mmd) {
+    public ArrayList(final ObjectProvider ownerOP, final AbstractMemberMetaData mmd) {
         super(ownerOP, mmd);
         changeTracker = new CollectionChangeTrackerImpl( this, true, true, false);
         changeTracker.startTracking();
@@ -50,7 +49,7 @@ public class List<E> extends org.datanucleus.store.types.wrappers.backed.List<E>
 
     @Override
     public void clear() {
-        final java.util.List copy = new ArrayList(this);
+        final java.util.List copy = new java.util.ArrayList(this);
         super.clear();
         remove(changeTracker, copy, true);
     }
@@ -78,10 +77,6 @@ public class List<E> extends org.datanucleus.store.types.wrappers.backed.List<E>
         return orig;
     }
 
-    @Override
-    public void setValue(java.util.List<E> value) {
-        super.setValue(value);
-    }
 
     @Override
     public E set(final int index, final E element) {
@@ -96,7 +91,7 @@ public class List<E> extends org.datanucleus.store.types.wrappers.backed.List<E>
     @Override
     public boolean removeAll(final Collection elements) {
         // retain a list of elements which are present in the delegate
-        Collection existing = (Collection) elements.stream().filter(e -> delegate.contains(e)).collect(Collectors.toCollection(ArrayList::new));
+        Collection existing = (Collection) elements.stream().filter(e -> delegate.contains(e)).collect(Collectors.toCollection(java.util.ArrayList::new));
 
         final boolean result = super.removeAll(elements);
         return remove( changeTracker, existing, result);

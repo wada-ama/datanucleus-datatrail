@@ -1,15 +1,22 @@
 <?xml version="1.0"?>
-<plugin id="mydomain" name="ADAMS DataNucleus plug-in" provider-name="ADAMS">
+<plugin id="org.datanucleus.datatrail" name="DataNucleus plug-in" provider-name="DataNucleus">
     <extension point="org.datanucleus.java_type">
         <java-type name="java.util.List" dfg="false" wrapper-type="org.datanucleus.store.types.wrappers.List" wrapper-type-backed="org.datanucleus.datatrail.store.types.wrappers.backed.List"
                    container-handler="org.datanucleus.store.types.containers.ArrayListHandler" priority="10"/>
-        <java-type name="java.util.Arrays$ArrayList" dfg="false" wrapper-type="org.datanucleus.store.types.wrappers.List" wrapper-type-backed="org.datanucleus.datatrail.store.types.wrappers.backed.List"
+
+        <java-type name="java.util.ArrayList" dfg="false" wrapper-type="org.datanucleus.store.types.wrappers.ArrayList" wrapper-type-backed="org.datanucleus.datatrail.store.types.wrappers.backed.ArrayList"
+                   container-handler="org.datanucleus.store.types.containers.ArrayListHandler" priority="10"/>
+        <java-type name="java.util.Arrays$ArrayList" dfg="false" wrapper-type="org.datanucleus.store.types.wrappers.ArrayList" wrapper-type-backed="org.datanucleus.datatrail.store.types.wrappers.backed.List"
                    container-handler="org.datanucleus.store.types.containers.ArrayListHandler" priority="10"/>
 
+        <java-type name="java.util.Set" dfg="false" wrapper-type="org.datanucleus.store.types.wrappers.Set" wrapper-type-backed="org.datanucleus.datatrail.store.types.wrappers.backed.Set"
+                   container-handler="org.datanucleus.store.types.containers.HashSetHandler" priority="10"/>
+        <java-type name="java.util.HashSet" dfg="false" wrapper-type="org.datanucleus.store.types.wrappers.HashSet" wrapper-type-backed="org.datanucleus.datatrail.store.types.wrappers.backed.HashSet"
+                   container-handler="org.datanucleus.store.types.containers.HashSetHandler" priority="10"/>
 
         <java-type name="java.util.Map" dfg="false" wrapper-type="org.datanucleus.store.types.wrappers.Map" wrapper-type-backed="org.datanucleus.datatrail.store.types.wrappers.backed.Map"
                    container-handler="org.datanucleus.store.types.containers.HashMapHandler" priority="10"/>
-        <java-type name="java.util.HashMap" dfg="false" wrapper-type="org.datanucleus.store.types.wrappers.Map" wrapper-type-backed="org.datanucleus.datatrail.store.types.wrappers.backed.Map"
+        <java-type name="java.util.HashMap" dfg="false" wrapper-type="org.datanucleus.store.types.wrappers.HashMap" wrapper-type-backed="org.datanucleus.datatrail.store.types.wrappers.backed.Map"
                    container-handler="org.datanucleus.store.types.containers.HashMapHandler" priority="10"/>
     </extension>
 
