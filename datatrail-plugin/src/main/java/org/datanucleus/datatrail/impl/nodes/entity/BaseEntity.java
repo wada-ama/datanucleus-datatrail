@@ -3,7 +3,8 @@ package org.datanucleus.datatrail.impl.nodes.entity;
 
 import org.datanucleus.datatrail.Node;
 import org.datanucleus.datatrail.NodeFactory;
-import org.datanucleus.datatrail.impl.TransactionInfo;
+import org.datanucleus.datatrail.TransactionInfo;
+import org.datanucleus.datatrail.impl.TransactionInfoImpl;
 import org.datanucleus.datatrail.impl.nodes.AbstractReferenceNode;
 import org.datanucleus.datatrail.impl.nodes.EntityNode;
 import org.datanucleus.datatrail.impl.nodes.Updatable;
@@ -68,17 +69,18 @@ public abstract class BaseEntity extends AbstractReferenceNode implements Entity
     }
 
     /**
-     * Ensures that a {@link TransactionInfo} object is assigned to the transaction.  If it is missing, create one
+     * Ensures that a {@link TransactionInfoImpl} object is assigned to the transaction.  If it is missing, create one
      */
     private void updateTxDetails() {
         final PersistenceManager pm = (PersistenceManager)getSource().dnGetExecutionContext().getOwner();
         txInfo = (TransactionInfo) pm.getUserObject(TransactionInfo.class.getName());
 
+        // if no transaction information is provided in the persistence manager, than create an default instance of one
         if( txInfo == null ){
-            // create a new TxInfo object
-            txInfo = new TransactionInfo( Instant.now() );
+            txInfo = new TransactionInfoImpl( Instant.now() );
             pm.putUserObject(TransactionInfo.class.getName(), txInfo);
         }
     }
+
 
 }

@@ -3,25 +3,30 @@ package org.datanucleus.test;
 import com.spotify.hamcrest.pojo.IsPojo;
 import org.datanucleus.datatrail.Node;
 import org.datanucleus.datatrail.DataTrailDescription;
+import org.datanucleus.datatrail.TransactionInfo;
 import org.datanucleus.datatrail.impl.NodeAction;
 import org.datanucleus.datatrail.impl.NodeType;
-import org.datanucleus.datatrail.impl.TransactionInfo;
+import org.datanucleus.datatrail.impl.TransactionInfoImpl;
+import org.datanucleus.datatrail.impl.nodes.entity.BaseEntity;
 import org.datanucleus.test.model.Street;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
+import java.util.UUID;
 
 import static com.spotify.hamcrest.pojo.IsPojo.pojo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 public class TransactionInfoTest extends AbstractTest{
 
@@ -29,7 +34,24 @@ public class TransactionInfoTest extends AbstractTest{
     public void testTransactionInfo(){
         // create some transactionInfo
         Instant date = Instant.now().minus(10, ChronoUnit.DAYS);
-        TransactionInfo txInfo = new TransactionInfo( date, "eric" );
+        TransactionInfo txInfo = new TransactionInfo() {
+            String txId = UUID.randomUUID().toString();
+            Instant now = Instant.now();
+            @Override
+            public Instant getDateModified() {
+                return now;
+            }
+
+            @Override
+            public String getUsername() {
+                return "eric";
+            }
+
+            @Override
+            public String getTxId() {
+                return txId;
+            }
+        };
 
         executeTx(pm -> {
             // set the transactionInfo
@@ -83,9 +105,9 @@ public class TransactionInfoTest extends AbstractTest{
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Calgary", null)
                 ))
-                .withProperty("username", is(TransactionInfo.NO_USERNAME))
+                .withProperty("username", is(not(emptyOrNullString())))
                 .withProperty("dateModified", instanceOf(Instant.class))
-                .withProperty("transactionId", anything());
+                .withProperty("transactionId", is(not(emptyOrNullString())));
 
 
 
@@ -93,9 +115,9 @@ public class TransactionInfoTest extends AbstractTest{
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Regina", null)
                 ))
-                .withProperty("username", is(TransactionInfo.NO_USERNAME))
+                .withProperty("username", is(not(emptyOrNullString())))
                 .withProperty("dateModified", instanceOf(Instant.class))
-                .withProperty("transactionId", anything());
+                .withProperty("transactionId", is(not(emptyOrNullString())));
 
 
 
