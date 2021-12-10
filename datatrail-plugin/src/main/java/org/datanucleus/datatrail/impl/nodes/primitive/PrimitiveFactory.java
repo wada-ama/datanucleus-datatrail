@@ -1,28 +1,25 @@
 package org.datanucleus.datatrail.impl.nodes.primitive;
 
-import org.datanucleus.datatrail.impl.AbstractNodeFactory;
 import org.datanucleus.datatrail.Node;
+import org.datanucleus.datatrail.StringConverter;
+import org.datanucleus.datatrail.impl.AbstractNodeFactory;
 import org.datanucleus.datatrail.impl.NodeAction;
 import org.datanucleus.datatrail.impl.NodeType;
 import org.datanucleus.datatrail.impl.nodes.NodeDefinition;
 import org.datanucleus.datatrail.impl.nodes.Priority;
-import org.datanucleus.datatrail.StringConverter;
 import org.datanucleus.datatrail.impl.nodes.converter.NullConverter;
 import org.datanucleus.datatrail.impl.nodes.converter.ObjectConverter;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Stream;
 
 @NodeDefinition(type = NodeType.PRIMITIVE, action = {NodeAction.CREATE, NodeAction.UPDATE, NodeAction.DELETE})
 @Priority(priority = Priority.LOWEST_PRECEDENCE)

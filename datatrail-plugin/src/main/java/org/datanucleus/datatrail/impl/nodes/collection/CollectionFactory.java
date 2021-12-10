@@ -1,7 +1,7 @@
 package org.datanucleus.datatrail.impl.nodes.collection;
 
-import org.datanucleus.datatrail.impl.AbstractNodeFactory;
 import org.datanucleus.datatrail.Node;
+import org.datanucleus.datatrail.impl.AbstractNodeFactory;
 import org.datanucleus.datatrail.impl.NodeAction;
 import org.datanucleus.datatrail.impl.NodeType;
 import org.datanucleus.datatrail.impl.nodes.NodeDefinition;

@@ -1,7 +1,7 @@
 package org.datanucleus.datatrail.impl.nodes.converter;
 
-import org.datanucleus.datatrail.impl.nodes.Priority;
 import org.datanucleus.datatrail.StringConverter;
+import org.datanucleus.datatrail.impl.nodes.Priority;
 
 /**
  * Default converter.  Can convert any object by using the toString() method of the object

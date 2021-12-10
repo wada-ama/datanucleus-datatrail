@@ -1,8 +1,8 @@
 package org.datanucleus.datatrail.impl.nodes.array;
 
 import org.datanucleus.datatrail.Node;
-import org.datanucleus.datatrail.impl.NodeAction;
 import org.datanucleus.datatrail.NodeFactory;
+import org.datanucleus.datatrail.impl.NodeAction;
 import org.datanucleus.datatrail.impl.NodeType;
 import org.datanucleus.datatrail.impl.nodes.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;

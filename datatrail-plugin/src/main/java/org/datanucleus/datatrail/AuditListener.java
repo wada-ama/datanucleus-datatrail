@@ -10,10 +10,8 @@ import org.datanucleus.util.NucleusLogger;
 import org.slf4j.Logger;
 
 import javax.jdo.JDOHelper;
-import javax.jdo.listener.CreateLifecycleListener;
 import javax.jdo.listener.DeleteLifecycleListener;
 import javax.jdo.listener.InstanceLifecycleEvent;
-import javax.jdo.listener.LoadLifecycleListener;
 import javax.jdo.listener.StoreLifecycleListener;
 import java.util.Collection;
 import java.util.Collections;

@@ -6,7 +6,6 @@ import org.datanucleus.datatrail.store.types.wrappers.tracker.CollectionChangeTr
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.state.ObjectProvider;
 import org.datanucleus.store.types.scostore.CollectionStore;
-import org.datanucleus.store.types.scostore.SetStore;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;

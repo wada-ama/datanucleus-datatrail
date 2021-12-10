@@ -1,8 +1,8 @@
 package org.datanucleus.datatrail.impl.nodes.primitive;
 
+import org.datanucleus.datatrail.Node;
 import org.datanucleus.datatrail.NodeFactory;
 import org.datanucleus.datatrail.impl.nodes.BaseNode;
-import org.datanucleus.datatrail.Node;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 public abstract class BasePrimitive extends BaseNode {
