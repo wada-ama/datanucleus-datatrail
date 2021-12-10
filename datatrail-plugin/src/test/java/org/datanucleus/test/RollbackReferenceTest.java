@@ -1,151 +1,124 @@
 package org.datanucleus.test;
 
-import com.spotify.hamcrest.pojo.IsPojo;
-import org.datanucleus.datatrail.Node;
-import org.datanucleus.datatrail.impl.NodeAction;
-import org.datanucleus.datatrail.impl.NodeType;
+import org.datanucleus.datatrail.TransactionListener;
 import org.datanucleus.test.model.CountryCode;
-import org.datanucleus.test.model.QTelephone;
+import org.datanucleus.test.model.QCountryCode;
 import org.datanucleus.test.model.Telephone;
-import org.datanucleus.identity.DatastoreIdImplKodo;
+import org.datanucleus.util.NucleusLogger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.util.Collection;
+import javax.jdo.JDODataStoreException;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Transaction;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
-public class ReferenceTest extends AbstractTest {
+public class RollbackReferenceTest extends AbstractTest {
 
-    @DisplayName("Create reference object using parent object commit only.  Expect to see both objects in DT")
+    @DisplayName("Deleting FK during tx trigger rollback")
     @Test
-    public void createReference() {
+    public void rollbackTestFlush() {
         executeTx(pm -> {
             CountryCode canada = new CountryCode("Canada", 1);
             Telephone telephone = new Telephone("514-123-1234", canada);
             pm.makePersistent(telephone);
-        });
-
-        Collection<Node> entities = audit.getModifications();
-
-        final IsPojo<Node>countryCode = getEntity(NodeAction.CREATE, CountryCode.class, "1")
-                .withProperty("fields", hasItems(
-                        getField(NodeType.PRIMITIVE, String.class, "country", "Canada", null),
-                        getField(NodeType.PRIMITIVE, Integer.class, "code", "1", null)
-                ));
-
-        assertThat(entities, hasItem(countryCode));
-
-        final IsPojo<Node>telephone = getEntity(NodeAction.CREATE, Telephone.class, "1")
-                .withProperty( "fields", hasItems(
-                        getField(NodeType.PRIMITIVE, String.class, "number", "514-123-1234", null),
-                        getField(NodeType.REF, CountryCode.class, "countryCode", "1", null)
-                ));
-
-        assertThat(entities, hasItem(telephone));
-
-        // final check
-        assertThat(entities, containsInAnyOrder(telephone, countryCode));
-    }
-
-
-
-    @Test
-    public void deleteReference() {
-        executeTx(pm -> {
-            CountryCode canada = new CountryCode("Canada", 1);
-            Telephone telephone = new Telephone("514-123-1234", canada);
-
-            CountryCode usa = new CountryCode( "USA", 1);
-            pm.makePersistent(telephone);
-            pm.makePersistent(usa);
         }, false);
 
 
-        executeTx(pm -> {
-            Telephone telephone = pm.newJDOQLTypedQuery(Telephone.class).executeUnique();
-            pm.deletePersistent(telephone);
+        // Create of object
+        PersistenceManager pm = pmf.getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+        TransactionListener txListener = new TransactionListener(entities -> {
+            fail("Should not be calling the post-commit listener since commit should have failed");
         });
+        txListener.attachListener(pm, null);
 
-        Collection<Node> entities = audit.getModifications();
+        AtomicBoolean rollback = new AtomicBoolean(false);
+        assertThrows(JDODataStoreException.class, () -> {
+            try {
+                tx.begin();
+                CountryCode usa = new CountryCode("USA", 1);
+                pm.makePersistent(usa);
+                pm.flush();
 
-        final IsPojo<Node>telephone = getEntity(NodeAction.DELETE, Telephone.class, "1")
-                .withProperty("fields", hasItems(
-                        getField(NodeType.PRIMITIVE, String.class, "number", "514-123-1234", null),
-                        getField(NodeType.REF, CountryCode.class, "countryCode", "1", null)
-                ));
 
-        assertThat(entities, containsInAnyOrder(telephone));
+                CountryCode canada = pm.newJDOQLTypedQuery(CountryCode.class).filter(QCountryCode.candidate().country.eq("Canada")).executeUnique();
+                pm.deletePersistent(canada);
+
+                // force a flush to trigger the rollback
+                pm.flush();
+
+                tx.commit();
+            } finally {
+                if (tx.isActive()) {
+                    NucleusLogger.GENERAL.error(">> Rolling back Tx");
+                    tx.rollback();
+                    rollback.set(true);
+                }
+                pm.close();
+            }
+        }, "Expecting exception to be thrown while trying to delete an FK");
+
+        pmf.getDataStoreCache().evictAll();
+
+        assertThat("Ensure transaction was rolled back since exception occured in middle of tx", rollback.get(), is(true));
+        assertThat("Should be nothing in the DataTrail to show", audit.getModifications(), hasSize(0));
     }
 
 
+    @DisplayName("Deleting FK during commit should not cause rollback")
     @Test
-    public void updateReference() {
+    public void rollbackTestCommit() {
         executeTx(pm -> {
             CountryCode canada = new CountryCode("Canada", 1);
             Telephone telephone = new Telephone("514-123-1234", canada);
-
-            CountryCode usa = new CountryCode( "USA", 1);
             pm.makePersistent(telephone);
-            pm.makePersistent(usa);
         }, false);
 
 
-        executeTx(pm -> {
-            Object id = new DatastoreIdImplKodo(CountryCode.class.getName(), 2);
-            CountryCode usa = pm.getObjectById(CountryCode.class, id);
+        // Create of object
+        PersistenceManager pm = pmf.getPersistenceManager();
 
-            id = new DatastoreIdImplKodo(Telephone.class.getName(), 1);
-            Telephone telephone = pm.getObjectById(Telephone.class, id);
-            telephone.setCountryCode(usa);
+        Transaction tx = pm.currentTransaction();
+        TransactionListener txListener = new TransactionListener(entities -> {
+            fail("Should not be calling the post-commit listener since commit should have failed");
         });
+        txListener.attachListener(pm, null);
 
-        Collection<Node> entities = audit.getModifications();
-
-        final IsPojo<Node>telephone = getEntity(NodeAction.UPDATE, Telephone.class, "1")
-                .withProperty( "fields", hasItems(
-                        getField(NodeType.REF, CountryCode.class, "countryCode", "2", getField(NodeType.REF, CountryCode.class, "countryCode", "1", null ))
-                ));
-
-        assertThat(entities, containsInAnyOrder(telephone));
-    }
-
+        AtomicBoolean rollback = new AtomicBoolean(false);
+        assertThrows(JDODataStoreException.class, () -> {
+            try {
+                tx.begin();
+                CountryCode usa = new CountryCode("USA", 1);
+                pm.makePersistent(usa);
+                pm.flush();
 
 
-    @DisplayName("Changing an existing reference to NULL should only show prevValue for the Ref")
-    @Test
-    public void updateReferenceToNull() {
-        executeTx(pm -> {
-            CountryCode canada = new CountryCode("Canada", 1);
-            Telephone telephone = new Telephone("514-123-1234", canada);
+                CountryCode canada = pm.newJDOQLTypedQuery(CountryCode.class).filter(QCountryCode.candidate().country.eq("Canada")).executeUnique();
+                pm.deletePersistent(canada);
 
-            CountryCode usa = new CountryCode( "USA", 1);
-            pm.makePersistent(telephone);
-            pm.makePersistent(usa);
-        }, false);
+                tx.commit();
+            } finally {
+                if (tx.isActive()) {
+                    NucleusLogger.GENERAL.error(">> Rolling back Tx");
+                    tx.rollback();
+                    rollback.set(true);
+                }
+                pm.close();
+            }
+        }, "Expecting exception to be thrown while trying to delete an FK");
+        pmf.getDataStoreCache().evictAll();
 
-
-        executeTx(pm -> {
-            Telephone telephone = pm.newJDOQLTypedQuery(Telephone.class).filter(QTelephone.candidate().number.endsWith("1234")).executeUnique();
-            telephone.setCountryCode(null);
-        });
-
-        Collection<Node> entities = audit.getModifications();
-
-        final IsPojo<Node>telephone = getEntity(NodeAction.UPDATE, Telephone.class, "1")
-                .withProperty( "fields", hasItems(
-                        getField(NodeType.REF, CountryCode.class, "countryCode", null,
-                                getField(NodeType.REF, CountryCode.class, "countryCode", "1", null))
-                ));
-
-        assertThat(entities, containsInAnyOrder(telephone));
+        assertThat("Rollback not required since TX not active", rollback.get(), is(false));
+        assertThat("Should be nothing in the DataTrail to show", audit.getModifications(), hasSize(0));
     }
 
 
