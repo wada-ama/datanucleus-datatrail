@@ -63,14 +63,4 @@ public class Set<E> extends org.datanucleus.store.types.wrappers.backed.Set<E> i
         final boolean result = super.removeAll(elements);
         return remove( changeTracker, existing, result);
     }
-
-    @Override
-    public void setValue(java.util.Set<E> value) {
-        // track the removal of all values
-        remove(changeTracker, value, true);
-        super.setValue(value);
-        // track the addition of all new values
-        add(changeTracker, value, true);
-    }
-
 }

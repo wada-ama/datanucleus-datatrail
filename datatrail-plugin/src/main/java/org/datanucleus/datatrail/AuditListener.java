@@ -201,7 +201,7 @@ class AuditListener implements DeleteLifecycleListener, StoreLifecycleListener {
                 ((Updatable)node).updateFields();
             }
         } else {
-            // preStore should have originally been callsed for the object, so add warning message in log
+            // preStore should have originally been called for the object, so add warning message in log
             AuditListener.logger.warn("New Persistable not already processed {}", pc.dnGetObjectId());
             modifications.add(pc, dataTrailFactory.createNode(pc, action));
         }

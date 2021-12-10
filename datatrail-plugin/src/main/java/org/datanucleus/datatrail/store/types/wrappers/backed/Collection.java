@@ -61,12 +61,10 @@ public class Collection<E> extends org.datanucleus.store.types.wrappers.backed.C
     }
 
     @Override
-    public void setValue(java.util.Collection<E> value) {
-        // track the removal of all values
-        remove(changeTracker, value, true);
-        super.setValue(value);
-        // track the addition of all new values
-        add(changeTracker, value, true);
+    public void clear() {
+        final java.util.List copy = new java.util.ArrayList(this);
+        super.clear();
+        remove(changeTracker, copy, true);
     }
 
     @Override

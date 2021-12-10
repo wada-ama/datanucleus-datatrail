@@ -78,10 +78,6 @@ public class List<E> extends org.datanucleus.store.types.wrappers.backed.List<E>
         return orig;
     }
 
-    @Override
-    public void setValue(java.util.List<E> value) {
-        super.setValue(value);
-    }
 
     @Override
     public E set(final int index, final E element) {

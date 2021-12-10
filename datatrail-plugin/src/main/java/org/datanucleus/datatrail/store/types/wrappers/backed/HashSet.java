@@ -64,12 +64,9 @@ public class HashSet<E> extends org.datanucleus.store.types.wrappers.backed.Hash
     }
 
     @Override
-    public void setValue(java.util.HashSet<E> value) {
-        // track the removal of all values
-        remove(changeTracker, value, true);
-        super.setValue(value);
-        // track the addition of all new values
-        add(changeTracker, value, true);
+    public void clear() {
+        // loop through all the values in the delegate set and add them to the tracker before they are cleared
+        delegate.forEach(value -> changeTracker.removed(value));
+        super.clear();
     }
-
 }
