@@ -17,10 +17,10 @@ import java.util.Date;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class DateTest extends AbstractTest{
+class DateTest extends AbstractTest{
 
     @Test
-    public void updateDateTest(){
+    void updateDateTest(){
         final Instant testStart = Instant.now();
         executeTx((pm) -> {
             Telephone telephone = new Telephone("514-555-1234", new CountryCode("Canada", 1));

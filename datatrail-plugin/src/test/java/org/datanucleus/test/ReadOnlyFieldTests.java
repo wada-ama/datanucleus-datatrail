@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 
-public class ReadOnlyFieldTests extends AbstractTest{
+class ReadOnlyFieldTests extends AbstractTest{
 
     @PersistenceCapable
     @Version(strategy= VersionStrategy.VERSION_NUMBER, column="VERSN")
@@ -52,7 +52,7 @@ public class ReadOnlyFieldTests extends AbstractTest{
 
     @DisplayName("Read Only fields should not be present in DataTrail")
     @Test
-    public void testReadOnlyFields(){
+    void testReadOnlyFields(){
         executeTx( pm -> {
             ReadOnlyFields pc = new ReadOnlyFields("firstName");
             pm.makePersistent(pc);
@@ -69,7 +69,7 @@ public class ReadOnlyFieldTests extends AbstractTest{
 
     @DisplayName("Read Only classes should not be present in DataTrail")
     @Test
-    public void testReadOnlyClass(){
+    void testReadOnlyClass(){
         // attempting to commit a ReadOnlyClass throws a JDOReadOnlyException
         executeTx( pm -> Assertions.assertThrows( JDOReadOnlyException.class, () ->{
             ReadOnlyClass pc = new ReadOnlyClass("firstName");

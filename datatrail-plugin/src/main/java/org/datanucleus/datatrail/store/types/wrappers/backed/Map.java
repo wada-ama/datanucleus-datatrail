@@ -6,6 +6,8 @@ import org.datanucleus.datatrail.store.types.wrappers.tracker.MapChangeTrackerIm
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.state.ObjectProvider;
 
+import java.util.Map.Entry;
+
 public class Map<K,V> extends org.datanucleus.store.types.wrappers.backed.Map<K,V> implements ChangeTrackable {
 
     private final transient MapChangeTrackerImpl changeTracker;
@@ -39,7 +41,7 @@ public class Map<K,V> extends org.datanucleus.store.types.wrappers.backed.Map<K,
     @Override
     public void putAll(final java.util.Map m) {
         m.entrySet().stream().forEach( o  -> {
-            final Entry kvEntry = ((Map.Entry)o);
+            final Entry kvEntry = (Entry)o;
             if( containsKey(kvEntry.getKey())){
                 // map already contains the value, so the value is changing
                 changeTracker.changed(kvEntry.getKey(), get(kvEntry.getKey()), kvEntry.getValue());

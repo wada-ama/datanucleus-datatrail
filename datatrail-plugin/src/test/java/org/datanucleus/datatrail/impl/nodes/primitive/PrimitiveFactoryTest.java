@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 @ExtendWith(JMockitExtension.class)
-public class PrimitiveFactoryTest {
+class PrimitiveFactoryTest {
 
     PrimitiveFactory primitiveFactory;
 
@@ -35,7 +35,7 @@ public class PrimitiveFactoryTest {
 
     @DisplayName("A custom converter can be added to format a specific object (Date)")
     @Test
-    public void testDateConverter(){
+    void testDateConverter(){
 
         // inject a new Date converter
         new MockUp<PrimitiveFactory>() {
@@ -64,14 +64,14 @@ public class PrimitiveFactoryTest {
 
     @DisplayName("Tests that the null converter works")
     @Test
-    public void testNullConverter(){
+    void testNullConverter(){
         assertThat(primitiveFactory.getAsString(null), is(nullValue()));
     }
 
 
     @DisplayName("Tests that a new converter with a higher priority is used")
     @Test
-    public void testOrderedConverter(){
+    void testOrderedConverter(){
         // inject a new Null  converter with a higher priority
         new MockUp<PrimitiveFactory>() {
             @Mock

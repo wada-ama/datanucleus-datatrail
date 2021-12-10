@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.iterableWithSize;
 
-public class SubclassTest extends AbstractTest{
+class SubclassTest extends AbstractTest{
 
     @PersistenceCapable
     @Version(strategy= VersionStrategy.VERSION_NUMBER, column="VERSN")
@@ -55,7 +55,7 @@ public class SubclassTest extends AbstractTest{
 
     @DisplayName("Should show the abstract class name if no value is defined")
     @Test
-    public void checkForAbstractName(){
+    void checkForAbstractName(){
         executeTx( pm -> {
             ChildClass cc = new ChildClass();
             pm.makePersistent(cc);
@@ -73,7 +73,7 @@ public class SubclassTest extends AbstractTest{
 
     @DisplayName("Should show the child class name if the child is defined as the ref obj")
     @Test
-    public void checkForChildName(){
+    void checkForChildName(){
         executeTx( pm -> {
             ChildClass cc = new ChildClass();
             cc.setMyField(cc);
@@ -92,7 +92,7 @@ public class SubclassTest extends AbstractTest{
 
     @DisplayName("Should show the child sub class name if the child is defined as the ref obj")
     @Test
-    public void checkForSubChildName(){
+    void checkForSubChildName(){
         executeTx( pm -> {
             ChildClass cc = new ChildSubClass();
             cc.setMyField(cc);
@@ -110,7 +110,7 @@ public class SubclassTest extends AbstractTest{
 
     @DisplayName("Should show the child sub class name if the sub child is defined as the ref obj in the parent class")
     @Test
-    public void checkForChildClassButChildSubclassName(){
+    void checkForChildClassButChildSubclassName(){
         executeTx( pm -> {
             ChildClass cc = new ChildClass();
             cc.setMyField(new ChildSubClass());

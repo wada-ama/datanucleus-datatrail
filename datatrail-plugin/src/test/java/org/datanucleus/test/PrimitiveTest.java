@@ -17,9 +17,9 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasItem;
 
-public class PrimitiveTest extends AbstractTest {
+class PrimitiveTest extends AbstractTest {
     @Test
-    public void createPrimitive() {
+    void createPrimitive() {
         executeTx((pm) -> {
             Street street = new Street("Regina");
             pm.makePersistent(street);
@@ -40,7 +40,7 @@ public class PrimitiveTest extends AbstractTest {
 
 
     @Test
-    public void deletePrimitive() {
+    void deletePrimitive() {
         executeTx((pm) -> {
             Street street = new Street("Regina");
             pm.makePersistent(street);
@@ -70,7 +70,7 @@ public class PrimitiveTest extends AbstractTest {
 
     @DisplayName("Update multiple times in a transaction shows last value only")
     @Test
-    public void updatePrimitive() {
+    void updatePrimitive() {
         executeTx((pm) -> {
             Street street = new Street("Regina");
             pm.makePersistent(street);

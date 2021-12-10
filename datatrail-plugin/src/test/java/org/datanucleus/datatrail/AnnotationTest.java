@@ -19,8 +19,7 @@ class AnnotationTest {
     static public class ChildInheritedClass extends ParentClass{
     }
 
-    @Test
-    public void testAnnotationPresentParent(){
+    @Test void testAnnotationPresentParent(){
         ParentClass sut = new ParentClass();
         MatcherAssert.assertThat( sut, IsClassAnnotated.with( DataTrail.class) );
         MatcherAssert.assertThat( sut, IsClassAnnotated.withParamValue( DataTrail.class, "excludeFromDataTrail", is(true) ) );

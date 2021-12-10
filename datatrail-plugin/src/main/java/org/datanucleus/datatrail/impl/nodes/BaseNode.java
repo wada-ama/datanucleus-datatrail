@@ -138,10 +138,10 @@ public abstract class BaseNode implements Node {
 
     @Override
     public String toString() {
-        StringBuffer stringBuffer = new StringBuffer(super.toString());
+        StringBuilder sb = new StringBuilder(super.toString());
         if( className != null){
-            stringBuffer.append("[" + className + "]");
+            sb.append("[" + className + "]");
         }
-        return stringBuffer.toString();
+        return sb.toString();
     }
 }

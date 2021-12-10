@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.isA;
 
-public class MapTestOfChangeTrackerPrimitiveRefTest extends AbstractTest {
+class MapTestOfChangeTrackerPrimitiveRefTest extends AbstractTest {
 
 
     protected Map<String, String> ids = new HashMap<>();
@@ -47,7 +47,7 @@ public class MapTestOfChangeTrackerPrimitiveRefTest extends AbstractTest {
 
     @DisplayName("Adds multiple values to the map.  Only the final value should be tracked.")
     @Test
-    public void testAddedTracker() {
+    void testAddedTracker() {
 
         executeTx(pm -> {
             Street victoria = pm.newJDOQLTypedQuery(Street.class).filter(QStreet.candidate().name.eq("Victoria")).executeUnique();
@@ -89,7 +89,7 @@ public class MapTestOfChangeTrackerPrimitiveRefTest extends AbstractTest {
 
     @DisplayName("Put and remove values in the map in the same tx.  Nothing should be recorded.")
     @Test
-    public void testRemovedTracker() {
+    void testRemovedTracker() {
 
         executeTx(pm -> {
             Street victoria = pm.newJDOQLTypedQuery(Street.class).filter(QStreet.candidate().name.eq("Victoria")).executeUnique();
@@ -126,7 +126,7 @@ public class MapTestOfChangeTrackerPrimitiveRefTest extends AbstractTest {
 
     @DisplayName("Change a value in the map multiple times.  The initial value prior to the first change should be recorded.")
     @Test
-    public void testChangedTracker() {
+    void testChangedTracker() {
 
         executeTx(pm -> {
             Street victoria = pm.newJDOQLTypedQuery(Street.class).filter(QStreet.candidate().name.eq("Victoria")).executeUnique();

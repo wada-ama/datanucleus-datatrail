@@ -40,11 +40,11 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 @Execution(ExecutionMode.SAME_THREAD)
-public class MapTest extends AbstractTest {
+class MapTest extends AbstractTest {
 
 
     @Test
-    public void createMap() {
+    void createMap() {
         executeTx(pm -> {
 
             CountryCode cc = new CountryCode("canada", 1);
@@ -90,7 +90,7 @@ public class MapTest extends AbstractTest {
 
     @DisplayName("Deletes an Entity containing a Map object.")
     @Test
-    public void deleteMap() {
+    void deleteMap() {
         Map<TelephoneType, String> ids = new HashMap<>();
 
         executeTx(pm -> {
@@ -141,7 +141,7 @@ public class MapTest extends AbstractTest {
 
     @DisplayName("Updates the Key/Value pairs of a Map<Prim,Prim> map")
     @Test
-    public void updateMapPrim() {
+    void updateMapPrim() {
         executeTx(pm -> {
             CountryCode cc = new CountryCode("canada", 1);
 
@@ -189,7 +189,7 @@ public class MapTest extends AbstractTest {
 
     @DisplayName("Updates the Key/Value pairs of a Map<Prim,Ref> map")
     @Test
-    public void updateMapRef() {
+    void updateMapRef() {
         Map<TelephoneType, String> ids = new HashMap<>();
 
         executeTx(pm -> {
@@ -251,7 +251,7 @@ public class MapTest extends AbstractTest {
 
     @DisplayName("Test Map<Ref, Ref> objects")
     @Test
-    public void updateMapRefRefTest() {
+    void updateMapRefRefTest() {
 
         // Create necessary objects
         Map<String, Persistable> ids = new HashMap<>();
@@ -366,7 +366,7 @@ public class MapTest extends AbstractTest {
 
     @DisplayName("Updating Map with same key/value pair should trigger a DataTrail entry with a version change only")
     @Test
-    public void updateMapWithSameKeyValuePair() {
+    void updateMapWithSameKeyValuePair() {
         executeTx(pm -> {
             MapClass sut = new MapClass();
             sut.getStreetMap().put(new Street("Victoria"), new CountryCode("Montreal", 514));
@@ -400,7 +400,7 @@ public class MapTest extends AbstractTest {
 
     @DisplayName("Add key and update key in same tx Map<Ref,Ref>.  Should show as added")
     @Test
-    public void addKeyAndUpdate(){
+    void addKeyAndUpdate(){
         executeTx(pm -> {
             MapClass sut = new MapClass();
             pm.makePersistent(sut);

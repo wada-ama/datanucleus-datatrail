@@ -37,11 +37,11 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 
 @Execution(ExecutionMode.SAME_THREAD)
-public class CollectionTest extends AbstractTest {
+class CollectionTest extends AbstractTest {
 
 
     @Test
-    public void createCollectionArray() {
+    void createCollectionArray() {
         executeTx(pm -> {
             Address address = new Address(new Street[]{new Street("Regina")});
             pm.makePersistent(address);
@@ -70,7 +70,7 @@ public class CollectionTest extends AbstractTest {
 
 
     @Test
-    public void createCollectionList() {
+    void createCollectionList() {
         executeTx(pm -> {
             Address address = new Address(new Street[]{
                     new Street("Regina"),
@@ -149,7 +149,7 @@ public class CollectionTest extends AbstractTest {
 
 
     @Test
-    public void deleteCollectionList() {
+    void deleteCollectionList() {
         executeTx(pm -> {
             Address address = new Address(new Street[]{
                     new Street("Regina"),
@@ -220,7 +220,7 @@ public class CollectionTest extends AbstractTest {
      * changes to the individual elements
      */
     @Test
-    public void updateCollectionArray(){
+    void updateCollectionArray(){
         executeTx(pm -> {
             Address address = new Address(new Street[]{new Street("Regina"), new Street("Montreal")});
             pm.makePersistent(address);
@@ -258,7 +258,7 @@ public class CollectionTest extends AbstractTest {
 
 
     @Test
-    public void updateCollectionList() {
+    void updateCollectionList() {
         executeTx(pm -> {
                     Address address = new Address(new Street[]{
                             new Street("Regina"),
@@ -330,7 +330,7 @@ public class CollectionTest extends AbstractTest {
     }
 
     @Test
-    public void updateListTest(){
+    void updateListTest(){
         executeTx(pm -> {
             TelephoneBook book = new TelephoneBook("Montreal");
             CountryCode canada = new CountryCode("Canada", 1);
@@ -390,7 +390,7 @@ public class CollectionTest extends AbstractTest {
 
     @DisplayName("Changes the order of a items in a list")
     @Test
-    public void updateListOrderTest() {
+    void updateListOrderTest() {
         executeTx(pm -> {
             TelephoneBook book = new TelephoneBook("Montreal");
             CountryCode canada = new CountryCode("Canada", 1);
@@ -421,7 +421,7 @@ public class CollectionTest extends AbstractTest {
                 ));
 
 
-
+        assertThat(audit.getModifications(), hasItem(telephoneBook));
     }
 
 }

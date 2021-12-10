@@ -57,22 +57,22 @@ public class TransactionListener implements TransactionEventListener {
 
     @Override
     public void transactionEnded() {
-
+        // intentionally left blank - nothing to do unless the tx is being committed
     }
 
     @Override
     public void transactionPreFlush() {
-
+        // intentionally left blank - nothing to do unless the tx is being committed
     }
 
     @Override
     public void transactionFlushed() {
-
+        // intentionally left blank - nothing to do unless the tx is being committed
     }
 
     @Override
     public void transactionPreCommit() {
-
+        // intentionally left blank - nothing to do unless the tx is being committed
     }
 
     @Override
@@ -83,26 +83,26 @@ public class TransactionListener implements TransactionEventListener {
 
     @Override
     public void transactionPreRollBack() {
-
+        // intentionally left blank - nothing to do unless the tx is being committed
     }
 
     @Override
     public void transactionRolledBack() {
-
+        // intentionally left blank - nothing to do unless the tx is being committed
     }
 
     @Override
     public void transactionSetSavepoint(String name) {
-
+        // intentionally left blank - nothing to do unless the tx is being committed
     }
 
     @Override
     public void transactionReleaseSavepoint(String name) {
-
+        // intentionally left blank - nothing to do unless the tx is being committed
     }
 
     @Override
     public void transactionRollbackToSavepoint(String name) {
-
+        // intentionally left blank - nothing to do unless the tx is being committed
     }
 }

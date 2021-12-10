@@ -87,7 +87,7 @@ public class DataTrailStateManagerImpl extends ReferentialStateManagerImpl {
         return provideField(savedImage, fieldNumber);
     }
 
-    private <T> T loadFieldFromDatastore(Class<T> type, int fieldNumber, T currentValue){
+    private <T> T loadFieldFromDatastore(int fieldNumber, T currentValue){
         // if field is already loaded, then nothing left to do
         if( loadedFields[fieldNumber]){
             return currentValue;
@@ -100,51 +100,51 @@ public class DataTrailStateManagerImpl extends ReferentialStateManagerImpl {
 
     @Override
     public void setBooleanField(Persistable pc, int fieldNumber, boolean currentValue, boolean newValue) {
-        super.setBooleanField(pc, fieldNumber, loadFieldFromDatastore(boolean.class, fieldNumber, currentValue), newValue);
+        super.setBooleanField(pc, fieldNumber, loadFieldFromDatastore(fieldNumber, currentValue), newValue);
     }
 
     @Override
     public void setByteField(Persistable pc, int fieldNumber, byte currentValue, byte newValue) {
-        super.setByteField(pc, fieldNumber, loadFieldFromDatastore(byte.class, fieldNumber, currentValue), newValue);
+        super.setByteField(pc, fieldNumber, loadFieldFromDatastore(fieldNumber, currentValue), newValue);
     }
 
     @Override
     public void setCharField(Persistable pc, int fieldNumber, char currentValue, char newValue) {
-        super.setCharField(pc, fieldNumber, loadFieldFromDatastore(char.class, fieldNumber, currentValue), newValue);
+        super.setCharField(pc, fieldNumber, loadFieldFromDatastore(fieldNumber, currentValue), newValue);
     }
 
     @Override
     public void setDoubleField(Persistable pc, int fieldNumber, double currentValue, double newValue) {
-        super.setDoubleField(pc, fieldNumber, loadFieldFromDatastore(double.class, fieldNumber, currentValue), newValue);
+        super.setDoubleField(pc, fieldNumber, loadFieldFromDatastore(fieldNumber, currentValue), newValue);
     }
 
     @Override
     public void setFloatField(Persistable pc, int fieldNumber, float currentValue, float newValue) {
-        super.setFloatField(pc, fieldNumber, loadFieldFromDatastore(float.class, fieldNumber, currentValue), newValue);
+        super.setFloatField(pc, fieldNumber, loadFieldFromDatastore(fieldNumber, currentValue), newValue);
     }
 
     @Override
     public void setIntField(Persistable pc, int fieldNumber, int currentValue, int newValue) {
-        super.setIntField(pc, fieldNumber, loadFieldFromDatastore(int.class, fieldNumber, currentValue), newValue);
+        super.setIntField(pc, fieldNumber, loadFieldFromDatastore(fieldNumber, currentValue), newValue);
     }
 
     @Override
     public void setLongField(Persistable pc, int fieldNumber, long currentValue, long newValue) {
-        super.setLongField(pc, fieldNumber, loadFieldFromDatastore(long.class, fieldNumber, currentValue), newValue);
+        super.setLongField(pc, fieldNumber, loadFieldFromDatastore(fieldNumber, currentValue), newValue);
     }
 
     @Override
     public void setShortField(Persistable pc, int fieldNumber, short currentValue, short newValue) {
-        super.setShortField(pc, fieldNumber, loadFieldFromDatastore(short.class, fieldNumber, currentValue), newValue);
+        super.setShortField(pc, fieldNumber, loadFieldFromDatastore(fieldNumber, currentValue), newValue);
     }
 
     @Override
     public void setStringField(Persistable pc, int fieldNumber, String currentValue, String newValue) {
-        super.setStringField(pc, fieldNumber, loadFieldFromDatastore(String.class, fieldNumber, currentValue), newValue);
+        super.setStringField(pc, fieldNumber, loadFieldFromDatastore(fieldNumber, currentValue), newValue);
     }
 
     @Override
     public void setObjectField(Persistable pc, int fieldNumber, Object currentValue, Object newValue) {
-        super.setObjectField(pc, fieldNumber, loadFieldFromDatastore(Object.class, fieldNumber, currentValue), newValue);
+        super.setObjectField(pc, fieldNumber, loadFieldFromDatastore(fieldNumber, currentValue), newValue);
     }
 }

@@ -25,8 +25,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Priority(priority = Priority.LOWEST_PRECEDENCE)
 public class PrimitiveFactory extends AbstractNodeFactory {
 
-    final private Set<StringConverter> stringConverters;
-    private Map<Class<?>, StringConverter> stringConvertersCache = new ConcurrentHashMap<>();
+    private final Set<StringConverter> stringConverters;
+    private final Map<Class<?>, StringConverter> stringConvertersCache = new ConcurrentHashMap<>();
 
     /**
      * Loads any String converters it finds in the classpath
@@ -40,17 +40,17 @@ public class PrimitiveFactory extends AbstractNodeFactory {
      * Uses the ServiceLoader pattern to load {@link StringConverter} defined classes
      * @return
      */
-    final protected Set<StringConverter> loadStringConverters(){
+    protected final Set<StringConverter> loadStringConverters(){
         // load any string converters from the classpath via the SerivceLoader
-        final Set<StringConverter> stringConverters = new HashSet<>();
+        final Set<StringConverter> converters = new HashSet<>();
 
         // ensure that there are always the two default converters
-        stringConverters.addAll(Arrays.asList(new ObjectConverter(), new NullConverter()));
+        converters.addAll(Arrays.asList(new ObjectConverter(), new NullConverter()));
 
         // load any converters supplied by the Service Loader
         ServiceLoader<StringConverter> serviceLoader = ServiceLoader.load(StringConverter.class);
-        serviceLoader.forEach( stringConverters::add);
-        return stringConverters;
+        serviceLoader.forEach( converters::add);
+        return converters;
     }
 
 

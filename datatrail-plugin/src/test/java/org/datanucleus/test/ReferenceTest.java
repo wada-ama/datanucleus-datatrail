@@ -22,11 +22,11 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 
-public class ReferenceTest extends AbstractTest {
+class ReferenceTest extends AbstractTest {
 
     @DisplayName("Create reference object using parent object commit only.  Expect to see both objects in DT")
     @Test
-    public void createReference() {
+    void createReference() {
         executeTx(pm -> {
             CountryCode canada = new CountryCode("Canada", 1);
             Telephone telephone = new Telephone("514-123-1234", canada);
@@ -58,7 +58,7 @@ public class ReferenceTest extends AbstractTest {
 
 
     @Test
-    public void deleteReference() {
+    void deleteReference() {
         executeTx(pm -> {
             CountryCode canada = new CountryCode("Canada", 1);
             Telephone telephone = new Telephone("514-123-1234", canada);
@@ -87,7 +87,7 @@ public class ReferenceTest extends AbstractTest {
 
 
     @Test
-    public void updateReference() {
+    void updateReference() {
         executeTx(pm -> {
             CountryCode canada = new CountryCode("Canada", 1);
             Telephone telephone = new Telephone("514-123-1234", canada);
@@ -121,7 +121,7 @@ public class ReferenceTest extends AbstractTest {
 
     @DisplayName("Changing an existing reference to NULL should only show prevValue for the Ref")
     @Test
-    public void updateReferenceToNull() {
+    void updateReferenceToNull() {
         executeTx(pm -> {
             CountryCode canada = new CountryCode("Canada", 1);
             Telephone telephone = new Telephone("514-123-1234", canada);

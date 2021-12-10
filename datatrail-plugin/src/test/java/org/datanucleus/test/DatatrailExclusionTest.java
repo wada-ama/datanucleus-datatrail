@@ -16,11 +16,11 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 
-public class DatatrailExclusionTest extends AbstractTest{
+class DatatrailExclusionTest extends AbstractTest{
 
     @DisplayName("Should exclude object from data trail")
     @Test
-    public void baseTeacherExcluded(){
+    void baseTeacherExcluded(){
         executeTx(pm -> {
             BaseTeacher baseTeacher = new BaseTeacher("baseTeacher");
             pm.makePersistent(baseTeacher);
@@ -31,7 +31,7 @@ public class DatatrailExclusionTest extends AbstractTest{
 
     @DisplayName( "Child class with override should be included.  Excluded field should be missing")
     @Test
-    public void childTeacherIncluded(){
+    void childTeacherIncluded(){
         executeTx(pm -> {
             Teacher teacher = new Teacher("teacher", null);
             pm.makePersistent(teacher);
@@ -47,7 +47,7 @@ public class DatatrailExclusionTest extends AbstractTest{
 
     @DisplayName( "Child class with composition should be included in the child class, but excluded as an entity in the DT")
     @Test
-    public void embededBaseTeacherIncluded(){
+    void embededBaseTeacherIncluded(){
         executeTx(pm -> {
             BaseTeacher mentor = new BaseTeacher("mentor");
             Teacher teacher = new Teacher("teacher", mentor);

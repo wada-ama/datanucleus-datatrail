@@ -44,11 +44,6 @@ public abstract class AbstractContainerNode extends BaseNode implements Updatabl
     }
 
     @Override
-    public String getClassName() {
-        return super.getClassName();
-    }
-
-    @Override
     public void updateFields() {
         added.stream().filter(Updatable.class::isInstance).forEach( node -> ((Updatable)node).updateFields());
         removed.stream().filter(Updatable.class::isInstance).forEach( node -> ((Updatable)node).updateFields());

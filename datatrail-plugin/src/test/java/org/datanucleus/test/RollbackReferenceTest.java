@@ -20,11 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 
-public class RollbackReferenceTest extends AbstractTest {
+class RollbackReferenceTest extends AbstractTest {
 
     @DisplayName("Deleting FK during tx trigger rollback")
     @Test
-    public void rollbackTestFlush() {
+    void rollbackTestFlush() {
         executeTx(pm -> {
             CountryCode canada = new CountryCode("Canada", 1);
             Telephone telephone = new Telephone("514-123-1234", canada);
@@ -76,7 +76,7 @@ public class RollbackReferenceTest extends AbstractTest {
 
     @DisplayName("Deleting FK during commit should not cause rollback")
     @Test
-    public void rollbackTestCommit() {
+    void rollbackTestCommit() {
         executeTx(pm -> {
             CountryCode canada = new CountryCode("Canada", 1);
             Telephone telephone = new Telephone("514-123-1234", canada);

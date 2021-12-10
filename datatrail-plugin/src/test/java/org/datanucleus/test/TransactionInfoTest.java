@@ -28,10 +28,10 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
-public class TransactionInfoTest extends AbstractTest{
+class TransactionInfoTest extends AbstractTest{
 
     @Test
-    public void testTransactionInfo(){
+    void testTransactionInfo(){
         // create some transactionInfo
         Instant date = Instant.now().minus(10, ChronoUnit.DAYS);
         TransactionInfo txInfo = new TransactionInfo() {
@@ -87,7 +87,7 @@ public class TransactionInfoTest extends AbstractTest{
     }
 
     @Test
-    public void testTransactionInfoMissing(){
+    void testTransactionInfoMissing(){
         executeTx(pm -> {
             // create 2 Primitive objects
             Street street = new Street("Regina");

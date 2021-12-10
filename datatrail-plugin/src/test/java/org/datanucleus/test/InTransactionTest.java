@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
-public class InTransactionTest extends AbstractTest{
+class InTransactionTest extends AbstractTest{
 
     // Update the same value multiple times in a tx
 
@@ -28,7 +28,7 @@ public class InTransactionTest extends AbstractTest{
 
     @DisplayName("Create and Delete in same Tx should not appear in the DataTrail")
     @Test
-    public void createAndDeleteSameTx(){
+    void createAndDeleteSameTx(){
         executeTx(pm -> {
             CountryCode countryCode = new CountryCode("Canada", 1);
             pm.makePersistent(countryCode);
@@ -42,7 +42,7 @@ public class InTransactionTest extends AbstractTest{
 
     @DisplayName("Delete and persist of same object in same tx.  DN only deletes the object")
     @Test
-    public void createAndDeleteSameTx2(){
+    void createAndDeleteSameTx2(){
         executeTx(pm -> {
             CountryCode countryCode = new CountryCode("Canada", 1);
             pm.makePersistent(countryCode);
