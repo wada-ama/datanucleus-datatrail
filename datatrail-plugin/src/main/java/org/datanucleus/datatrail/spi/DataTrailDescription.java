@@ -1,4 +1,4 @@
-package org.datanucleus.datatrail;
+package org.datanucleus.datatrail.spi;
 
 /**
  * Interface used to identify the description to be generated in the data trail.

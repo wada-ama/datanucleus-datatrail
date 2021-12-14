@@ -1,7 +1,8 @@
 package org.datanucleus.datatrail.impl.nodes;
 
-import org.datanucleus.datatrail.Node;
-import org.datanucleus.datatrail.NodeFactory;
+import org.datanucleus.datatrail.spi.ContainerNode;
+import org.datanucleus.datatrail.spi.Node;
+import org.datanucleus.datatrail.spi.NodeFactory;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 import java.util.ArrayList;

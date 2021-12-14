@@ -1,9 +1,9 @@
 package org.datanucleus.datatrail.store.types.wrappers.tracker;
 
 import com.spotify.hamcrest.pojo.IsPojo;
-import org.datanucleus.datatrail.Node;
-import org.datanucleus.datatrail.impl.NodeAction;
-import org.datanucleus.datatrail.impl.NodeType;
+import org.datanucleus.datatrail.spi.Node;
+import org.datanucleus.datatrail.spi.NodeAction;
+import org.datanucleus.datatrail.spi.NodeType;
 import org.datanucleus.test.AbstractTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

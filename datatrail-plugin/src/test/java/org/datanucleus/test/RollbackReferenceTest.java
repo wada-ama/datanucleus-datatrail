@@ -1,6 +1,6 @@
 package org.datanucleus.test;
 
-import org.datanucleus.datatrail.TransactionListener;
+import org.datanucleus.datatrail.spi.TransactionListener;
 import org.datanucleus.test.model.CountryCode;
 import org.datanucleus.test.model.QCountryCode;
 import org.datanucleus.test.model.Telephone;

@@ -1,4 +1,4 @@
-package org.datanucleus.datatrail;
+package org.datanucleus.datatrail.spi;
 
 import java.io.Serializable;
 import java.time.Instant;

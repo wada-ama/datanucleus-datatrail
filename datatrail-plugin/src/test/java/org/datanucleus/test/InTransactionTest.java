@@ -1,7 +1,7 @@
 package org.datanucleus.test;
 
 import com.spotify.hamcrest.pojo.IsPojo;
-import org.datanucleus.datatrail.impl.NodeAction;
+import org.datanucleus.datatrail.spi.NodeAction;
 import org.datanucleus.test.model.CountryCode;
 import org.datanucleus.test.model.QCountryCode;
 import org.junit.jupiter.api.DisplayName;

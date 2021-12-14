@@ -1,9 +1,9 @@
 package org.datanucleus.datatrail.impl.nodes.collection;
 
-import org.datanucleus.datatrail.Node;
-import org.datanucleus.datatrail.NodeFactory;
-import org.datanucleus.datatrail.impl.NodeAction;
-import org.datanucleus.datatrail.impl.NodeType;
+import org.datanucleus.datatrail.spi.Node;
+import org.datanucleus.datatrail.spi.NodeFactory;
+import org.datanucleus.datatrail.spi.NodeAction;
+import org.datanucleus.datatrail.spi.NodeType;
 import org.datanucleus.datatrail.impl.nodes.NodeDefinition;
 import org.datanucleus.datatrail.store.types.wrappers.tracker.ChangeTrackable;
 import org.datanucleus.datatrail.store.types.wrappers.tracker.ChangeTracker;

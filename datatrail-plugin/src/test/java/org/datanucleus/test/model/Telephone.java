@@ -1,6 +1,6 @@
 package org.datanucleus.test.model;
 
-import org.datanucleus.datatrail.DataTrailDescription;
+import org.datanucleus.datatrail.spi.DataTrailDescription;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Version;

@@ -1,11 +1,11 @@
 package org.datanucleus.test;
 
 import com.spotify.hamcrest.pojo.IsPojo;
-import org.datanucleus.datatrail.Node;
-import org.datanucleus.datatrail.DataTrailDescription;
-import org.datanucleus.datatrail.TransactionInfo;
-import org.datanucleus.datatrail.impl.NodeAction;
-import org.datanucleus.datatrail.impl.NodeType;
+import org.datanucleus.datatrail.spi.Node;
+import org.datanucleus.datatrail.spi.DataTrailDescription;
+import org.datanucleus.datatrail.spi.TransactionInfo;
+import org.datanucleus.datatrail.spi.NodeAction;
+import org.datanucleus.datatrail.spi.NodeType;
 import org.datanucleus.test.model.Street;
 import org.junit.jupiter.api.Test;
 

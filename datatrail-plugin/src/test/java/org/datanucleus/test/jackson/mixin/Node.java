@@ -1,9 +1,7 @@
 package org.datanucleus.test.jackson.mixin;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.datanucleus.datatrail.impl.NodeAction;
-import org.datanucleus.datatrail.impl.NodeType;
+import org.datanucleus.datatrail.spi.NodeType;
 
 public interface Node {
     /**

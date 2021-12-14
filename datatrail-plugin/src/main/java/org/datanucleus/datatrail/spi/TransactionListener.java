@@ -1,7 +1,8 @@
-package org.datanucleus.datatrail;
+package org.datanucleus.datatrail.spi;
 
 import org.datanucleus.TransactionEventListener;
 import org.datanucleus.api.jdo.JDOTransaction;
+import org.datanucleus.datatrail.impl.AuditListener;
 
 import javax.jdo.PersistenceManager;
 import java.util.Collection;

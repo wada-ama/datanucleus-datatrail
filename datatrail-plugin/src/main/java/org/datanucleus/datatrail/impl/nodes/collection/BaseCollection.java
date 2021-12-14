@@ -1,7 +1,7 @@
 package org.datanucleus.datatrail.impl.nodes.collection;
 
-import org.datanucleus.datatrail.Node;
-import org.datanucleus.datatrail.NodeFactory;
+import org.datanucleus.datatrail.spi.Node;
+import org.datanucleus.datatrail.spi.NodeFactory;
 import org.datanucleus.datatrail.impl.nodes.AbstractContainerNode;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 

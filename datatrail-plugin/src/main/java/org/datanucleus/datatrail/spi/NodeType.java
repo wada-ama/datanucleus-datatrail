@@ -1,4 +1,4 @@
-package org.datanucleus.datatrail.impl;
+package org.datanucleus.datatrail.spi;
 
 public enum NodeType {
     ENTITY,

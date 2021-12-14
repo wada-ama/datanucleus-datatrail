@@ -1,6 +1,6 @@
 package org.datanucleus.datatrail.impl;
 
-import org.datanucleus.datatrail.TransactionInfo;
+import org.datanucleus.datatrail.spi.TransactionInfo;
 
 import javax.jdo.PersistenceManager;
 import java.time.Instant;

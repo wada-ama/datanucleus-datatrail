@@ -1,9 +1,9 @@
 package org.datanucleus.test;
 
 import com.spotify.hamcrest.pojo.IsPojo;
-import org.datanucleus.datatrail.Node;
-import org.datanucleus.datatrail.impl.NodeAction;
-import org.datanucleus.datatrail.impl.NodeType;
+import org.datanucleus.datatrail.spi.Node;
+import org.datanucleus.datatrail.spi.NodeAction;
+import org.datanucleus.datatrail.spi.NodeType;
 import org.datanucleus.test.model.CountryCode;
 import org.datanucleus.test.model.QTelephone;
 import org.datanucleus.test.model.Telephone;
@@ -11,7 +11,6 @@ import org.datanucleus.identity.DatastoreIdImplKodo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.Collection;
 
 import static org.hamcrest.MatcherAssert.assertThat;

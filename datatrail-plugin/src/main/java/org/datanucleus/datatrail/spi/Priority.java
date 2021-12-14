@@ -1,4 +1,4 @@
-package org.datanucleus.datatrail.impl.nodes;
+package org.datanucleus.datatrail.spi;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

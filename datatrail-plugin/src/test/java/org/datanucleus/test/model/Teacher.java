@@ -1,6 +1,6 @@
 package org.datanucleus.test.model;
 
-import org.datanucleus.datatrail.DataTrail;
+import org.datanucleus.datatrail.spi.DataTrail;
 
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;

@@ -1,12 +1,12 @@
 package org.datanucleus.datatrail.impl.nodes.entity;
 
 
-import org.datanucleus.datatrail.Node;
-import org.datanucleus.datatrail.NodeFactory;
-import org.datanucleus.datatrail.TransactionInfo;
+import org.datanucleus.datatrail.spi.Node;
+import org.datanucleus.datatrail.spi.NodeFactory;
+import org.datanucleus.datatrail.spi.TransactionInfo;
 import org.datanucleus.datatrail.impl.TransactionInfoImpl;
 import org.datanucleus.datatrail.impl.nodes.AbstractReferenceNode;
-import org.datanucleus.datatrail.impl.nodes.EntityNode;
+import org.datanucleus.datatrail.spi.EntityNode;
 import org.datanucleus.datatrail.impl.nodes.Updatable;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.MetaData;

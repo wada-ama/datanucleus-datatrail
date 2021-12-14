@@ -1,6 +1,4 @@
-package org.datanucleus.datatrail.impl.nodes;
-
-import org.datanucleus.datatrail.Node;
+package org.datanucleus.datatrail.spi;
 
 
 /**

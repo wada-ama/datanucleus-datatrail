@@ -1,6 +1,4 @@
-package org.datanucleus.datatrail;
-
-import org.datanucleus.datatrail.impl.nodes.Priority;
+package org.datanucleus.datatrail.spi;
 
 /**
  * Identifies a converter for converting a given Class to a String

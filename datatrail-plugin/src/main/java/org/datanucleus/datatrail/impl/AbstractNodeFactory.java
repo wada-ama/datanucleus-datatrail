@@ -1,6 +1,7 @@
 package org.datanucleus.datatrail.impl;
 
-import org.datanucleus.datatrail.NodeFactory;
+import org.datanucleus.datatrail.spi.NodeAction;
+import org.datanucleus.datatrail.spi.NodeFactory;
 import org.datanucleus.datatrail.impl.annotation.DataTrailAnnotationHandler;
 import org.datanucleus.datatrail.impl.nodes.NodeDefinition;
 import org.datanucleus.metadata.MetaData;

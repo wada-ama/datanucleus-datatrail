@@ -1,7 +1,4 @@
-package org.datanucleus.datatrail.impl.nodes;
-
-import org.datanucleus.datatrail.Node;
-import org.datanucleus.datatrail.impl.NodeAction;
+package org.datanucleus.datatrail.spi;
 
 import java.time.Instant;
 import java.util.Set;

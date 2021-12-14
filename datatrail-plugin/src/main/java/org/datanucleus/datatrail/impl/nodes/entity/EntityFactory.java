@@ -1,11 +1,11 @@
 package org.datanucleus.datatrail.impl.nodes.entity;
 
-import org.datanucleus.datatrail.Node;
+import org.datanucleus.datatrail.spi.Node;
 import org.datanucleus.datatrail.impl.AbstractNodeFactory;
-import org.datanucleus.datatrail.impl.NodeAction;
-import org.datanucleus.datatrail.impl.NodeType;
+import org.datanucleus.datatrail.spi.NodeAction;
+import org.datanucleus.datatrail.spi.NodeType;
 import org.datanucleus.datatrail.impl.nodes.NodeDefinition;
-import org.datanucleus.datatrail.impl.nodes.Priority;
+import org.datanucleus.datatrail.spi.Priority;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.MetaData;

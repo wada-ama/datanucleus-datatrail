@@ -1,8 +1,8 @@
 package org.datanucleus.datatrail.impl.nodes.map;
 
-import org.datanucleus.datatrail.Node;
+import org.datanucleus.datatrail.spi.Node;
 import org.datanucleus.datatrail.impl.nodes.BaseNode;
-import org.datanucleus.datatrail.impl.nodes.MapEntry;
+import org.datanucleus.datatrail.spi.MapEntry;
 import org.datanucleus.datatrail.impl.nodes.Updatable;
 
 import java.util.stream.Stream;

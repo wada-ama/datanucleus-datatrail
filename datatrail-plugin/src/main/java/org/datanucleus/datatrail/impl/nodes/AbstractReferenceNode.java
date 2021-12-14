@@ -1,8 +1,9 @@
 package org.datanucleus.datatrail.impl.nodes;
 
-import org.datanucleus.datatrail.DataTrailDescription;
-import org.datanucleus.datatrail.Node;
-import org.datanucleus.datatrail.NodeFactory;
+import org.datanucleus.datatrail.spi.DataTrailDescription;
+import org.datanucleus.datatrail.spi.Node;
+import org.datanucleus.datatrail.spi.NodeFactory;
+import org.datanucleus.datatrail.spi.ReferenceNode;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.identity.DatastoreId;
 import org.datanucleus.identity.IdentityUtils;

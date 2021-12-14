@@ -21,10 +21,10 @@
     </extension>
 
     <extension point="org.datanucleus.class_annotation_handler">
-        <class-annotation-handler annotation-class="org.datanucleus.datatrail.DataTrail" handler="org.datanucleus.datatrail.impl.annotation.DataTrailAnnotationHandler"/>
+        <class-annotation-handler annotation-class="org.datanucleus.datatrail.spi.DataTrail" handler="org.datanucleus.datatrail.impl.annotation.DataTrailAnnotationHandler"/>
     </extension>
 
     <extension point="org.datanucleus.member_annotation_handler">
-        <member-annotation-handler annotation-class="org.datanucleus.datatrail.DataTrail" handler="org.datanucleus.datatrail.impl.annotation.DataTrailAnnotationHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.datatrail.spi.DataTrail" handler="org.datanucleus.datatrail.impl.annotation.DataTrailAnnotationHandler"/>
     </extension>
 </plugin>

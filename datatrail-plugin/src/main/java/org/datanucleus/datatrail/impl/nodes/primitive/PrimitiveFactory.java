@@ -1,12 +1,12 @@
 package org.datanucleus.datatrail.impl.nodes.primitive;
 
-import org.datanucleus.datatrail.Node;
-import org.datanucleus.datatrail.StringConverter;
+import org.datanucleus.datatrail.spi.Node;
+import org.datanucleus.datatrail.spi.StringConverter;
 import org.datanucleus.datatrail.impl.AbstractNodeFactory;
-import org.datanucleus.datatrail.impl.NodeAction;
-import org.datanucleus.datatrail.impl.NodeType;
+import org.datanucleus.datatrail.spi.NodeAction;
+import org.datanucleus.datatrail.spi.NodeType;
 import org.datanucleus.datatrail.impl.nodes.NodeDefinition;
-import org.datanucleus.datatrail.impl.nodes.Priority;
+import org.datanucleus.datatrail.spi.Priority;
 import org.datanucleus.datatrail.impl.nodes.converter.NullConverter;
 import org.datanucleus.datatrail.impl.nodes.converter.ObjectConverter;
 import org.datanucleus.metadata.AbstractMemberMetaData;

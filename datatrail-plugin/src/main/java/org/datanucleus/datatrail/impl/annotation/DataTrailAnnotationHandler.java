@@ -1,7 +1,7 @@
 package org.datanucleus.datatrail.impl.annotation;
 
 import org.datanucleus.ClassLoaderResolver;
-import org.datanucleus.datatrail.DataTrail;
+import org.datanucleus.datatrail.spi.DataTrail;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.annotations.AnnotationObject;

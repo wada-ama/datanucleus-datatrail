@@ -1,9 +1,9 @@
 package org.datanucleus.test;
 
 import com.spotify.hamcrest.pojo.IsPojo;
-import org.datanucleus.datatrail.Node;
-import org.datanucleus.datatrail.impl.NodeAction;
-import org.datanucleus.datatrail.impl.NodeType;
+import org.datanucleus.datatrail.spi.Node;
+import org.datanucleus.datatrail.spi.NodeAction;
+import org.datanucleus.datatrail.spi.NodeType;
 import org.datanucleus.api.jdo.annotations.ReadOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

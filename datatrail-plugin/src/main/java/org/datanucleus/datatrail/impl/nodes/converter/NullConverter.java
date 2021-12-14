@@ -1,7 +1,7 @@
 package org.datanucleus.datatrail.impl.nodes.converter;
 
-import org.datanucleus.datatrail.StringConverter;
-import org.datanucleus.datatrail.impl.nodes.Priority;
+import org.datanucleus.datatrail.spi.StringConverter;
+import org.datanucleus.datatrail.spi.Priority;
 
 /**
  * Null converter.  Returns a null for a null object

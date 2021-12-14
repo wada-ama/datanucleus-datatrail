@@ -1,7 +1,7 @@
 package org.datanucleus.test.model;
 
-import org.datanucleus.datatrail.DataTrail;
-import org.datanucleus.datatrail.DataTrailDescription;
+import org.datanucleus.datatrail.spi.DataTrail;
+import org.datanucleus.datatrail.spi.DataTrailDescription;
 
 import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;

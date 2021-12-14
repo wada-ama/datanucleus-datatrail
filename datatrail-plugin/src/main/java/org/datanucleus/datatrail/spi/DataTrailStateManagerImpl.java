@@ -1,4 +1,4 @@
-package org.datanucleus.datatrail;
+package org.datanucleus.datatrail.spi;
 
 import org.datanucleus.ExecutionContext;
 import org.datanucleus.enhancement.Persistable;

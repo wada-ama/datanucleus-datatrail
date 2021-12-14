@@ -4,7 +4,7 @@ import mockit.Invocation;
 import mockit.Mock;
 import mockit.MockUp;
 import mockit.integration.junit5.JMockitExtension;
-import org.datanucleus.datatrail.StringConverter;
+import org.datanucleus.datatrail.spi.StringConverter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

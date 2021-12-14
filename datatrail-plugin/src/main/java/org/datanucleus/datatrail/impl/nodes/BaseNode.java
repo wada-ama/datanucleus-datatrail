@@ -1,10 +1,10 @@
 package org.datanucleus.datatrail.impl.nodes;
 
-import org.datanucleus.datatrail.Node;
-import org.datanucleus.datatrail.NodeFactory;
+import org.datanucleus.datatrail.spi.Node;
+import org.datanucleus.datatrail.spi.NodeFactory;
 import org.datanucleus.datatrail.impl.ClassUtils;
-import org.datanucleus.datatrail.impl.NodeAction;
-import org.datanucleus.datatrail.impl.NodeType;
+import org.datanucleus.datatrail.spi.NodeAction;
+import org.datanucleus.datatrail.spi.NodeType;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaData;

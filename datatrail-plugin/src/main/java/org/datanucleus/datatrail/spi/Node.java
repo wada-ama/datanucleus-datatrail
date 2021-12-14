@@ -1,7 +1,4 @@
-package org.datanucleus.datatrail;
-
-import org.datanucleus.datatrail.impl.NodeAction;
-import org.datanucleus.datatrail.impl.NodeType;
+package org.datanucleus.datatrail.spi;
 
 public interface Node {
     /**

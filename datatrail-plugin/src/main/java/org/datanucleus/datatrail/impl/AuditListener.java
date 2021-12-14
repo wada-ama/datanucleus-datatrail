@@ -1,8 +1,8 @@
-package org.datanucleus.datatrail;
+package org.datanucleus.datatrail.impl;
 
-import org.datanucleus.datatrail.impl.DataTrailFactory;
-import org.datanucleus.datatrail.impl.NodeAction;
 import org.datanucleus.datatrail.impl.nodes.Updatable;
+import org.datanucleus.datatrail.spi.Node;
+import org.datanucleus.datatrail.spi.NodeAction;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.identity.IdentityReference;
 import org.datanucleus.state.ObjectProvider;
@@ -27,8 +27,11 @@ import static org.slf4j.LoggerFactory.getLogger;
  * Class that provides suitable hooks for auditing of a persistence process.
  * <p>
  * This implementation simply logs the audit events.
+ *
+ * This is a private implementation and is NOT part of the exposed SPI.  It is subject to change and should not be consumed outside the
+ * datatrail library SPI.
  */
-class AuditListener implements DeleteLifecycleListener, StoreLifecycleListener {
+public class AuditListener implements DeleteLifecycleListener, StoreLifecycleListener {
 
     // get a static slf4j logger for the class
     protected static final Logger logger = getLogger(AuditListener.class);

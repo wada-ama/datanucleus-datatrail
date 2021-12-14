@@ -1,6 +1,7 @@
 package org.datanucleus.datatrail;
 
 import com.zaradai.matchers.IsClassAnnotated;
+import org.datanucleus.datatrail.spi.DataTrail;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
