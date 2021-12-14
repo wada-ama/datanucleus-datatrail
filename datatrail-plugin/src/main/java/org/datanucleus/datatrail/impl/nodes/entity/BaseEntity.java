@@ -47,12 +47,12 @@ public abstract class BaseEntity extends AbstractReferenceNode implements Entity
 
     @Override
     public Instant getDateModified() {
-        return txInfo.getDateModified();
+        return txInfo.getTxDate();
     }
 
     @Override
     public String getUsername() {
-        return txInfo.getUsername();
+        return txInfo.getUserId();
     }
 
     @Override

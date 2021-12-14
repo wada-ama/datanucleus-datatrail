@@ -19,29 +19,29 @@ public class TransactionInfoImpl implements TransactionInfo {
 
     private static final String NO_USERNAME = "__NOT_DEFINED__";
 
-    protected final Instant dateModified;
-    protected final String username;
+    protected final Instant txDate;
+    protected final String userId;
     protected final String txId;
 
 
-    public TransactionInfoImpl(final Instant dateModified) {
-        this(dateModified, NO_USERNAME, UUID.randomUUID().toString());
+    public TransactionInfoImpl(final Instant txDate) {
+        this(txDate, NO_USERNAME, UUID.randomUUID().toString());
     }
 
-    public TransactionInfoImpl(final Instant dateModified, final String username, final String txId) {
-        this.dateModified = dateModified;
-        this.username = username;
+    public TransactionInfoImpl(final Instant txDate, final String userId, final String txId) {
+        this.txDate = txDate;
+        this.userId = userId;
         this.txId = txId;
     }
 
     @Override
-    public Instant getDateModified() {
-        return dateModified;
+    public Instant getTxDate() {
+        return txDate;
     }
 
     @Override
-    public String getUsername() {
-        return username;
+    public String getUserId() {
+        return userId;
     }
 
     @Override

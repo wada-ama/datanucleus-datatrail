@@ -12,9 +12,22 @@ import java.time.Instant;
  * @author Eric Benzacar
  */
 public interface TransactionInfo extends Serializable {
-    Instant getDateModified();
 
-    String getUsername();
+    /**
+     * Gets the date the transaction occurred
+     * @return
+     */
+    Instant getTxDate();
 
+    /**
+     * Gets the name of the user that triggered the transaction
+     * @return
+     */
+    String getUserId();
+
+    /**
+     * Gets a unique transaction identifier
+     * @return
+     */
     String getTxId();
 }

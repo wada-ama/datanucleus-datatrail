@@ -6,8 +6,6 @@ import org.datanucleus.datatrail.DataTrailDescription;
 import org.datanucleus.datatrail.TransactionInfo;
 import org.datanucleus.datatrail.impl.NodeAction;
 import org.datanucleus.datatrail.impl.NodeType;
-import org.datanucleus.datatrail.impl.TransactionInfoImpl;
-import org.datanucleus.datatrail.impl.nodes.entity.BaseEntity;
 import org.datanucleus.test.model.Street;
 import org.junit.jupiter.api.Test;
 
@@ -38,12 +36,12 @@ class TransactionInfoTest extends AbstractTest{
             String txId = UUID.randomUUID().toString();
             Instant now = Instant.now();
             @Override
-            public Instant getDateModified() {
+            public Instant getTxDate() {
                 return now;
             }
 
             @Override
-            public String getUsername() {
+            public String getUserId() {
                 return "eric";
             }
 
@@ -71,16 +69,16 @@ class TransactionInfoTest extends AbstractTest{
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Calgary", null)
                 ))
-                .withProperty("dateModified", is(txInfo.getDateModified()))
-                .withProperty("username",  is(txInfo.getUsername()))
+                .withProperty("dateModified", is(txInfo.getTxDate()))
+                .withProperty("username",  is(txInfo.getUserId()))
                 .withProperty("transactionId", is(txInfo.getTxId()));
 
         final IsPojo<Node>regina = getEntity(NodeAction.CREATE, Street.class, ANY)
                 .withProperty("fields", hasItem(
                         getField(NodeType.PRIMITIVE, String.class, "name", "Regina", null)
                 ))
-                .withProperty("dateModified", is(txInfo.getDateModified()))
-                .withProperty("username",  is(txInfo.getUsername()))
+                .withProperty("dateModified", is(txInfo.getTxDate()))
+                .withProperty("username",  is(txInfo.getUserId()))
                 .withProperty("transactionId", is(txInfo.getTxId()));
 
         assertThat(entities, containsInAnyOrder(calgary, regina));

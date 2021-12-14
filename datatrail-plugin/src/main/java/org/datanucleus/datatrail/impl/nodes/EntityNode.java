@@ -14,6 +14,4 @@ public interface EntityNode extends ReferenceNode{
     String getUsername();
 
     String getTransactionId();
-
-    NodeAction getAction();
 }
