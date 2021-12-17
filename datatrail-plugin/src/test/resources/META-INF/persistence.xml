@@ -25,6 +25,7 @@
             <property name="datanucleus.generateSchema.database.mode" value="drop-and-create"/>
 
             <property name="datanucleus.datastoreIdentityType" value="kodo"/>
+            <property name="datanucleus.query.sql.allowAll" value="true" />
         </properties>
     </persistence-unit>
 

@@ -58,7 +58,12 @@ public abstract class AbstractReferenceNode extends BaseNode implements Updatabl
 
     protected void setDescription(final Object field){
         if( field instanceof DataTrailDescription){
-            description = ((DataTrailDescription)field).getDataTrailDescription();
+            try {
+                description = ((DataTrailDescription) field).getDataTrailDescription();
+            } catch(Exception e){
+                // if any exception occurs getting the description, set it to null instead
+                description = null;
+            }
         }
     }
 
