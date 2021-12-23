@@ -1,7 +1,7 @@
 # DataNucleus DataTrail Transaction Listener
 
 This package has been designed as a plugin to DataNucleus in order to produce a tracking system of changes made to DataNucleus tracked
-entities, similar in concept to Hibernate's Envers, but implemented specifically for DataNucleus.  The plugin aims to track CREAT, UPDATE or 
+entities, similar in concept to Hibernate's Envers, but implemented specifically for DataNucleus.  The plugin aims to track CREATE, UPDATE or 
 DELETE changes to FCOs and their fields.
 
 ## Requirements
@@ -10,7 +10,7 @@ DELETE changes to FCOs and their fields.
 ## Developed and designed for
 - RDBMS backing store
 - Optimistic transactions
-- KodoDatastoreId
+- DataStore Identity: KodoDatastoreId
 
 ### Limitations
 While this package should in theory work for Pessimistic Transactions and Non Transactional, it has not been tested
@@ -40,10 +40,17 @@ settings in the `persistence.xml` file:
        txListener.attachListener(pm, null);
 ```
 
+## TransactionListener
+### TransactionListener attachment
+The [TransactionListener](src/main/java/org/datanucleus/datatrail/spi/TransactionListener.java) is the entry point to enable the DataTrail library.
+It requires a `PersistenceManager` and a list of `Persistable` objects to advise.  If the list is `null`, then all classes are automatically
+included for advice.  Otherwise, the list can be tailored to the required models on a per-PM basis.  If the list is empty or missing, then 
+no classes will be included in the data trail.
 
-## TransactionListener callback
+
+### TransactionListener callback
 The TransactionListener uses a callback/lambda to supply a collection of events/changes at the end of the transaction
-via the [DataTrailHandler](src/main/java/org/datanucleus/datatrail/TransactionListener/DataTrailHandler.java).  This class has a single 
+via the [DataTrailHandler](src/main/java/org/datanucleus/datatrail/spi/TransactionListener.java).  This class has a single 
 `execute()` method which is supplied a `Collection<Node> entities` to represent the changes that have been tracked for all FCO objects 
 that are part of the transaction.  The client application is then free to manage the tracked changes as best suited; 
 for example log to a file, write to a NoSQL database, sent to an MQ, etc.
@@ -51,6 +58,43 @@ for example log to a file, write to a NoSQL database, sent to an MQ, etc.
 Unlike Envers, the transport layer for the changes is kept independent of the plugin.  Future development of this plugin can 
 potentially produce different DataTrailHandlers, responsible for each transport layer.
 
+#### Generating JSON
+The easiest way to generate produce a JSON representation of the node tree is to use the Jackson FasterXML library.  The library is 
+intentionally implementation agnostic, but Jackson can use MixIns (see [Jackson MixIn Annotations](https://www.baeldung.com/jackson-annotations#jackson-mixin-annotations)
+for some basic information in order to identify the labels and nodes to export into a json file.
+
+The [AbstractTest](src/test/java/org/datanucleus/test/AbstractTest.java) base test class uses this approach to help in visualization and debugging
+of the automated tests in this package.  This is the recommended approach to integrating this library within an application.
+
+```java
+        ObjectMapper mapper = new ObjectMapper();
+        JavaTimeModule module = new JavaTimeModule();
+        mapper.registerModule(module);
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
+        mapper.disable(MapperFeature.AUTO_DETECT_GETTERS,
+                MapperFeature.AUTO_DETECT_IS_GETTERS,
+                MapperFeature.AUTO_DETECT_CREATORS,
+                MapperFeature.AUTO_DETECT_FIELDS);
+        mapper.addMixIn(Node.class, org.datanucleus.test.jackson.mixin.Node.class);
+        mapper.addMixIn(EntityNode.class, org.datanucleus.test.jackson.mixin.EntityNode.class);
+        mapper.addMixIn(MapEntry.class, org.datanucleus.test.jackson.mixin.MapEntry.class);
+        mapper.addMixIn(ContainerNode.class, org.datanucleus.test.jackson.mixin.ContainerNode.class);
+        mapper.addMixIn(ReferenceNode.class, org.datanucleus.test.jackson.mixin.ReferenceNode.class);
+
+        StringWriter sw = new StringWriter();
+        for (Node entity : entities) {
+            try {
+                mapper.writeValue(sw, entity);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        
+        return sw.toString();
+```
 
 # Design Approach
 
@@ -267,31 +311,53 @@ to provide their own implementation of the class as the default implementation i
 
 
 ## @DataTrail annotation
-TODO Write doc
-- can remove classes from the tracking
-- can remove fields from tracking
+The [DataTrail](src/main/java/org/datanucleus/datatrail/spi/DataTrail.java) annotation is used to identify which models or fields
+should be included or excluded from the data trail.  By definition, any `@org.datanucleus.api.jdo.annotations.ReadOnly` and `@Transient`
+fields are excluded from the DataTrail as they cannot by modified.  Optionally, other fields can also be identified using the 
+`@DataTrail(excludeFromDataTrail=true)` annotation as well.
+
+By default, if no classes (ie: a null list) are specified in the [TransactionListener](#transactionlistener-attachment) then all classes are automatically
+included in the datatrail.  The `@DataTrail` annotation can then be used to filter out individual classes.
 
 
 ## DataTrailFactory
+The [DataTrailFactory](src/main/java/org/datanucleus/datatrail/impl/DataTrailFactory.java) is the heart of the implementation of the DataTrail.
+It is the entry point into creating the tree structure of nodes to represent each type of object being modified during the current transaction.
+To accomplish this, it delegates the choice of which node to create to any registered [NodeFactory](#nodefactory).  NodeFactory can be registered
+manually, or automatically.  The `DataTrailFactory` supports 2 different types of automatic registration:
+- ServiceLoader pattern
+- Classpath scanning
 
-TODO Write doc
-- 
-The design approach for the plugin leverages the factory pattern and Java's the factory pattern and Java's Service Loader
-pattern for extensibility and customization.
+### ServiceLoader
+The `org.datanucleus.datatrail.impl.DataTrailFactory.getDataTrailFactory()` method will delegate to using Java's ServiceLoader pattern and
+load any NodeFactory defined in the [org.datanucleus.datatrail.spi.NodeFactory](src/main/resources/META-INF/services/org.datanucleus.datatrail.spi.NodeFactory)
+configuration file.
 
-- loads all node factories by ServiceLoader
-  - can use class scanning if dependency provided
-- searches for the correct factory based on provided object
+
+### Classpath scanning
+An alternate mechanism to instantiate a `DataTrailFactory` is to use the `org.datanucleus.datatrail.impl.DataTrailFactory.getDataTrailFactory(java.lang.Class<?>)`
+method, in which the factory will automatically scan the given classpath and load any class implementing the [NodeFactory](#nodefactory) 
+interface.  This requires an additional dependency in the classpath [io.github.classgraph:classgraph]() dependency in the classpath.
+
+
 
 ## NodeFactory
-TODO Write doc
+Each type of supported node is instantiated via it's [NodeFactory](src/main/java/org/datanucleus/datatrail/spi/NodeFactory.java).  Currently,
+there is support for the following type of nodes:
+- array
+- collection
+- entity
+- map
+- primitive
+- reference
 
-The design approach for the plugin leverages the factory pattern and Java's the factory pattern and Java's Service Loader
-pattern for extensibility and customization.
-- 
-- uses ServiceLoader to load individual factories
-- searches for the correct factory base on provided object and action
-- searchs
+The factory exposes a [NodeFactory](src/main/java/org/datanucleus/datatrail/spi/NodeFactory.java) methods to identify if the current
+value, with the given DataNucleus metadata is supported by the given node type.  The 
+[DataTrailFactory](src/main/java/org/datanucleus/datatrail/impl/DataTrailFactory.java) searches for the factory with the highest priority
+defined when selecting the type of node to be created.
+
+The [NodeDefinition](src/main/java/org/datanucleus/datatrail/spi/NodeDefinition.java) annotation can help identify which type of 
+node is being created.
 
 
 
@@ -322,9 +388,21 @@ proxy object, a call is made to the `ChangeTracker` to keep a list of the change
 `ChangeTracker` can be accessed via the proxy object to retrieve the list of changes.
 
 
-
 # DataTrailStateManager
-TODO Write Doc
+In order to identify changes to modified fields, the [DataTrailStateManager](src/main/java/org/datanucleus/datatrail/spi/DataTrailStateManagerImpl.java)
+must be attached to all advised objects.  Currently the only way to accomplish this is to specify the custom  `javax.jdo.spi.StateManager` in the
+`persistence.xml` file (see [How To Use](#how-to-use)).  Without this configuration, DataNucleus will not know to store initial values
+of changed fields and consequently not be able to identify the previous field when creating a Node.
+
+Longer-term, changes to the DataNucleus core project could potentially identify classes which are identified as being part of the 
+DataTrail and automatically attach/select the appropriate `StateManager`, but this is not currently present in DataNucleus 5.2.
+
+Add the following entry to the persistence manager:
+```xml
+    <property name="datanucleus.objectProvider.className" value="org.datanucleus.datatrail.spi.DataTrailStateManagerImpl"/>
+```
+
+
 
 
 
@@ -343,18 +421,3 @@ TODO Write Doc
 - Testing for multi-PK
 - FCO without ID
 - Class-level InstanceLifecycleEvents are not currently fully supported (ie: they are called after the transaction level lifecycle events)
-
-Use of InstanceLifecycleListener to do basic auditing.
-
-Notifications are sent to the various listener methods, and so you can detect INSERT / UPDATE / DELETE events
-and store any information you require from that inwhatever backend is appropriate. 
-This particular sample just uses logging of the events. 
-
-Note that a persist of a new object will receive a create event as well as a preStore and postStore event.
-
-Use of the DN Persistable interface allows access to field values on the object pre and post store.
-
-You could link in with transaction boundary and demarcate the events in particular transactions.
-
-
-# Design
