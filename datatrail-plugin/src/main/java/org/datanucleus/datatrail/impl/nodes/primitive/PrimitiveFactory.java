@@ -5,7 +5,7 @@ import org.datanucleus.datatrail.spi.StringConverter;
 import org.datanucleus.datatrail.impl.AbstractNodeFactory;
 import org.datanucleus.datatrail.spi.NodeAction;
 import org.datanucleus.datatrail.spi.NodeType;
-import org.datanucleus.datatrail.impl.nodes.NodeDefinition;
+import org.datanucleus.datatrail.spi.NodeDefinition;
 import org.datanucleus.datatrail.spi.Priority;
 import org.datanucleus.datatrail.impl.nodes.converter.NullConverter;
 import org.datanucleus.datatrail.impl.nodes.converter.ObjectConverter;

@@ -15,7 +15,7 @@ import org.datanucleus.datatrail.spi.NodeType;
 import org.datanucleus.datatrail.spi.ContainerNode;
 import org.datanucleus.datatrail.spi.EntityNode;
 import org.datanucleus.datatrail.spi.MapEntry;
-import org.datanucleus.datatrail.impl.nodes.NodeDefinition;
+import org.datanucleus.datatrail.spi.NodeDefinition;
 import org.datanucleus.datatrail.spi.ReferenceNode;
 import org.datanucleus.datatrail.impl.nodes.map.MapEntryImpl;
 import org.datanucleus.enhancement.Persistable;

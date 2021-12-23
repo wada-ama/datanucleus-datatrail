@@ -1,7 +1,6 @@
 package org.datanucleus.datatrail.spi;
 
 import org.datanucleus.datatrail.impl.DataTrailFactory;
-import org.datanucleus.datatrail.impl.nodes.NodeDefinition;
 import org.datanucleus.metadata.MetaData;
 
 import java.util.Optional;

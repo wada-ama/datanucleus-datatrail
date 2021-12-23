@@ -4,7 +4,7 @@ import org.datanucleus.datatrail.spi.Node;
 import org.datanucleus.datatrail.spi.NodeFactory;
 import org.datanucleus.datatrail.spi.NodeAction;
 import org.datanucleus.datatrail.spi.NodeType;
-import org.datanucleus.datatrail.impl.nodes.NodeDefinition;
+import org.datanucleus.datatrail.spi.NodeDefinition;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 import java.util.Map;
